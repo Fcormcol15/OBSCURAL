@@ -8,6 +8,7 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+    @media (max-width: 900px) { html { scroll-behavior: auto; } }
 
     body {
       background: #000;
@@ -36,60 +37,11 @@
     #hero {
       position: fixed; inset: 0;
       z-index: 9000;
-      background: #fff;
+      background: #000;
       display: flex; align-items: center; justify-content: center;
-      transition: background 1.4s linear 0.05s;
       overflow: hidden;
     }
-    #hero.fire { background: #000; }
-
-    /* ── SPOTLIGHT INICIAL (blanco casi puro, degradado muy sutil) ── */
-    #hero::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse 70% 70% at 50% 50%,
-        transparent 0%, rgba(0,0,0,0.04) 60%, rgba(0,0,0,0.14) 100%);
-      pointer-events: none;
-      transition: opacity 1.2s ease;
-    }
-    #hero.fire::before { opacity: 0; }
-
-    /* ── RADAR RINGS (emanan del toggle) ── */
-    #radar {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none; z-index: -1;
-      transition: opacity 0.8s ease;
-    }
-    #hero.fire #radar { opacity: 0; }
-
-    .ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1px dashed rgba(0,0,0,0.12);
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      animation: ring-expand 5s ease-out infinite;
-    }
-    .ring:nth-child(2) { animation-delay: 1.66s; }
-    .ring:nth-child(3) { animation-delay: 3.33s; }
-
-    @keyframes ring-expand {
-      0%   { width: 220px; height: 220px; opacity: 0.55; }
-      100% { width: 80vw;  height: 80vw;  opacity: 0;    }
-    }
-
-    /* ── TOGGLE PULSE ── solo glow, sin escala */
-    @keyframes toggle-breathe {
-      0%, 100% { filter: drop-shadow(0 0 4px rgba(0,0,0,0.12)); }
-      50%       { filter: drop-shadow(0 0 48px rgba(0,0,0,0.72)) drop-shadow(0 0 18px rgba(0,0,0,0.5)); }
-    }
     #heroIso { position: relative; }
-    #heroIso svg {
-      animation: toggle-breathe 2.6s ease-in-out infinite;
-    }
-    #hero.fire #heroIso svg { animation: none; filter: none; }
 
     /* ── VIGNETTE (aparece con fire) ── */
     #vignette {
@@ -157,66 +109,56 @@
     }
 
     /* ── WORDMARK ──
-       heroWord tiene ancho fijo (toggle + bscural), calculado por JS.
-       El flex del hero lo centra. El toggle nunca se mueve.
-       Cuando bscural aparece, el wordmark completo ya estaba centrado.
+       heroWord wraps isotype + bscural — centered by hero flex.
+       On .fire, bscural expands via max-width transition.
     */
     #heroWord {
       display: flex;
-      align-items: flex-end;
+      /* baseline: SVG aligns bottom to text baseline;
+         SVG height = cap-height → SVG top = cap-height top  */
+      align-items: baseline;
       flex-shrink: 0;
       position: relative; z-index: 5;
+      gap: clamp(1px, 0.15vw, 3px);
     }
 
-    /* ── TOGGLE ── */
+    /* ── ISOTYPE (stadium + círculo) ── */
     #heroIso {
       flex-shrink: 0;
-      cursor: none;
-      /* Levanta el toggle para que quede sobre la baseline del texto */
-      margin-bottom: clamp(10px, 2vw, 28px);
+      cursor: pointer;
     }
     #heroIso svg {
-      width: clamp(88px, 12vw, 160px);
-      height: auto; display: block;
+      /* Pill = baseline → x-height (igual que c, u, s).
+         Outfit 800 x-height ≈ 52% em → a max 172px = ~89px.
+         align-items:baseline pone SVG bottom en baseline; SVG top = x-height top. */
+      height: clamp(33px, 6.24vw, 90px);
+      width: auto; display: block;
+      position: relative; z-index: 1;
+      opacity: 0.55;
+      transition: opacity 0.6s ease;
     }
-
-    /* 2. Slide del botón: animado via JS (cx CSS transition no es confiable) */
-    /* sin reglas CSS para cx aquí */
-
-    /* 1. Prendido: linear = pasa gradualmente por gris, sin ningún salto
-          Empieza cuando termina el slide (3.0s) */
-    #heroIso rect {
-      stroke: #000;
-      transition: stroke 1.4s linear 0.05s;
-    }
-    #hero.fire #heroIso rect { stroke: #fff; }
-
-    #heroIso circle {
-      fill: #000;
-      transition: fill 1.4s linear 0.05s;
-    }
-    #hero.fire #heroIso circle { fill: #fff; }
+    #hero.fire #heroIso svg { opacity: 1; }
+    #heroIso rect   { stroke: #fff; }
+    #heroIso circle { fill:   #fff; }
 
     /* ── BSCURAL ── */
     #heroBscural {
       font-size: clamp(64px, 12vw, 172px);
       font-weight: 600;
-      letter-spacing: -.03em;
+      letter-spacing: -.02em;
       line-height: 1;
       white-space: nowrap;
       overflow: hidden;
       max-width: 0;
-      opacity: 0;
-      color: #000;
-      transition:
-        max-width 1.2s cubic-bezier(.16,1,.3,1) 1.45s,
-        opacity   0.8s cubic-bezier(.4,0,.2,1)  1.45s,
-        color     1.4s linear                   0.05s;
-    }
-    #hero.fire #heroBscural {
-      max-width: 1200px;
-      opacity: 1;
       color: #fff;
+      opacity: 0;
+      transition:
+        max-width 2.2s cubic-bezier(0.42, 0, 0.58, 1) 0.1s,
+        opacity   1.8s ease                            2.0s;
+    }
+    /* ── BSCURAL REVEAL on .fire — max-width lo pone JS con el ancho exacto ── */
+    #hero.fire #heroBscural {
+      opacity: 1;
     }
 
     /* ── HERO TAGLINE ── */
@@ -245,7 +187,7 @@
     /* ══ NAV ══ */
     nav {
       position: fixed; top: 0; left: 0; right: 0;
-      padding: 30px 72px;
+      padding: 30px clamp(24px, 5.5vw, 72px);
       display: flex; align-items: center; justify-content: space-between;
       z-index: 8000;
       opacity: 0;
@@ -254,17 +196,14 @@
     }
     nav.show { opacity: 1; pointer-events: auto; }
 
-    .nav-logo {
-      display: flex; align-items: center; gap: 7px;
-      text-decoration: none; color: #fff;
-      font-size: 13px; font-weight: 600; letter-spacing: -.01em;
-    }
-    .nav-logo svg { width: 20px; height: auto; flex-shrink: 0; }
-    .nav-links { display: flex; gap: 48px; list-style: none; }
+    .nav-logo { text-decoration: none; display: block; transition: opacity 0.3s; }
+    .nav-logo:hover { opacity: 0.7; }
+    .nav-logo svg { height: 17px; width: auto; display: block; }
+    .nav-links { display: flex; gap: clamp(14px, 2.5vw, 32px); list-style: none; padding: 0; margin: 0; }
     .nav-links a {
       color: rgba(255,255,255,.26); text-decoration: none;
       font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
-      transition: color .5s ease;
+      transition: color .5s ease; white-space: nowrap;
     }
     .nav-links a:hover { color: rgba(255,255,255,.8); }
 
@@ -377,12 +316,47 @@
     .pr-s { font-size:14px; font-weight:500; color:rgba(255,255,255,.9); }
     .pr-w { font-size:13px; color:rgba(255,255,255,.22); line-height:1.8; }
 
-    /* ── WHO ── */
-    #who .sec { background: transparent; }
-    .who-inner { display:flex; flex-direction:column; gap:0; align-items:flex-start; }
-    .who-intro { font-size:clamp(13px,1.3vw,17px); color:rgba(255,255,255,.28); line-height:2; font-weight:300; margin-bottom:56px; max-width:620px; }
-    .who-item { padding:30px 0; border-top:1px solid rgba(255,255,255,.04); font-size:clamp(17px,1.9vw,25px); font-weight:300; color:rgba(255,255,255,.2); line-height:1.4; transition:color .6s ease, transform .4s ease; }
-    .who-item:last-child { border-bottom:1px solid rgba(255,255,255,.04); }
+    /* ── WHO+WHAT split-screen ── */
+    #who-what {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+    .ww-left {
+      position: relative;
+      display: flex; align-items: center;
+      padding: clamp(60px,8vw,120px);
+      background: #050505;
+    }
+    .ww-right {
+      position: relative;
+      overflow: hidden;
+    }
+    .who-bg {
+      position: absolute; inset: 0; z-index: 0;
+    }
+    .who-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: 30% center;
+      filter: brightness(0.55) saturate(1.1);
+      display: block;
+    }
+    .who-bg::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to right,
+        rgba(0,0,0,0.88) 0%,
+        rgba(0,0,0,0.55) 45%,
+        rgba(0,0,0,0.12) 100%);
+    }
+    .ww-inner { display: flex; flex-direction: column; gap: 0; align-items: flex-start; }
+    .who-panel {
+      position: absolute; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: clamp(40px,6vw,80px);
+    }
+    .who-intro { font-size:clamp(13px,1.3vw,17px); color:rgba(255,255,255,.28); line-height:2; font-weight:300; margin-bottom:56px; max-width:480px; }
+    .who-item { padding:30px 0; border-top:1px solid rgba(255,255,255,.06); font-size:clamp(15px,1.6vw,22px); font-weight:300; color:rgba(255,255,255,.22); line-height:1.4; transition:color .6s ease, transform .4s ease; }
+    .who-item:last-child { border-bottom:1px solid rgba(255,255,255,.06); }
     .who-item:hover { color:rgba(255,255,255,.75); transform: translateX(6px); }
 
     /* ── SOLUTIONS ── */
@@ -394,6 +368,26 @@
     .sol-nm { font-size:28px; font-weight:600; letter-spacing:-.02em; }
     .sol-ds { font-size:13px; color:rgba(255,255,255,.28); line-height:1.9; font-weight:300; }
     .sol-tg { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.12); text-align:right; padding-top:7px; }
+    .sol-more { display:block; margin-top:18px; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.18); transition:color .4s; }
+    a.sol-row:hover .sol-more { color:rgba(255,255,255,.6); }
+
+    /* ── SECTION CTA ── */
+    .sec-cta { padding: 0 96px 96px; }
+    .sec-link {
+      font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+      color: rgba(255,255,255,.3); text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      padding-bottom: 5px; transition: color .4s, border-color .4s;
+    }
+    .sec-link:hover { color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.3); }
+
+    /* ── PAGE TRANSITION VEIL ── */
+    #page-veil { position:fixed; inset:0; z-index:99999; background:#000; opacity:1; transition:opacity .55s ease; pointer-events:none; }
+    #page-veil.out { opacity:0; }
+
+    /* sol-row clicable */
+    a.sol-row { color: inherit; text-decoration: none; }
+    a.sol-row:hover .sol-nm { letter-spacing: -.015em; }
 
     /* ── CONTACT ── */
     #contact .sec { flex-direction:column; align-items:center; justify-content:center; text-align:center; background:#000; }
@@ -442,27 +436,6 @@
       color: rgba(255,255,255,.75);
     }
 
-    /* ── WHO: full-bleed background ── */
-    #who { position: relative; overflow: hidden; }
-    .who-bg { position: absolute; inset: 0; z-index: 0; }
-    .who-bg img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: 30% center;
-      filter: brightness(0.55) saturate(1.1);
-      display: block;
-    }
-    .who-bg::after {
-      content: '';
-      position: absolute; inset: 0;
-      /* Transparente izquierda → ámbar respira; oscuro derecha → texto legible */
-      background: linear-gradient(to left,
-        rgba(0,0,0,0.90) 0%,
-        rgba(0,0,0,0.65) 35%,
-        rgba(0,0,0,0.18) 70%,
-        rgba(0,0,0,0.05) 100%);
-    }
-    #who .sec { position: relative; z-index: 2; display: flex; justify-content: flex-end; }
-    .who-inner { max-width: 520px; width: 100%; }
 
     /* ── CONTACT: background foto ── */
     #contact { position: relative; overflow: hidden; }
@@ -470,7 +443,7 @@
     .contact-bg img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: center;
-      filter: brightness(0.1) saturate(0.2);
+      filter: brightness(0.18) saturate(0.25);
       display: block;
     }
     #contact .sec { position: relative; z-index: 2; }
@@ -624,7 +597,7 @@
       .nav-links a { font-size:11px; }
 
       /* hero */
-      #heroWord { font-size:clamp(38px,11vw,64px); }
+      #heroBscural { font-size: clamp(38px, 11vw, 64px); }
       /* barras: más angostas para no solaparse */
       #bar-l, #bar-r { width:100px; }
       #bar-l span { left: calc(var(--i, 0) * 26px) !important; }
@@ -639,6 +612,7 @@
 
       /* secciones */
       .sec { padding:80px 24px; }
+      .sec-cta { padding: 0 24px 72px; }
       footer { padding:22px 24px; }
 
       /* layouts */
@@ -653,10 +627,9 @@
       .stat-cell:last-child { border-bottom:none; }
       .stat-num { font-size:clamp(48px,12vw,64px); }
 
-      /* who: texto ocupa todo el ancho */
-      #who .sec { justify-content:flex-start; }
-      .who-inner { max-width:100%; }
-      .who-bg img { object-position:60% center; }
+      /* who-what: stacks en mobile */
+      #who-what { grid-template-columns: 1fr; }
+      .ww-right { min-height: 100vh; }
       .who-intro { max-width:100%; }
 
       /* editorial */
@@ -670,25 +643,67 @@
 
       /* mockup (por si acaso) */
       .mockup-grid { grid-template-columns:1fr; gap:2px; }
+
+      /* hero word: pill + texto juntos */
+      #heroWord { gap: clamp(1px, 1vw, 4px); }
+      #heroIso svg { height: clamp(24px, 5.5vw, 44px); }
+
+      /* sol-row mobile: simplificar */
+      .sol-more { display: none; }
+
+      /* sec-cta */
+      .sec-cta { padding: 0 24px 56px; }
+    }
+
+    /* ── NAV SQUEEZE (≤700px): abreviar "Who We Protect" → "Who" ── */
+    @media (max-width: 700px) {
+      .nav-links a[href="who-what.html"] { font-size: 0; }
+      .nav-links a[href="who-what.html"]::before {
+        content: "Who"; font-size: 10px; letter-spacing: .2em;
+        color: rgba(255,255,255,.26); text-transform: uppercase; text-decoration: none;
+      }
+    }
+
+    /* ── MOBILE S (≤480px) ── */
+    @media (max-width: 480px) {
+      nav { padding: 16px 18px; }
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 8px; letter-spacing: .10em; }
+      .nav-links a[href="who-what.html"]::before { font-size: 8px; letter-spacing: .10em; }
+
+      /* hero */
+      #heroBscural { font-size: clamp(32px, 10vw, 52px); }
+      #heroIso svg { height: clamp(20px, 4.8vw, 36px); }
+
+      /* sec padding */
+      .sec { padding: 64px 20px; }
+      footer { padding: 20px; font-size: 10px; }
     }
   </style>
 </head>
 <body>
+<div id="page-veil"></div>
 
   <div id="dot"></div>
 
   <!-- ══ NAV ══ -->
   <nav id="nav">
     <a href="javascript:location.reload()" class="nav-logo">
-      <svg viewBox="0 0 240 140" fill="none">
-        <rect x="20" y="20" width="200" height="100" rx="50" fill="none" stroke="#fff" stroke-width="26"/>
-        <circle cx="170" cy="70" r="60" fill="#fff"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+        <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+        <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+        <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+        <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+        <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+        <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+        <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+        <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
       </svg>
-      obscural
     </a>
     <ul class="nav-links">
-      <li><a href="#solutions">Solutions</a></li>
-      <li><a href="#who">Who We Protect</a></li>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="who-what.html">Who We Protect</a></li>
+      <li><a href="solutions.html">Solutions</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -700,15 +715,11 @@
     <div id="bar-r"><span></span><span></span><span></span><span></span></div>
     <div id="heroWord">
       <div id="heroIso">
-        <!-- Radar sale desde el centro del toggle -->
-        <div id="radar">
-          <span class="ring"></span>
-          <span class="ring"></span>
-          <span class="ring"></span>
-        </div>
-        <svg width="240" height="144" viewBox="0 0 240 140" fill="none">
-          <rect x="20" y="20" width="200" height="100" rx="50" fill="none" stroke="#000" stroke-width="26"/>
-          <circle id="thumb" cx="70" cy="70" r="60" fill="#000"/>
+        <!-- Isotype: pill 1.3:1 + círculo (botón) encima a la derecha -->
+        <!-- Pill: 130×100 (rx=50 = semicírculo perfecto). Círculo r=52, centrado a ~68% del pill -->
+        <svg viewBox="0 0 185 140" fill="none">
+          <rect x="20" y="20" width="130" height="100" rx="50" fill="none" stroke="#fff" stroke-width="26"/>
+          <circle id="thumb" cx="70" cy="70" r="52" fill="#fff"/>
         </svg>
       </div>
       <div id="heroBscural">bscural</div>
@@ -788,45 +799,44 @@
       </div>
     </section>
 
-    <!-- §5 WHAT WE PROTECT -->
-    <section id="what">
-      <div class="sec">
-        <div class="sec-top r-fade"><p class="lbl">What We Protect</p></div>
-        <div class="pr-row r-fade d1"><span class="pr-s">Your devices</span><span class="pr-w">Because everything you are lives inside them.</span></div>
-        <div class="pr-row r-fade d2"><span class="pr-s">Your home</span><span class="pr-w">Because four walls are only as safe as the network inside them.</span></div>
-        <div class="pr-row r-fade d3"><span class="pr-s">Your digital identity</span><span class="pr-w">Because someone is always looking.</span></div>
-        <div class="pr-row r-fade d4"><span class="pr-s">Your reputation</span><span class="pr-w">Because it takes years to build and hours to destroy.</span></div>
-        <div class="pr-row r-fade d5"><span class="pr-s">Your communications</span><span class="pr-w">Because privacy is not paranoia — it is a right.</span></div>
-        <div class="pr-row r-fade d6"><span class="pr-s">Your family</span><span class="pr-w">Because exposure doesn't choose who it hurts.</span></div>
+    <!-- §5-6 WHO + WHAT — split screen -->
+    <section id="who-what">
+      <!-- LEFT: WHAT WE PROTECT -->
+      <div class="ww-left">
+        <div class="ww-inner">
+          <div class="r-fade"><p class="lbl">What We Protect</p></div>
+          <div class="pr-row r-fade d1"><span class="pr-s">Your devices</span><span class="pr-w">Because everything you are lives inside them.</span></div>
+          <div class="pr-row r-fade d2"><span class="pr-s">Your home</span><span class="pr-w">Because four walls are only as safe as the network inside them.</span></div>
+          <div class="pr-row r-fade d3"><span class="pr-s">Your digital identity</span><span class="pr-w">Because someone is always looking.</span></div>
+          <div class="pr-row r-fade d4"><span class="pr-s">Your reputation</span><span class="pr-w">Because it takes years to build and hours to destroy.</span></div>
+          <div class="pr-row r-fade d5"><span class="pr-s">Your communications</span><span class="pr-w">Because privacy is not paranoia — it is a right.</span></div>
+          <div class="pr-row r-fade d6"><span class="pr-s">Your family</span><span class="pr-w">Because exposure doesn't choose who it hurts.</span></div>
+        </div>
       </div>
-    </section>
-
-    <!-- §6 WHO WE PROTECT — full-bleed guitarrista close-up -->
-    <section id="who">
-      <div class="who-bg">
-        <img src="img_guitar2.png" alt="">
-      </div>
-      <div class="sec">
-        <div class="who-inner">
+      <!-- RIGHT: WHO WE PROTECT (guitarrista) -->
+      <div class="ww-right">
+        <div class="who-bg">
+          <img src="img_guitar2.png" alt="">
+        </div>
+        <div class="ww-inner who-panel">
           <div class="r-fade"><p class="lbl">Who We Protect</p></div>
-          <div>
-            <div class="r-clip"><p class="r-inner who-intro">We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality.</p></div>
-            <div>
-              <div class="r-clip d1"><div class="r-inner who-item">The executive whose decisions move markets.</div></div>
-              <div class="r-clip d2"><div class="r-inner who-item">The artist whose identity is their most valuable asset.</div></div>
-              <div class="r-clip d3"><div class="r-inner who-item">The family that built generational wealth and intends to protect it.</div></div>
-              <div class="r-clip d4"><div class="r-inner who-item">The public figure who lives under permanent scrutiny.</div></div>
-            </div>
-          </div>
+          <div class="r-clip"><p class="r-inner who-intro">We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality.</p></div>
+          <div class="r-clip d1"><div class="r-inner who-item">The executive whose decisions move markets.</div></div>
+          <div class="r-clip d2"><div class="r-inner who-item">The artist whose identity is their most valuable asset.</div></div>
+          <div class="r-clip d3"><div class="r-inner who-item">The family that built generational wealth and intends to protect it.</div></div>
+          <div class="r-clip d4"><div class="r-inner who-item">The public figure who lives under permanent scrutiny.</div></div>
         </div>
       </div>
     </section>
+    <div class="sec-cta r-fade">
+      <a href="who-what.html" class="sec-link">Who We Protect →</a>
+    </div>
 
     <!-- EDITORIAL C — the home -->
     <section class="editorial">
       <img src="img3.png" alt="" style="object-position: center 40%;">
       <div class="editorial-caption">
-        <p class="lbl r-fade">Sanctum</p>
+        <a href="solutions.html#sanctum" class="lbl r-fade" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:2px;">Sanctum</a>
         <p class="r-fade d1">Your space,<br>made invisible.</p>
       </div>
     </section>
@@ -836,29 +846,32 @@
       <div class="sec">
         <div class="r-fade"><p class="lbl">Solutions</p></div>
         <div class="sol-list">
-          <div class="sol-row r-fade d1">
+          <a href="solutions.html#veil" class="sol-row r-fade d1">
             <span class="sol-n">01</span><span class="sol-nm">Veil</span>
-            <span class="sol-ds">Active protection of your personal devices — phones, laptops, tablets. Control. Privacy. Prevention.</span>
+            <span class="sol-ds">Active protection of your personal devices — phones, laptops, tablets. Control. Privacy. Prevention.<span class="sol-more">Learn more →</span></span>
             <span class="sol-tg">Personal Device Protection</span>
-          </div>
-          <div class="sol-row r-fade d2">
+          </a>
+          <a href="solutions.html#pulse" class="sol-row r-fade d2">
             <span class="sol-n">02</span><span class="sol-nm">Pulse</span>
-            <span class="sol-ds">Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching before they move.</span>
+            <span class="sol-ds">Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching before they move.<span class="sol-more">Learn more →</span></span>
             <span class="sol-tg">Digital Intelligence</span>
-          </div>
-          <div class="sol-row r-fade d3">
+          </a>
+          <a href="solutions.html#sanctum" class="sol-row r-fade d3">
             <span class="sol-n">03</span><span class="sol-nm">Sanctum</span>
-            <span class="sol-ds">Cybersecurity architecture for your home, office, or private studio. Your space, made invisible.</span>
+            <span class="sol-ds">Cybersecurity architecture for your home, office, or private studio. Your space, made invisible.<span class="sol-more">Learn more →</span></span>
             <span class="sol-tg">Home & Office Infrastructure</span>
-          </div>
-          <div class="sol-row r-fade d4">
+          </a>
+          <a href="solutions.html#phantom" class="sol-row r-fade d4">
             <span class="sol-n">04</span><span class="sol-nm">Phantom</span>
-            <span class="sol-ds">Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent.</span>
+            <span class="sol-ds">Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent.<span class="sol-more">Learn more →</span></span>
             <span class="sol-tg">Privacy & Counter-Surveillance</span>
-          </div>
+          </a>
         </div>
       </div>
     </section>
+    <div class="sec-cta r-fade">
+      <a href="solutions.html" class="sec-link">All Solutions →</a>
+    </div>
 
     <!-- §8 CONTACT — fondo pared concreto -->
     <section id="contact">
@@ -899,53 +912,67 @@
     const thumb      = document.getElementById('thumb');
     let   fired      = false;
 
-    // Fija el ancho del wordmark completo para que quede centrado desde el inicio.
-    // Lo hace después de que la fuente cargue para medir correctamente.
-    function fixWordmarkWidth() {
-      // Medir bscural en su tamaño real (invisible)
-      const prev = heroBscural.style.cssText;
-      heroBscural.style.cssText += ';max-width:9999px !important;opacity:0 !important;visibility:hidden !important;position:absolute !important';
-      const bW = heroBscural.scrollWidth;
-      heroBscural.style.cssText = prev;
-      // Ancho fijo = toggle + bscural
-      heroWord.style.width = (heroIso.offsetWidth + bW) + 'px';
+    /* ── SKIP INTRO (coming from sub-pages) ── */
+    const skipIntro = location.search.includes('skip');
+    if (skipIntro) {
+      fired = true;
+      // Kill ALL transitions on hero elements — snap to final state instantly
+      hero.style.cssText        = 'transition:none!important;background:#000!important;';
+      heroBscural.style.cssText = 'transition:none!important;max-width:none!important;overflow:visible!important;opacity:1!important;color:#fff!important;';
+      heroIso.querySelector('svg').style.cssText = 'transition:none!important;opacity:1!important;';
+      thumb.setAttribute('cx', 112);
+      void hero.offsetHeight; // force reflow
+      hero.classList.add('fire', 'done');
+      document.body.classList.add('ready');
+      navEl.classList.add('show');
+      setTimeout(initScroll, 50);
+      if (location.hash) {
+        setTimeout(() => {
+          const target = document.querySelector(location.hash);
+          if (target) target.scrollIntoView({ behavior: 'instant' });
+        }, 80);
+      }
     }
-    document.fonts.ready.then(fixWordmarkWidth);
-    window.addEventListener('resize', fixWordmarkWidth);
 
-    // Anima cx del círculo via JS (CSS transition cx no es confiable cross-browser)
+    // Desliza el círculo (thumb) via JS — CSS transition de cx no es confiable cross-browser
     function slideThumb(fromX, toX, durationMs) {
       const start = performance.now();
-      // ease-in fuerte al inicio, desacelera al llegar (cúbico)
-      const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
-      function tick(now) {
+      const ease  = t => 1 - Math.pow(1 - t, 3); /* ease-out: arranca rápido, desacelera al final */
+      (function tick(now) {
         const raw = Math.min((now - start) / durationMs, 1);
-        const t   = ease(raw);
-        thumb.setAttribute('cx', fromX + (toX - fromX) * t);
+        thumb.setAttribute('cx', fromX + (toX - fromX) * ease(raw));
         if (raw < 1) requestAnimationFrame(tick);
-      }
-      requestAnimationFrame(tick);
+      })(performance.now());
     }
 
     heroIso.addEventListener('click', () => {
       if (fired) return;
       fired = true;
 
-      // 1. Slide: 1.0s, arranca rápido y llega lento
-      slideThumb(70, 170, 1000);
+      // Medir ancho natural del texto (sin restricción de max-width)
+      heroBscural.style.cssText = 'max-width:none!important;overflow:visible!important;transition:none!important;opacity:0!important;';
+      const natW = heroBscural.scrollWidth;
+      heroBscural.style.cssText = '';
+      void heroBscural.offsetHeight; // reflow
 
-      // 2. Colores + fondo: pausa de 300ms después del slide, luego cambia
-      setTimeout(() => hero.classList.add('fire'), 1300);
+      // 1. Círculo desliza izquierda → derecha (1.8s)
+      slideThumb(70, 112, 1800);
 
-      // 3. Nav: 1.3 + 1.4 colores + 1.45 delay bscural + 1.2 bscural ≈ 5.35s
-      setTimeout(() => navEl.classList.add('show'), 4400);
+      // 2. Fire: bscural se expande hasta su ancho exacto
+      setTimeout(() => {
+        heroBscural.style.maxWidth = natW + 'px';
+        hero.classList.add('fire');
+      }, 2400);
+
+      // 3. Nav aparece
+      setTimeout(() => navEl.classList.add('show'), 7200);
 
       // 4. Hero al flujo, scroll desbloqueado
       setTimeout(() => {
         hero.classList.add('done');
         document.body.classList.add('ready');
         initScroll();
-      }, 4600);
+      }, 7500);
     });
 
     /* ── SCROLL REVEAL ── */
@@ -987,6 +1014,22 @@
         }, 24);
       }
     }, { threshold: .3 }).observe(expEl);
+  </script>
+  <script>
+    /* ── PAGE TRANSITION ── */
+    (function(){
+      const veil = document.getElementById('page-veil');
+      requestAnimationFrame(() => requestAnimationFrame(() => veil.classList.add('out')));
+      document.addEventListener('click', function(e){
+        const a = e.target.closest('a[href]');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (!href || href.startsWith('mailto:') || href.startsWith('javascript:') || href.startsWith('#') || /^https?:/.test(href)) return;
+        e.preventDefault();
+        veil.classList.remove('out');
+        setTimeout(() => { location.href = href; }, 520);
+      });
+    })();
   </script>
 </body>
 </html>
