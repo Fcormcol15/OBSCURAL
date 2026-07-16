@@ -272,13 +272,13 @@ nav {
    02 CONTEXTO — statement left + tablero right
 ══════════════════════════════════════════ */
 #mundo {
-  padding: clamp(100px,14vh,160px) clamp(32px,6vw,96px);
+  padding: clamp(80px,10vh,120px) clamp(32px,6vw,96px);
   background: #020202;
   position: relative;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
   gap: clamp(60px,8vw,120px);
-  align-items: start;
+  align-items: center;
   border-top: 1px solid rgba(255,255,255,0.04);
 }
 
@@ -382,34 +382,14 @@ nav {
 }
 .tablero-wrap.scanning::after { animation: scan 1.6s ease-out forwards; }
 
-/* Row CRT flicker-in — more dramatic, step cuts */
-@keyframes row-crt {
-  0%   { opacity: 0;    }
-  6%   { opacity: 0.9;  }
-  9%   { opacity: 0;    }
-  14%  { opacity: 0;    }
-  18%  { opacity: 0.75; }
-  21%  { opacity: 0;    }
-  26%  { opacity: 0;    }
-  30%  { opacity: 0.95; }
-  33%  { opacity: 0;    }
-  38%  { opacity: 0.85; }
-  41%  { opacity: 0.05; }
-  46%  { opacity: 1;    }
-  50%  { opacity: 0;    }
-  54%  { opacity: 1;    }
-  58%  { opacity: 0.4;  }
-  63%  { opacity: 1;    }
-  68%  { opacity: 0.7;  }
-  74%  { opacity: 1;    }
-  80%  { opacity: 0.85; }
-  87%  { opacity: 1;    }
-  93%  { opacity: 0.9;  }
-  100% { opacity: 1;    }
+/* Row reveal — clean fade up */
+@keyframes row-appear {
+  0%   { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 .t-row { transition: none !important; opacity: 0; }
 .t-row.in {
-  animation: row-crt var(--crt-dur, 1.1s) step-start both;
+  animation: row-appear 0.5s ease both;
 }
 
 /* ══════════════════════════════════════════
@@ -752,7 +732,7 @@ nav {
   transform: translate(-50%, -52%);
   font-size: 22vw;
   font-weight: 700; letter-spacing: -0.05em; line-height: 1;
-  color: rgba(255,255,255,0.14);
+  color: rgba(255,255,255,0.32);
   pointer-events: none; user-select: none;
   white-space: nowrap; z-index: 2;
   opacity: 0; transition: opacity 1.4s ease;
@@ -2698,21 +2678,10 @@ nav {
 .cta-eyebrow {
   font-size: 8px; letter-spacing: 0.28em; text-transform: uppercase;
   color: rgba(255,255,255,0.22); font-weight: 600;
-  opacity: 0; transform: translateY(10px);
-  transition: opacity 1.4s ease 1.6s, transform 1.4s ease 1.6s;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity 1s ease 0.6s, transform 1s ease 0.6s;
 }
 #cta.cta-live .cta-eyebrow { opacity: 1; transform: translateY(0); }
-.cta-headline {
-  font-size: clamp(28px, 4.5vw, 64px);
-  font-weight: 200; letter-spacing: -0.03em; line-height: 1.0;
-  color: rgba(255,255,255,0.72);
-  opacity: 0; transform: translateY(12px);
-  transition: opacity 1.4s cubic-bezier(.16,1,.3,1) 1.8s, transform 1.4s cubic-bezier(.16,1,.3,1) 1.8s;
-}
-.cta-headline em {
-  font-style: normal; font-weight: 600; color: #fff;
-}
-#cta.cta-live .cta-headline { opacity: 1; transform: translateY(0); }
 .cta-rule {
   width: 1px; height: clamp(24px, 3vh, 40px);
   background: linear-gradient(to bottom, rgba(255,255,255,0.28), transparent);
@@ -2724,7 +2693,54 @@ nav {
   transition: opacity 2s ease 0.3s, transform 2s cubic-bezier(.16,1,.3,1) 0.3s;
 }
 .cta-logo-wrap svg { height: clamp(40px, 7vw, 108px); width: auto; }
-#cta.cta-live .cta-logo-wrap { opacity: 0.9; transform: scale(1); }
+#cta.cta-live .cta-logo-wrap { opacity: 1; transform: scale(1); }
+
+/* ── CTA QR ── */
+.cta-qr-wrap {
+  position: absolute;
+  bottom: clamp(40px, 6vh, 72px);
+  right: clamp(48px, 6vw, 96px);
+  z-index: 2;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0; transition: opacity 1s ease 0.8s;
+}
+#cta.cta-live .cta-qr-wrap { opacity: 1; }
+.cta-qr-label {
+  font-size: 7px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(255,255,255,0.18); font-weight: 600;
+}
+.cta-qr-outer {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.cta-qr-box {
+  width: 130px; height: 130px;
+  overflow: hidden; background: transparent;
+  position: relative; z-index: 2;
+}
+/* qrcodejs injects its own bg — override */
+#cta-qr, #cta-qr > * { background: transparent !important; }
+#cta-qr canvas, #cta-qr img {
+  display: block; width: 130px !important; height: 130px !important;
+  filter:
+    drop-shadow(0 0 14px rgba(255,255,255,0.30))
+    drop-shadow(0 0 40px rgba(255,255,255,0.12));
+}
+
+/* Square pulse rings */
+.sq-ring {
+  position: absolute; z-index: 1;
+  border: 1px solid rgba(255,255,255,0.22);
+  animation: sq-expand 3s ease-out infinite;
+  pointer-events: none;
+}
+.sq-ring:nth-child(1) { animation-delay: 0s; }
+.sq-ring:nth-child(2) { animation-delay: 1s; }
+.sq-ring:nth-child(3) { animation-delay: 2s; }
+@keyframes sq-expand {
+  0%   { width: 130px; height: 130px; opacity: 0.5; }
+  100% { width: 320px; height: 320px; opacity: 0; }
+}
 
 /* ── FOOTER ── */
 footer {
@@ -2968,10 +2984,10 @@ footer {
   <div class="mundo-left">
     <span class="section-tag">02 — Context</span>
     <h2 class="mundo-statement">
-      Risk gives<br>no warning.
-      <em>It's already<br>inside.</em>
+      The world<br>changed.
+      <em>The threats<br>followed.</em>
     </h2>
-    <p class="mundo-sub">Attacks no longer target companies. They target individuals. And they almost never find out.</p>
+    <p class="mundo-sub">Attacks no longer just target companies. They target individuals. And they almost never find out.</p>
   </div>
 
   <!-- RIGHT: tablero compacto -->
@@ -3661,9 +3677,24 @@ footer {
         <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
       </svg>
     </div>
-    <h2 class="cta-headline">Turn on <em>Privacy.</em></h2>
-    <span class="cta-eyebrow">10 — Access</span>
   </div>
+
+  <!-- QR — bottom right -->
+  <a href="https://wa.me/573164800266" target="_blank" rel="noopener" style="text-decoration:none;">
+    <div class="cta-qr-wrap">
+      <span class="cta-qr-label">Turn on Privacy.</span>
+      <div class="cta-qr-outer">
+        <div class="sq-ring"></div>
+        <div class="sq-ring"></div>
+        <div class="sq-ring"></div>
+        <div class="cta-qr-box">
+          <div id="cta-qr"></div>
+        </div>
+      </div>
+      <span class="cta-eyebrow" style="margin-top:6px;">10 — Access</span>
+    </div>
+  </a>
+
 </section>
 
 <!-- ═══════════════════════════════════════════════════ ANEXO ═══ -->
@@ -4416,72 +4447,31 @@ if (tableroWrap) {
     if (entries[0].isIntersecting) tableroWrap.classList.add('scanning');
   }, { threshold: 0.2 }).observe(tableroWrap);
 }
-/* ── Tablero: CRT blink — single trigger, random order, no delay ── */
-(function tableroGlitch() {
-  const GLYPHS = '0123456789$%+TBMK';
-
-  function scramble(el, finalText, startAt) {
-    const TICK = 65;
-    const duration = 800;
-    const total = Math.round(duration / TICK);
-    let frame = 0;
-    setTimeout(() => {
-      const iv = setInterval(() => {
-        frame++;
-        const p = frame / total;
-        if (p >= 1) { el.textContent = finalText; clearInterval(iv); return; }
-        let out = '';
-        for (let i = 0; i < finalText.length; i++) {
-          const ch = finalText[i];
-          if (/[\s,+$%.]/.test(ch)) { out += ch; continue; }
-          out += p > (i / finalText.length) * 0.55 + 0.38
-            ? ch : GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-        }
-        el.textContent = out;
-      }, TICK);
-    }, startAt);
-  }
-
+/* ── Tablero: stagger reveal — clean, no scramble ── */
+(function tableroReveal() {
   const rows = Array.from(document.querySelectorAll('.t-row'));
 
-  // Shuffle indices → random arrival order
+  // Shuffle for disordered arrival
   const order = rows.map((_, i) => i);
   for (let i = order.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [order[i], order[j]] = [order[j], order[i]];
   }
-
-  // Map each row to its shuffled slot: 0, 200, 400, 600 ... + small jitter
   const offsets = new Array(rows.length);
   order.forEach((rowIdx, slot) => {
-    offsets[rowIdx] = slot * 200 + Math.floor(Math.random() * 80);
+    offsets[rowIdx] = slot * 120 + Math.floor(Math.random() * 40);
   });
 
   let triggered = false;
-
   function triggerAll() {
     if (triggered) return;
     triggered = true;
-
     rows.forEach((row, idx) => {
-      const offset = offsets[idx];
-      const crtDur = 1.0 + (idx % 3) * 0.12;
-      row.style.setProperty('--crt-dur', crtDur + 's');
-
-      setTimeout(() => {
-        row.classList.add('in');
-        const numEl = row.querySelector('.t-num');
-        if (numEl) {
-          const finalText = numEl.dataset.final || numEl.textContent.trim();
-          numEl.dataset.final = finalText;
-          numEl.textContent = '';
-          scramble(numEl, finalText, 80);
-        }
-      }, offset);
+      row.style.setProperty('--crt-dur', '0.65s');
+      setTimeout(() => row.classList.add('in'), offsets[idx]);
     });
   }
 
-  // Watch tablero-wrap — fire as soon as it's barely visible (threshold 0)
   const wrap = document.querySelector('.tablero-wrap');
   if (wrap) {
     new IntersectionObserver(entries => {
@@ -5185,6 +5175,37 @@ const PROFILES = [
   window.addEventListener('resize', () => { if (running) resize(); }, { passive: true });
 })();
 
+</script>
+
+<!-- QR Code -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function() {
+  const el = document.getElementById('cta-qr');
+  if (!el) return;
+  new QRCode(el, {
+    text: 'https://wa.me/573164800266',
+    width: 130,
+    height: 130,
+    colorDark: '#ffffff',
+    colorLight: '#000000',
+    correctLevel: QRCode.CorrectLevel.H
+  });
+  // Make background pixels fully transparent
+  setTimeout(function() {
+    const canvas = el.querySelector('canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const d = img.data;
+    for (let i = 0; i < d.length; i += 4) {
+      if (d[i] < 128 && d[i+1] < 128 && d[i+2] < 128) {
+        d[i+3] = 0; // transparent
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+  }, 100);
+})();
 </script>
 </body>
 </html>
