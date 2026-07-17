@@ -82,6 +82,34 @@ body {
   100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
 }
 
+/* — PW Agency — The Agency & The Concierge —*/
+.pw-agency {
+  height: 100vh;
+  min-height: 500px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  justify-content: center;
+  align-items: center;
+}
+.pw-agency-text {
+  font-size: clamp(11px, 1.1vw, 16px);
+  font-weight: 100;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  text-align: center;
+  line-height: 2;
+  animation: agency-glow 4s ease-in-out infinite;
+}
+.pw-agency-text em {
+  font-style: normal;
+  color: rgba(255,255,255,0.95);
+}
+@keyframes agency-glow {
+  0%, 100% { text-shadow: 0 0 0px rgba(255,255,255,0); }
+  50%       { text-shadow: 0 0 18px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.18); }
+}
+
 /* — PW 2: pero hay más —*/
 .pw-pero {
   height: 100vh;
@@ -114,6 +142,109 @@ body {
 @keyframes pw-blink {
   0%,100% { opacity:1; }
   50%     { opacity:0; }
+}
+
+/* ══════════════════════════════════════════
+   THE AGENCY — Security Concierge section
+══════════════════════════════════════════ */
+#the-agency {
+  background: #020202;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: clamp(32px,4.5vh,56px) clamp(32px,6vw,96px) 0;
+  position: relative; overflow: hidden;
+}
+/* Photo background layer */
+.agency-photo {
+  position: absolute; inset: 0; z-index: 0;
+  background-size: cover; background-position: center 30%;
+  background-repeat: no-repeat;
+}
+.agency-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to right, rgba(2,2,2,0.45) 40%, rgba(2,2,2,0.05) 100%),
+    linear-gradient(to bottom, rgba(2,2,2,0.05) 0%, rgba(2,2,2,0.55) 100%);
+}
+#the-agency > *:not(.agency-photo) { position: relative; z-index: 2; }
+.agency-tag {
+  display: block;
+  font-size: 10px; font-weight: 300; letter-spacing: 0.32em;
+  text-transform: uppercase; color: rgba(255,255,255,0.22);
+  margin-bottom: clamp(14px,2vh,22px);
+}
+.agency-headline {
+  font-size: clamp(36px,4.8vw,68px);
+  font-weight: 700; letter-spacing: -0.045em;
+  line-height: 1.0; color: #fff;
+  max-width: 900px;
+  margin-bottom: clamp(16px,2.5vh,28px);
+}
+.agency-headline em {
+  font-style: normal;
+  color: rgba(255,255,255,0.28);
+}
+.agency-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(24px,4vw,64px);
+  max-width: 1080px;
+  flex: 1;
+  margin-bottom: clamp(16px,2.5vh,28px);
+  padding-bottom: clamp(16px,2.5vh,28px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-content: start;
+}
+.agency-body-beat {
+  font-size: clamp(12px,0.95vw,14px);
+  font-weight: 300; line-height: 1.6;
+  color: rgba(255,255,255,0.48);
+  padding: clamp(10px,1.3vh,16px) 0;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.agency-body-beat:last-child { border-bottom: 1px solid rgba(255,255,255,0.06); }
+.agency-body-beat strong {
+  color: rgba(255,255,255,0.82);
+  font-weight: 500;
+}
+.agency-body-beat.agency-beat-hero {
+  font-size: clamp(13px,1.15vw,17px);
+  color: rgba(255,255,255,0.62);
+  border-top: none;
+  padding-top: 0;
+  grid-column: 1 / -1;
+}
+.agency-callouts {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+}
+.agency-callout {
+  background: rgba(2,2,2,0.80);
+  padding: clamp(20px,2.8vh,36px) clamp(24px,2.8vw,42px);
+  display: flex; flex-direction: column; gap: 10px;
+  transition: background 0.35s ease;
+}
+.agency-callout:hover { background: rgba(255,255,255,0.03); }
+.agency-callout-n {
+  font-size: clamp(28px,3.5vw,52px);
+  font-weight: 700; letter-spacing: -0.04em;
+  line-height: 1; color: #fff;
+}
+.agency-callout-title {
+  font-size: clamp(10px,0.9vw,13px);
+  font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: rgba(255,255,255,0.55);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 10px;
+}
+.agency-callout-sub {
+  font-size: clamp(10px,0.8vw,12px);
+  font-weight: 300; font-style: italic;
+  color: rgba(255,255,255,0.26); line-height: 1.5;
 }
 
 /* ── CURSOR ── */
@@ -852,8 +983,6 @@ nav {
 .svc-eco-card:hover .sec-arrow { color:rgba(255,255,255,0.48); transform:translateX(5px); }
 
 
-
-
 /* ── Service micro-sections ── */
 .svc-micro {
   background: #000;
@@ -927,10 +1056,8 @@ nav {
   width: 100%;
   display: flex;
   align-items: center;
-  padding: clamp(48px,6vh,88px) clamp(32px,6vw,96px);
+  padding: clamp(80px,10vh,120px) clamp(32px,6vw,96px) clamp(48px,6vh,88px);
   gap: clamp(40px,7vw,110px);
-  /* shift slightly above center for visual weight */
-  margin-top: -6vh;
 }
 /* Izquierda: título gigante */
 .svc-intro-left {
@@ -955,7 +1082,7 @@ nav {
 }
 /* Derecha: 4 bloques */
 .svc-intro-right {
-  flex: 0 0 clamp(260px, 30%, 420px);
+  flex: 0 0 clamp(340px, 40%, 560px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -963,21 +1090,21 @@ nav {
 }
 .svc-intro-block { display: flex; flex-direction: column; }
 .svc-intro-label {
-  font-size: 8px;
-  letter-spacing: 0.35em;
+  font-size: 10px;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.35);
   display: block;
-  font-weight: 300;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 .svc-intro-label b {
   font-weight: 700;
-  color: rgba(255,255,255,0.52);
+  color: rgba(255,255,255,0.6);
   letter-spacing: 0.04em;
 }
-.svc-intro-right p {
-  font-size: clamp(11px, 0.92vw, 13px);
+.svc-intro-right p:not(.svc-intro-hard):not(.svc-intro-closer):not(.phantom-trio):not(.phantom-body) {
+  font-size: clamp(10px, 0.82vw, 12px);
   font-weight: 300;
   color: rgba(255,255,255,0.52);
   line-height: 1.72;
@@ -988,6 +1115,82 @@ nav {
 .svc-intro-right strong {
   color: rgba(255,255,255,0.84);
   font-weight: 400;
+}
+/* Hard product line — direct statement above copy blocks */
+.svc-intro-hard {
+  font-size: clamp(12px, 1.1vw, 16px);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  padding-bottom: clamp(12px, 1.5vh, 18px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+/* Pulse — two idea boxes (glass, no radius) */
+.svc-intro-boxes {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8px;
+  margin-bottom: clamp(14px, 1.8vh, 22px);
+}
+.svc-intro-box {
+  display: flex; flex-direction: column; gap: 10px;
+  padding: clamp(16px,2vh,22px) clamp(16px,1.6vw,22px);
+  border-radius: 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.svc-intro-box--cold {
+  background: rgba(255,255,255,0.03);
+}
+.svc-intro-box--warm {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.13);
+}
+.svc-intro-box-label {
+  font-size: 7px; letter-spacing: 0.36em;
+  text-transform: uppercase; font-weight: 500;
+  color: rgba(255,255,255,0.30);
+  display: block;
+}
+.svc-intro-box--warm .svc-intro-box-label {
+  color: rgba(255,255,255,0.50);
+}
+/* Cold box — dossier list style */
+.svc-intro-box--cold p {
+  font-size: clamp(10px, 0.85vw, 12px) !important;
+  color: rgba(255,255,255,0.42) !important;
+  line-height: 1.9 !important;
+  letter-spacing: 0.01em;
+}
+/* Warm box — bigger, more editorial */
+.svc-intro-box--warm p {
+  font-size: clamp(12px, 1vw, 14px) !important;
+  color: rgba(255,255,255,0.75) !important;
+  line-height: 1.55 !important;
+  font-weight: 300;
+}
+/* Pulse — closing editorial line */
+.svc-intro-closer {
+  font-size: clamp(14px, 1.5vw, 22px);
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.4;
+  text-align: center;
+  padding: clamp(14px, 2vh, 22px) 0;
+  margin-bottom: clamp(14px, 1.8vh, 20px);
+  letter-spacing: -0.01em;
+}
+/* Pulse box — heartbeat glow on warm box */
+@keyframes pulse-glow {
+  0%, 100% { border-color: rgba(255,255,255,0.13); box-shadow: 0 0 0px rgba(255,255,255,0); }
+  50%       { border-color: rgba(255,255,255,0.38); box-shadow: 0 0 18px rgba(255,255,255,0.06); }
+}
+.svc-intro-box--warm {
+  animation: pulse-glow 3.2s ease-in-out infinite;
 }
 
 /* ── STACKED layout (Sanctum / Phantom) ──
@@ -1101,31 +1304,7 @@ nav {
   border-bottom: 1px solid rgba(255,255,255,0.04);
   align-items: start;
 }
-.vd-label {
-  font-size: 8px; letter-spacing: 0.34em; text-transform: uppercase;
-  color: rgba(255,255,255,0.28);
-  line-height: 1.6; padding-top: 4px;
-  position: sticky; top: 52px;
-}
-.vd-label strong {
-  display: block; font-size: 22px;
-  color: rgba(255,255,255,0.12);
-  font-weight: 700; letter-spacing: -0.02em;
-  line-height: 1; margin-bottom: 8px;
-}
-/* WHAT IT DOES — full width editorial */
-.vd-prose {
-  font-size: clamp(15px,1.35vw,20px); font-weight: 300;
-  color: rgba(255,255,255,0.75);
-  line-height: 1.7; letter-spacing: 0.005em;
-  max-width: 740px;
-}
-.vd-prose strong { font-weight: 500; color: #fff; }
 
-/* WHAT IT PROTECTS — 5 cols */
-.vd-protects {
-  display: grid; grid-template-columns: repeat(5,1fr); gap: 0;
-}
 .vd-protect-cat {
   padding: 0 28px 0 0;
   border-right: none; /* sin líneas verticales */
@@ -1147,10 +1326,6 @@ nav {
 }
 .vd-protect-item:last-child { border-bottom: none; }
 
-/* EXPECTED OUTCOME */
-.vd-outcomes {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0 80px;
-}
 .vd-outcome {
   display: flex; align-items: center; gap: 14px;
   padding: 8px 0;
@@ -1166,35 +1341,6 @@ nav {
   color: rgba(255,255,255,0.62); line-height: 1.4;
 }
 
-/* HOW IT WORKS — horizontal steps with connecting line */
-.vd-steps-wrap {
-  position: relative;
-}
-.vd-steps-line {
-
-  position: absolute; top: 20px; left: 0; right: 0;
-  height: 1px; background: rgba(255,255,255,0.07);
-}
-.vd-steps {
-  display: grid; grid-template-columns: repeat(7,1fr);
-  gap: 0; position: relative;
-}
-.vd-step { padding: 0 16px 0 0; }
-.vd-step:last-child { padding-right: 0; }
-.vd-step-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,255,255,0.25);
-  margin-bottom: 20px;
-}
-.vd-step-n {
-  font-size: 40px; font-weight: 700;
-  color: rgba(255,255,255,0.05);
-  line-height: 1; margin-bottom: 10px; display: block;
-}
-.vd-step-name {
-  font-size: clamp(10px,0.85vw,12px); font-weight: 400;
-  color: rgba(255,255,255,0.6); line-height: 1.5;
-}
 
 /* SERVICES INCLUDED + DELIVERABLES */
 .vd-grid-3 {
@@ -1214,21 +1360,6 @@ nav {
   border-radius: 50%; flex-shrink: 0;
 }
 
-/* TRUST & GOVERNANCE */
-.vd-trust {
-  display: grid; grid-template-columns: 1fr 1fr;
-  gap: 0 80px; align-items: start;
-}
-.vd-trust-statement {
-  font-size: clamp(14px,1.2vw,18px); font-weight: 300;
-  color: rgba(255,255,255,0.68); line-height: 1.75;
-}
-.vd-trust-statement strong {
-  display: block; font-weight: 600;
-  color: #fff; font-style: normal;
-  font-size: clamp(16px,1.4vw,21px);
-  margin: 16px 0; letter-spacing: -0.02em; line-height: 1.2;
-}
 .vd-trust-list { display: flex; flex-direction: column; }
 .vd-trust-item {
   font-size: 10px; font-weight: 200;
@@ -1236,11 +1367,6 @@ nav {
   padding: 10px 0 10px 14px;
   border-bottom: 1px solid rgba(255,255,255,0.05);
   border-left: 1px solid rgba(255,255,255,0.08);
-  transition: color 0.3s, border-left-color 0.3s;
-}
-.vd-trust-item:hover {
-  color: rgba(255,255,255,0.82);
-  border-left-color: rgba(255,255,255,0.4);
 }
 
 /* Hover effects on all interactive content */
@@ -1256,7 +1382,6 @@ nav {
 .vd-protect-cat:hover .vd-protect-item { color: rgba(255,255,255,0.72); }
 .vd-protect-cat-name { transition: color 0.25s; }
 .vd-protect-item { transition: color 0.25s; }
-.vd-protects:hover .vd-protect-cat:not(:hover) { opacity: 0.45; }
 
 /* vd-sec sin columna label — contenido full width */
 .vd-sec--nolabel {
@@ -1353,36 +1478,6 @@ nav {
   font-weight: 700; color: rgba(255,255,255,0.65); letter-spacing: 0.04em;
 }
 
-/* EDITORIAL PHOTO BREAK */
-.vd-photo-break {
-  width: 100%; height: 36vh; min-height: 260px;
-  overflow: hidden; position: relative;
-  border-top: 1px solid rgba(255,255,255,0.04);
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-}
-.vd-photo-break img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  filter: brightness(0.5) saturate(0.25);
-  display: block;
-  transition: transform 9s ease, filter 0.6s ease;
-}
-.vd-photo-break:hover img {
-  transform: scale(1.04);
-  filter: brightness(0.62) saturate(0.35);
-}
-.vd-photo-break::before {
-  content: '';
-  position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(to bottom,
-    rgba(0,0,0,0.4) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
-}
-.vd-photo-break-label {
-  position: absolute; bottom: 24px; right: clamp(32px,6vw,96px);
-  z-index: 2;
-  font-size: 7px; letter-spacing: 0.38em; text-transform: uppercase;
-  color: rgba(255,255,255,0.18);
-}
 
 /* Section in-view highlight — subtle left accent */
 .vd-sec {
@@ -1393,16 +1488,8 @@ nav {
   border-left-color: rgba(255,255,255,0.12);
 }
 
-/* Step hover */
-.vd-step { transition: opacity 0.25s; }
-.vd-steps:hover .vd-step:not(:hover) { opacity: 0.4; }
-.vd-step:hover .vd-step-name { color: rgba(255,255,255,0.9); }
-.vd-step:hover .vd-step-dot { background: rgba(255,255,255,0.7); }
-.vd-step-dot { transition: background 0.25s; }
-.vd-step-name { transition: color 0.25s; }
 
 /* Outcome hover */
-.vd-outcomes:hover .vd-outcome:not(:hover) { opacity: 0.45; }
 .vd-outcome:hover .vd-outcome-text { color: rgba(255,255,255,0.9); }
 .vd-outcome-text { transition: color 0.25s; }
 
@@ -1640,7 +1727,6 @@ nav {
               font-size: 7px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 400; }
 
 
-
 /* ── 08 Paquetes de Privacidad y Confianza ── */
 #paq-confianza {
   min-height: 100vh; height: 100vh;
@@ -1746,7 +1832,7 @@ nav {
 .sfe-grid {
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0;
   align-items: stretch;
 }
@@ -1777,12 +1863,12 @@ nav {
 .sfe-item-photo img {
   width: 100%; height: 100%;
   object-fit: cover; display: block;
-  filter: brightness(0.62) saturate(0.28);
+  filter: brightness(0.95) saturate(0.45);
   transition: transform 0.9s cubic-bezier(.16,1,.3,1), filter 0.6s ease;
 }
 .sfe-item:hover .sfe-item-photo img {
   transform: scale(1.05);
-  filter: brightness(0.52) saturate(0.22);
+  filter: brightness(1.10) saturate(0.65);
 }
 .sfe-item-photo::after {
   content: '';
@@ -1826,6 +1912,96 @@ nav {
   border: 1px solid rgba(255,255,255,0.09);
   padding: 4px 10px;
 }
+/* Phantom — title smaller than other products */
+#phantom-intro .svc-intro-left h2 {
+  font-size: clamp(80px, 12vw, 180px);
+}
+
+/* Phantom — editorial text, no boxes */
+.phantom-trio {
+  font-size: clamp(11px, 1vw, 15px);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: rgba(255,255,255,0.88);
+  line-height: 1.3;
+  margin: 0 0 clamp(10px, 1.5vh, 18px) 0;
+  padding-bottom: clamp(10px, 1.5vh, 16px);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.phantom-trio:last-of-type {
+  margin-bottom: clamp(20px, 3vh, 36px);
+}
+.phantom-body {
+  font-size: clamp(10px, 0.88vw, 13px);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+  color: rgba(255,255,255,0.32);
+  line-height: 1.75;
+}
+
+/* Sanctum — mid boxes between title and columns */
+.svc-sanctum-boxes {
+  display: flex;
+  gap: clamp(24px, 3vw, 48px);
+  align-items: flex-start;
+  padding: clamp(20px, 3vh, 36px) 0 clamp(24px, 3.5vh, 40px);
+}
+.svc-sanctum-box1 {
+  max-width: clamp(280px, 32vw, 460px);
+  padding: clamp(18px, 2.2vh, 28px) clamp(20px, 2vw, 30px);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: clamp(11px, 0.95vw, 14px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.62);
+  line-height: 1.65;
+}
+.svc-sanctum-box2 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-content: center;
+  justify-content: center;
+  max-width: clamp(240px, 28vw, 380px);
+  padding-top: 4px;
+}
+.svc-sanctum-item {
+  font-size: clamp(9px, 0.8vw, 11px);
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.52);
+  padding: 2px 0;
+}
+.svc-sanctum-item::after {
+  content: '·';
+  margin-left: 14px;
+  color: rgba(255,255,255,0.14);
+}
+.svc-sanctum-item:last-child::after { content: ''; }
+
+/* Veil — device chips */
+.svc-intro-chips {
+  display: flex; flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: clamp(16px, 2vh, 24px);
+  padding-bottom: clamp(14px, 1.8vh, 20px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.svc-intro-chip {
+  font-size: clamp(10px, 0.88vw, 13px);
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+  border: 1px solid rgba(255,255,255,0.18);
+  padding: 7px 18px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255,255,255,0.04);
+}
 
 /* ══════════════════════════════════════════
    09 INFORMATION SECURITY
@@ -1833,9 +2009,11 @@ nav {
 #infosec {
   background: #000;
   border-top: 1px solid rgba(255,255,255,0.04);
+  min-height: 100vh;
   padding: clamp(80px,10vh,140px) clamp(32px,6vw,96px) clamp(60px,8vh,100px);
   display: grid;
   grid-template-columns: 1fr 1fr;
+  align-content: center;
   gap: clamp(60px,8vw,140px);
   align-items: start;
 }
@@ -1997,12 +2175,6 @@ footer {
 }
 
 /* ── ENTRANCE ANIMATIONS ── */
-.reveal {
-  opacity: 0; transform: translateY(20px);
-  transition: opacity 0.85s cubic-bezier(.16,1,.3,1),
-              transform 0.85s cubic-bezier(.16,1,.3,1);
-}
-.reveal.in { opacity: 1; transform: none; }
 
 .reveal-fade {
   opacity: 0;
@@ -2262,7 +2434,7 @@ body.lang-es .nos-cap-big {
   .svc-intro-block:nth-child(2) { padding: 20px 0 0 !important; }
   .svc-intro-block p { font-size: 13px !important; line-height: 1.65 !important; }
 
-  /* === SERVICE INTROS — Sanctum & Phantom (stacked layout) === */
+  /* === SERVICE INTROS — Sanctum (stacked layout) === */
   .svc-intro--stacked .svc-intro-stacked-top h2 {
     font-size: clamp(44px, 12vw, 68px) !important;
   }
@@ -2275,6 +2447,15 @@ body.lang-es .nos-cap-big {
   .svc-intro-col:nth-child(4) { display: none !important; }
   .svc-intro-col:nth-child(2) { padding: 20px 0 0 !important; }
   .svc-intro-col p { font-size: 13px !important; line-height: 1.65 !important; }
+
+  /* === PHANTOM — right-panel layout on mobile === */
+  #phantom-intro .svc-intro-left h2 { font-size: clamp(52px, 14vw, 80px) !important; }
+  .phantom-trio { font-size: 13px !important; letter-spacing: 0.04em !important; }
+  .phantom-body { font-size: 12px !important; }
+
+  /* === pw-agency parteaguas === */
+  #pw-agency { padding: 0 24px !important; }
+  .pw-agency-text { font-size: clamp(10px, 3.2vw, 14px) !important; letter-spacing: 0.18em !important; }
 
   /* === #pw-pero === */
   #pw-pero { padding: 0 24px !important; }
@@ -2370,6 +2551,16 @@ body.lang-es .nos-cap-big {
   .svc-eco-card:hover { background: transparent !important; }
   .vd-protect-cat:hover .vd-protect-item { opacity: 1 !important; }
   .infosec-principle:hover { background: none !important; }
+
+  /* === #the-agency === */
+  #the-agency { min-height: unset; height: auto; padding: 48px 20px 0; }
+  .agency-headline { font-size: clamp(28px,7vw,44px); }
+  .agency-body { grid-template-columns: 1fr; gap: 0; }
+  .agency-body-beat { font-size: 13px; }
+  .agency-body-beat.agency-beat-hero { font-size: 14px; }
+  .agency-callouts { grid-template-columns: 1fr; gap: 1px; }
+  .agency-callout { padding: 24px 20px; }
+  .agency-callout-n { font-size: 36px; }
 
 }
 </style>
@@ -2482,12 +2673,12 @@ body.lang-es .nos-cap-big {
 
       <div class="t-row">
         <div class="t-num-col">
-          <span class="t-num">99%</span>
+          <span class="t-num">68%</span>
         </div>
         <div class="t-detail-col">
           <span class="t-cat">Identity as a target</span>
-          <p class="t-desc" data-en="Of successful attacks target personal identification data." data-es="De los ataques exitosos apuntan a datos de identificación personal.">Of successful attacks target personal identification data.</p>
-          <a class="t-src" href="https://www.enisa.europa.eu/publications/enisa-threat-landscape-2024" target="_blank" rel="noopener">ENISA Threat Landscape, 2024 ↗</a>
+          <p class="t-desc" data-en="Of data breaches involve a human element — credentials stolen, accounts hijacked, identities impersonated." data-es="De las brechas de datos involucran un elemento humano — credenciales robadas, cuentas secuestradas, identidades suplantadas.">Of data breaches involve a human element — credentials stolen, accounts hijacked, identities impersonated.</p>
+          <a class="t-src" href="https://www.verizon.com/business/resources/reports/dbir/" target="_blank" rel="noopener">Verizon DBIR, 2024 ↗</a>
         </div>
       </div>
 
@@ -2509,7 +2700,7 @@ body.lang-es .nos-cap-big {
         <div class="t-detail-col">
           <span class="t-cat">Deepfake fraud surge</span>
           <p class="t-desc" data-en="Increase in deepfake fraud in North America in a single year. Your image can be a weapon." data-es="De aumento en fraude por deepfake en Norteamérica en un solo año. Tu imagen puede ser un arma.">Increase in deepfake fraud in North America in a single year. Your image can be a weapon.</p>
-          <a class="t-src" href="https://surfshark.com/research/study/deepfake-statistics" target="_blank" rel="noopener">Surfshark Research, 2024 ↗</a>
+          <a class="t-src" href="https://sumsub.com/fraud-report/" target="_blank" rel="noopener">Sumsub Identity Fraud Report, 2024 ↗</a>
         </div>
       </div>
 
@@ -2580,7 +2771,6 @@ body.lang-es .nos-cap-big {
       <span class="nos-cap-sub" data-en="Applied to the private sector." data-es="Aplicadas al sector privado.">Applied to the private sector.</span>
     </div>
   </div>
-
 
 
   <!-- Bottom: 4 pillar boxes separados -->
@@ -2837,6 +3027,12 @@ body.lang-es .nos-cap-big {
         <h2>Veil</h2>
       </div>
       <div class="svc-intro-right">
+        <p class="svc-intro-hard" data-en="We protect your personal digital space." data-es="Protegemos tu espacio digital personal.">We protect your personal digital space.</p>
+        <div class="svc-intro-chips">
+          <span class="svc-intro-chip" data-en="Phone" data-es="Teléfono">Phone</span>
+          <span class="svc-intro-chip" data-en="Laptop" data-es="Laptop">Laptop</span>
+          <span class="svc-intro-chip" data-en="Tablet" data-es="Tablet">Tablet</span>
+        </div>
         <div class="svc-intro-block">
           <span class="svc-intro-label"><b>01</b> — Why it matters</span>
           <p data-en="Your devices are not just tools. They are the most intimate record of your life — where you are, who you speak to, what you decide, what you know. Cybersecurity was built for corporations with IT departments and legal teams. You have neither. And those who target you know that." data-es="Tus dispositivos no son solo herramientas. Son el registro más íntimo de tu vida — dónde estás, con quién hablas, qué decides, qué sabes. La ciberseguridad fue construida para corporaciones con departamentos de TI y equipos legales. Tú no tienes ninguno de los dos. Y quienes te tienen como objetivo lo saben.">Your devices are not just tools. They are the most intimate record of your life — where you are, who you speak to, what you decide, what you know. Cybersecurity was built for corporations with IT departments and legal teams. You have neither. And those who target you know that.</p>
@@ -2878,6 +3074,22 @@ body.lang-es .nos-cap-big {
         <h2>Pulse</h2>
       </div>
       <div class="svc-intro-right">
+
+        <p class="svc-intro-hard" data-en="The internet knows more about you than you think. We find it first." data-es="Internet sabe más de ti de lo que crees. Nosotros lo encontramos primero.">The internet knows more about you than you think. We find it first.</p>
+
+        <div class="svc-intro-boxes">
+          <div class="svc-intro-box svc-intro-box--cold">
+            <span class="svc-intro-box-label" data-en="What It Finds" data-es="Qué Encuentra">What It Finds</span>
+            <p data-en="Your identity.<br>Your passwords.<br>Your finances.<br>Your location.<br>Already circulating." data-es="Tu identidad.<br>Tus contraseñas.<br>Tus finanzas.<br>Tu ubicación.<br>Ya circulando.">Your identity.<br>Your passwords.<br>Your finances.<br>Your location.<br>Already circulating.</p>
+          </div>
+          <div class="svc-intro-box svc-intro-box--warm">
+            <span class="svc-intro-box-label" data-en="What It Prevents" data-es="Qué Previene">What It Prevents</span>
+            <p data-en="Every exposed data point is a step closer to you.<br><br>Reputational risk. Financial risk.<br>Sometimes physical." data-es="Cada dato expuesto es un paso más cerca de ti.<br><br>Riesgo reputacional. Riesgo financiero.<br>A veces físico.">Every exposed data point is a step closer to you.<br><br>Reputational risk. Financial risk.<br>Sometimes physical.</p>
+          </div>
+        </div>
+
+        <p class="svc-intro-closer" data-en="This isn't about only what leaked. It's about what someone can build with it." data-es="No se trata solo de lo que se filtró. Se trata de lo que alguien puede construir con ello.">This isn't about only what leaked. It's about what someone can build with it.</p>
+
         <div class="svc-intro-block">
           <span class="svc-intro-label"><b>01</b> — Why it matters</span>
           <p data-en="You did not publish most of what exists about you online. Data brokers, leaked databases, public records, networks from a decade ago — all indexed and available to anyone who knows where to look. Your adversaries know. You probably don't." data-es="No publicaste la mayoría de lo que existe sobre ti en internet. Corredores de datos, bases de datos filtradas, registros públicos, redes de hace una década — todo indexado y disponible para quien sepa dónde buscar. Tus adversarios lo saben. Tú probablemente no.">You did not publish most of what exists about you online. Data brokers, leaked databases, public records, networks from a decade ago — all indexed and available to anyone who knows where to look. Your adversaries know. You probably don't.</p>
@@ -2919,6 +3131,22 @@ body.lang-es .nos-cap-big {
         </div>
         <h2>Sanctum</h2>
       </div>
+
+      <div class="svc-sanctum-boxes">
+        <div class="svc-sanctum-box1">
+          <span data-en="Your home now has more doors than you think. Every connected device is an entry point — and the number of services, devices and access points connected to your life is growing exponentially." data-es="Tu hogar ahora tiene más puertas de las que crees. Cada dispositivo conectado es un punto de entrada — y el número de servicios, dispositivos y puntos de acceso conectados a tu vida crece de forma exponencial.">Your home now has more doors than you think. Every connected device is an entry point — and the number of services, devices and access points connected to your life is growing exponentially.</span>
+        </div>
+        <div class="svc-sanctum-box2">
+          <span class="svc-sanctum-item" data-en="Architecture" data-es="Arquitectura">Architecture</span>
+          <span class="svc-sanctum-item" data-en="Network" data-es="Red">Network</span>
+          <span class="svc-sanctum-item">IoT</span>
+          <span class="svc-sanctum-item" data-en="Cameras" data-es="Cámaras">Cameras</span>
+          <span class="svc-sanctum-item" data-en="Access Controls" data-es="Controles de Acceso">Access Controls</span>
+          <span class="svc-sanctum-item" data-en="Smart Home" data-es="Hogar Inteligente">Smart Home</span>
+          <span class="svc-sanctum-item" data-en="Local Storage" data-es="Almacenamiento Local">Local Storage</span>
+        </div>
+      </div>
+
       <div class="svc-intro-stacked-bottom">
         <div class="svc-intro-col">
           <span class="svc-intro-label"><b>01</b> — Why it matters</span>
@@ -2949,35 +3177,23 @@ body.lang-es .nos-cap-big {
 <section id="svc-phantom" class="svc-micro">
 
   <!-- PARTE 1: Intro 100vh -->
-  <div class="svc-intro svc-intro--stacked" id="phantom-intro">
+  <div class="svc-intro" id="phantom-intro">
     <div class="svc-hero-photo">
       <img src="ChatGPT Image Jul 16, 2026, 12_18_15 AM.png" alt="" style="object-position: center 45%;">
     </div>
-    <div class="svc-intro-overlay svc-intro-overlay--stacked">
-      <div class="svc-intro-stacked-top">
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
         <div class="svc-intro-eyebrow">
           <span class="svc-hero-n">04</span>
           <span class="svc-hero-cat">Counter-Surveillance &amp; Crisis</span>
         </div>
         <h2>Phantom</h2>
       </div>
-      <div class="svc-intro-stacked-bottom">
-        <div class="svc-intro-col">
-          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
-          <p data-en="Not all threats are opportunistic. Some people are targeted — for who they are, who they know, or what they are involved in. When surveillance is directed, the signals are subtle and the window to act is short. By the time most people are certain, it is already too late." data-es="No todas las amenazas son oportunistas. Algunas personas son objetivos — por quiénes son, a quién conocen, o en qué están involucradas. Cuando la vigilancia es dirigida, las señales son sutiles y la ventana para actuar es corta. Para cuando la mayoría tiene certeza, ya es demasiado tarde.">Not all threats are opportunistic. Some people are targeted — for who they are, who they know, or what they are involved in. When surveillance is directed, the signals are subtle and the window to act is short. By the time most people are certain, it is already too late.</p>
-        </div>
-        <div class="svc-intro-col">
-          <span class="svc-intro-label"><b>02</b> — What it does</span>
-          <p data-en="We investigate, validate, and contain unauthorized surveillance — technical, digital, and physical — with complete discretion and no unnecessary paper trail." data-es="Investigamos, validamos y contenemos vigilancia no autorizada — técnica, digital y física — con total discreción y sin rastro de papel innecesario.">We investigate, validate, and contain unauthorized surveillance — technical, digital, and physical — with complete discretion and no unnecessary paper trail.</p>
-        </div>
-        <div class="svc-intro-col">
-          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
-          <p data-en="A device that changed behavior after a sensitive meeting · A private conversation that someone else seemed to know about · A room where you need certainty before speaking · Spyware installed by someone with physical access to your phone" data-es="Un dispositivo que cambió de comportamiento después de una reunión sensible · Una conversación privada que alguien más parecía conocer · Un espacio donde necesitas certeza antes de hablar · Spyware instalado por alguien con acceso físico a tu teléfono">A device that changed behavior after a sensitive meeting · A private conversation that someone else seemed to know about · A room where you need certainty before speaking · Spyware installed by someone with physical access to your phone</p>
-        </div>
-        <div class="svc-intro-col">
-          <span class="svc-intro-label"><b>04</b> — What it covers</span>
-          <p><strong>Device forensics · Spyware detection · Secure communications · Counter-surveillance · Crisis response · Confidential investigations</strong></p>
-        </div>
+      <div class="svc-intro-right">
+        <p class="phantom-trio" data-en="Crisis management." data-es="Crisis management.">Crisis management.</p>
+        <p class="phantom-trio" data-en="Counter-surveillance." data-es="Counter-surveillance.">Counter-surveillance.</p>
+        <p class="phantom-trio" data-en="Specific, directed threats." data-es="Specific, directed threats.">Specific, directed threats.</p>
+        <p class="phantom-body" data-en="This is not a standard engagement. It is a response — built around your situation, deployed when it matters most. The most advanced intelligence strategies and security technology we deploy, applied at the highest operational level." data-es="Este no es un compromiso estándar. Es una respuesta — construida alrededor de tu situación, desplegada cuando más importa. Las estrategias de inteligencia y tecnología de seguridad más avanzadas que desplegamos, aplicadas al más alto nivel operacional.">This is not a standard engagement. It is a response — built around your situation, deployed when it matters most. The most advanced intelligence strategies and security technology we deploy, applied at the highest operational level.</p>
       </div>
     </div>
   </div>
@@ -3051,17 +3267,98 @@ body.lang-es .nos-cap-big {
         <img src="ChatGPT Image Jul 16, 2026, 01_32_57 AM.png" alt="" style="object-position: center 50%;">
       </div>
       <div class="sfe-item-body-wrap">
-        <h3 class="sfe-item-name" data-en="Tor &amp; Drone Surveillance" data-es="Vigilancia Tor y Drones">Tor &amp; Drone Surveillance</h3>
-        <p class="sfe-item-body" data-en="For large private properties, estates and rural extensions where standard perimeter security has blind spots. Combines anonymous network routing via Tor with aerial surveillance capabilities and RF drone detection — covering the physical and digital perimeter as a single security layer." data-es="Para grandes propiedades privadas, fincas y extensiones rurales donde la seguridad perimetral estándar tiene puntos ciegos. Combina enrutamiento de red anónimo vía Tor con capacidades de vigilancia aérea y detección de drones RF — cubriendo el perímetro físico y digital como una sola capa de seguridad.">For large private properties, estates and rural extensions where standard perimeter security has blind spots. Combines anonymous network routing via Tor with aerial surveillance capabilities and RF drone detection — covering the physical and digital perimeter as a single security layer.</p>
+        <h3 class="sfe-item-name" data-en="Argos" data-es="Argos">Argos</h3>
+        <p class="sfe-item-body" data-en="Some properties are too large, too remote, or too exposed for static security. Argos deploys autonomous aerial surveillance — detecting movement, logging anomalies, and reporting in real time. Your eyes in the air, even when you aren't there." data-es="Algunas propiedades son demasiado grandes, remotas o expuestas para la seguridad estática. Argos despliega vigilancia aérea autónoma — detectando movimiento, registrando anomalías y reportando en tiempo real. Tus ojos en el aire, incluso cuando no estás.">Some properties are too large, too remote, or too exposed for static security. Argos deploys autonomous aerial surveillance — detecting movement, logging anomalies, and reporting in real time. Your eyes in the air, even when you aren't there.</p>
+        <div class="sfe-item-tags">
+          <span class="sfe-tag">Aerial Surveillance</span>
+          <span class="sfe-tag">Perimeter</span>
+          <span class="sfe-tag">Autonomous</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sfe-item reveal" data-d="0.38">
+      <div class="sfe-item-photo">
+        <span class="sfe-item-n">— 04</span>
+        <img src="ChatGPT Image Jul 17, 2026, 12_59_32 PM.png" alt="" style="object-position: center 50%;">
+      </div>
+      <div class="sfe-item-body-wrap">
+        <h3 class="sfe-item-name" data-en="Aegis" data-es="Aegis">Aegis</h3>
+        <p class="sfe-item-body" data-en="A drone overhead is invisible until it isn't. Aegis monitors the airspace around your property — detecting unauthorized aerial activity, identifying drone signals, logging flight patterns, and alerting your Security Concierge the moment something appears. Awareness before exposure." data-es="Un dron en el aire es invisible hasta que no lo es. Aegis monitorea el espacio aéreo alrededor de tu propiedad — detectando actividad aérea no autorizada, identificando señales de drones, registrando patrones de vuelo y alertando a tu Security Concierge en el momento en que algo aparece. Conciencia antes de la exposición.">A drone overhead is invisible until it isn't. Aegis monitors the airspace around your property — detecting unauthorized aerial activity, identifying drone signals, logging flight patterns, and alerting your Security Concierge the moment something appears. Awareness before exposure.</p>
         <div class="sfe-item-tags">
           <span class="sfe-tag">Drone Detection</span>
-          <span class="sfe-tag">Tor Network</span>
-          <span class="sfe-tag">Perimeter</span>
+          <span class="sfe-tag">Tracking</span>
+          <span class="sfe-tag">Alert</span>
         </div>
       </div>
     </div>
 
   </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PARTEAGUAS — THE AGENCY & THE CONCIERGE
+══════════════════════════════════════════ -->
+<section id="pw-agency" class="pw pw-agency">
+  <p class="pw-agency-text" data-en="The Agency<br>&amp; The <em>Concierge</em>" data-es="The Agency<br>&amp; The <em>Concierge</em>">The Agency<br>&amp; The <em>Concierge</em></p>
+</section>
+
+<!-- ══════════════════════════════════════════
+     THE AGENCY — Security Concierge
+══════════════════════════════════════════ -->
+<section id="the-agency">
+  <div class="agency-photo" style="background-image: url('ChatGPT Image Jul 17, 2026, 12_22_44 PM.png');"></div>
+
+  <span class="agency-tag reveal-fade" data-en="05 — The Agency" data-es="05 — The Agency">05 — The Agency</span>
+
+  <h2 class="agency-headline reveal-fade">
+    <span data-en="We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em>" data-es="No somos software.<br><em>No somos un helpdesk.<br>No somos una firma de ingeniería.</em>">We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em></span>
+  </h2>
+
+  <div class="agency-body">
+
+    <p class="agency-body-beat agency-beat-hero reveal-fade"
+       data-en="Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person."
+       data-es="Obscural es una <strong>agencia privada de seguridad digital</strong>. A cada cliente se le asigna un <strong>Security Concierge</strong> — alguien que conoce tu exposición, tus rutinas, tus riesgos personalmente. No un sistema de tickets. Una persona.">
+      Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person.
+    </p>
+
+    <p class="agency-body-beat reveal"
+       data-en="When a threat emerges, we don't send an email. <strong>We find you.</strong>"
+       data-es="Cuando surge una amenaza, no enviamos un correo. <strong>Te encontramos.</strong>">
+      When a threat emerges, we don't send an email. <strong>We find you.</strong>
+    </p>
+
+    <p class="agency-body-beat reveal"
+       data-en="Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>."
+       data-es="Detrás de tu Security Concierge hay un equipo especializado de analistas — suficientemente pequeño para moverse rápido, suficientemente experto para manejar cualquier cosa. Cubriendo infraestructura crítica y seguridad personal <strong>sin interrupciones, sin excepciones</strong>.">
+      Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>.
+    </p>
+
+  </div>
+
+  <div class="agency-callouts">
+
+    <div class="agency-callout reveal">
+      <span class="agency-callout-n">24/7</span>
+      <span class="agency-callout-title" data-en="Always On" data-es="Siempre Activo">Always On</span>
+      <span class="agency-callout-sub" data-en="No exceptions." data-es="Sin excepciones.">No exceptions.</span>
+    </div>
+
+    <div class="agency-callout reveal" style="transition-delay:0.1s">
+      <span class="agency-callout-n" style="font-size:clamp(18px,2vw,28px); letter-spacing:-0.01em; padding-top:8px;">Security<br>Concierge</span>
+      <span class="agency-callout-title" data-en="One Person. Permanent. Yours." data-es="Una Persona. Permanente. Tuya.">One Person. Permanent. Yours.</span>
+      <span class="agency-callout-sub" data-en="Not a queue. Not a rotation. Someone who knows your name." data-es="No una cola. No una rotación. Alguien que conoce tu nombre.">Not a queue. Not a rotation. Someone who knows your name.</span>
+    </div>
+
+    <div class="agency-callout reveal" style="transition-delay:0.2s">
+      <span class="agency-callout-n" style="font-size:clamp(28px,3.5vw,52px);">Pro-<br>active</span>
+      <span class="agency-callout-title" data-en="We Don't Wait to Be Called" data-es="No Esperamos la Llamada">We Don't Wait to Be Called</span>
+      <span class="agency-callout-sub" data-en="We monitor, we investigate, we reach out first." data-es="Monitoreamos, investigamos, llegamos primero.">We monitor, we investigate, we reach out first.</span>
+    </div>
+
+  </div>
+
 </section>
 
 <!-- ══════════════════════════════════════════
@@ -3992,7 +4289,7 @@ if (tableroWrap) {
 
 /* ── SECTION NAVIGATION ── */
 (function() {
-  const SECTIONS = ['hero','mundo','pw-question','nosotros','protegemos','quienes','como','servicios','svc-veil','svc-pulse','svc-sanctum','svc-phantom','pw-pero','sfe','paq-confianza','infosec','cta'];
+  const SECTIONS = ['hero','mundo','pw-question','nosotros','protegemos','quienes','como','servicios','svc-veil','svc-pulse','svc-sanctum','svc-phantom','pw-pero','sfe','pw-agency','the-agency','paq-confianza','infosec','cta'];
   const els = SECTIONS.map(id => document.getElementById(id));
   let current = 0;
 
@@ -4391,7 +4688,6 @@ if (tableroWrap) {
     draw();
   });
 })();
-
 
 
 /* ── VD-SEC in-view accent ── */
