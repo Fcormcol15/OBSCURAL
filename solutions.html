@@ -422,6 +422,26 @@ nav {
   color: rgba(255,255,255,0.12); margin-top: 16px;
 }
 
+/* ── PROTECTS TAGS ── */
+.svc-protects {
+  margin-top: 44px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  padding-top: 28px;
+}
+.svc-protects-label {
+  font-size: 9px; letter-spacing: 0.30em; text-transform: uppercase;
+  color: rgba(255,255,255,0.16); display: block; margin-bottom: 18px;
+}
+.svc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.svc-tag {
+  font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 7px 16px;
+  transition: color 0.3s, border-color 0.3s;
+}
+.svc-tag:hover { color: rgba(255,255,255,0.65); border-color: rgba(255,255,255,0.22); }
+
 /* ── CTA ── */
 #sol-cta {
   padding: clamp(80px,12vh,160px) clamp(32px,6vw,96px);
@@ -551,6 +571,7 @@ footer {
     <a href="who-what.html">Who We Protect</a>
     <a href="solutions.html" class="active">Solutions</a>
     <a href="obscural.html?skip#contact">Contact</a>
+    <a href="obscural.html#1p" style="opacity:0.45;letter-spacing:0.28em;">1P</a>
   </div>
 </nav>
 
@@ -581,30 +602,22 @@ footer {
     <div class="svc-badge r-fade">
       <span class="svc-badge-n">01</span>
       <span class="svc-badge-sep"></span>
-      <span class="svc-badge-tag">Personal Device Protection</span>
+      <span class="svc-badge-tag">Device Protection</span>
     </div>
     <h2 class="svc-name r-fade d1">Veil</h2>
-    <p class="svc-desc r-fade d2">Active, continuous protection of every device you own. Phones, laptops, tablets — wherever you work, travel, or live, Veil is watching so you don't have to.</p>
-    <div class="svc-features r-fade d3">
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Zero-day threat detection across all personal devices</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>End-to-end encrypted communication infrastructure</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Remote wipe and emergency lockdown capability</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Travel security protocols and briefing</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>24/7 device health monitoring and response</div>
+    <p class="svc-desc r-fade d2">Veil provides active, continuous protection across your entire personal sphere — every phone, laptop, and tablet you own. It monitors for threats, responds to incidents, and keeps your personal digital environment secure without interrupting how you work or live. From your home to a hotel room on another continent, Veil is present and operational at all times.</p>
+    <div class="svc-protects r-fade d3">
+      <span class="svc-protects-label">Protects</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Personal devices</span>
+        <span class="svc-tag">Communications</span>
+        <span class="svc-tag">Trusted circle</span>
+        <span class="svc-tag">Emergency response</span>
+      </div>
     </div>
   </div>
   <div class="svc-visual">
-    <div class="veil-graphic" style="margin: auto; position: relative;">
-      <div class="veil-orbit"></div>
-      <div class="veil-orbit-2"></div>
-      <div class="veil-core">
-        <p class="veil-center-text">Active<br>Protection</p>
-      </div>
-      <span class="veil-dot"></span>
-      <span class="veil-dot"></span>
-      <span class="veil-dot"></span>
-      <span class="veil-dot"></span>
-    </div>
+    <img src="img_veil_hero.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 40%;filter:brightness(0.5) saturate(0.85);">
   </div>
 </section>
 
@@ -618,26 +631,19 @@ footer {
       <span class="svc-badge-tag">Digital Intelligence</span>
     </div>
     <h2 class="svc-name r-fade d1">Pulse</h2>
-    <p class="svc-desc r-fade d2">Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching — before they move.</p>
-    <div class="svc-features r-fade d3">
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Real-time alerts when your data surfaces online</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Dark web credential and identity leak scanning</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Social media exposure and impersonation detection</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Threat actor profiling and pattern analysis</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Weekly intelligence briefings, always in plain language</div>
+    <p class="svc-desc r-fade d2">Pulse keeps your personal identity protected through continuous intelligence monitoring across the open web, deep web, and dark web. Any exposure of your name, credentials, private data, or account access is detected and reported immediately. You always know what's out there — and what to do about it.</p>
+    <div class="svc-protects r-fade d3">
+      <span class="svc-protects-label">Protects</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Identity & credentials</span>
+        <span class="svc-tag">Dark web exposure</span>
+        <span class="svc-tag">Reputation</span>
+        <span class="svc-tag">Impersonation</span>
+      </div>
     </div>
   </div>
   <div class="svc-visual">
-    <div class="pulse-grid"></div>
-    <div class="pulse-feed">
-      <div class="feed-item"><span class="feed-dot alert"></span><span class="feed-text">CREDENTIAL EXPOSED — dark web forum</span><span class="feed-time">00:03</span></div>
-      <div class="feed-item"><span class="feed-dot warn"></span><span class="feed-text">NEW MENTION — social platform scrape</span><span class="feed-time">01:17</span></div>
-      <div class="feed-item"><span class="feed-dot ok"></span><span class="feed-text">SCAN COMPLETE — surface web clear</span><span class="feed-time">02:44</span></div>
-      <div class="feed-item"><span class="feed-dot info"></span><span class="feed-text">INTEL UPDATE — threat actor inactive</span><span class="feed-time">04:08</span></div>
-      <div class="feed-item"><span class="feed-dot warn"></span><span class="feed-text">IP PROBE — unknown origin detected</span><span class="feed-time">05:51</span></div>
-      <div class="feed-item"><span class="feed-dot ok"></span><span class="feed-text">IDENTITY SCAN — no new exposure</span><span class="feed-time">07:22</span></div>
-      <div class="feed-item"><span class="feed-dot info"></span><span class="feed-text">BRIEFING READY — weekly report</span><span class="feed-time">08:00</span></div>
-    </div>
+    <img src="img_pulse_hero.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 50%;filter:brightness(0.55) saturate(0.75);">
   </div>
 </section>
 
@@ -648,16 +654,18 @@ footer {
     <div class="svc-badge r-fade">
       <span class="svc-badge-n">03</span>
       <span class="svc-badge-sep"></span>
-      <span class="svc-badge-tag">Home & Office Infrastructure</span>
+      <span class="svc-badge-tag">Space Security</span>
     </div>
     <h2 class="svc-name r-fade d1">Sanctum</h2>
-    <p class="svc-desc r-fade d2">Cybersecurity architecture for your home, private office, or studio. Every connected device, every network entry point — hardened, audited, and made invisible.</p>
-    <div class="svc-features r-fade d3">
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Full network architecture audit and redesign</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Smart device isolation and access control</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Guest network and perimeter segmentation</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Physical security consultation</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>On-site installation, configuration, and training</div>
+    <p class="svc-desc r-fade d2">Your home is not just where you live. It's where you're most exposed. Sanctum audits every router, camera, smart device, and access point in your personal environment — then rebuilds it the right way. On-site. No ongoing complexity. Done once, done right.</p>
+    <div class="svc-protects r-fade d3">
+      <span class="svc-protects-label">Protects</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Home & office</span>
+        <span class="svc-tag">Connected devices</span>
+        <span class="svc-tag">Physical access</span>
+        <span class="svc-tag">Private spaces</span>
+      </div>
     </div>
   </div>
   <div class="svc-visual">
@@ -728,16 +736,17 @@ footer {
     <div class="svc-badge r-fade">
       <span class="svc-badge-n">04</span>
       <span class="svc-badge-sep"></span>
-      <span class="svc-badge-tag">Privacy & Counter-Surveillance</span>
+      <span class="svc-badge-tag">Counter-Surveillance</span>
     </div>
     <h2 class="svc-name r-fade d1">Phantom</h2>
-    <p class="svc-desc r-fade d2">Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent — and the window for action is narrow.</p>
-    <div class="svc-features r-fade d3">
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Technical surveillance countermeasures (TSCM / bug sweeps)</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Digital footprint reduction and exposure elimination</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Secure and private communication channel setup</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Reputational threat analysis and rapid response</div>
-      <div class="svc-feat"><span class="svc-feat-dot"></span>Legal threat coordination and documentation</div>
+    <p class="svc-desc r-fade d2">Phantom deploys Obscural's most advanced security capabilities when a situation demands it — technical surveillance countermeasures, active threat assessment, digital footprint reduction, and direct incident response. It is reserved for high-sensitivity cases where speed, technical precision, and complete discretion are non-negotiable. When passive protection is no longer sufficient, Phantom is the next call.</p>
+    <div class="svc-protects r-fade d3">
+      <span class="svc-protects-label">Protects</span>
+      <div class="svc-tags">
+        <span class="svc-tag">Active threats</span>
+        <span class="svc-tag">Crisis situations</span>
+        <span class="svc-tag">Sophisticated attacks</span>
+      </div>
     </div>
   </div>
   <div class="svc-visual">
@@ -831,6 +840,38 @@ sections.forEach(s => scrollSpy.observe(s));
       setTimeout(() => { location.href = href; }, 520);
     });
   })();
+</script>
+
+<!-- Brand-alias: ?alias=trace activa modo Trace; botón T/S bottom-left -->
+<script>
+(function(){
+  var KEY = 'ob-alias';
+  if (new URLSearchParams(location.search).get('alias') === 'trace') {
+    sessionStorage.setItem(KEY, 'trace');
+    history.replaceState(null, null, location.pathname + location.hash);
+  }
+  var isTrace = sessionStorage.getItem(KEY) === 'trace';
+  if (isTrace) {
+    (function walk(n) {
+      if (n.nodeType === 3) {
+        n.nodeValue = n.nodeValue.replace(/Pulse/g,'Trace').replace(/PULSE/g,'TRACE');
+      } else if (n.nodeType === 1 && !/^(script|style)$/i.test(n.tagName)) {
+        n.childNodes.forEach(walk);
+      }
+    })(document.body);
+  }
+  var s = document.createElement('style');
+  s.textContent = '#ob-at{position:fixed;bottom:20px;left:20px;display:flex;gap:3px;z-index:99999;opacity:0.28;transition:opacity .3s}#ob-at:hover{opacity:1}#ob-at button{width:22px;height:22px;border:1px solid;background:rgba(5,5,5,.90);font-size:8px;font-family:\'Outfit\',sans-serif;cursor:pointer;padding:0;transition:all .2s;letter-spacing:.04em}#ob-at .ob-on{color:#fff;border-color:rgba(255,255,255,.60)}#ob-at .ob-off{color:rgba(210,45,45,.75);border-color:rgba(210,45,45,.22)}';
+  document.head.appendChild(s);
+  var d = document.createElement('div');
+  d.id = 'ob-at';
+  d.innerHTML = '<button id="ob-t" title="Trace">T</button><button id="ob-s" title="Standard">S</button>';
+  document.body.appendChild(d);
+  document.getElementById('ob-t').className = isTrace ? 'ob-on' : 'ob-off';
+  document.getElementById('ob-s').className = isTrace ? 'ob-off' : 'ob-on';
+  document.getElementById('ob-t').onclick = function(){ if(!isTrace){ sessionStorage.setItem(KEY,'trace'); location.reload(); }};
+  document.getElementById('ob-s').onclick = function(){ if(isTrace){ sessionStorage.removeItem(KEY); location.reload(); }};
+})();
 </script>
 </body>
 </html>

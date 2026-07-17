@@ -355,7 +355,7 @@
       padding: clamp(40px,6vw,80px);
     }
     .who-intro { font-size:clamp(13px,1.3vw,17px); color:rgba(255,255,255,.28); line-height:2; font-weight:300; margin-bottom:56px; max-width:480px; }
-    .who-item { padding:30px 0; border-top:1px solid rgba(255,255,255,.06); font-size:clamp(15px,1.6vw,22px); font-weight:300; color:rgba(255,255,255,.22); line-height:1.4; transition:color .6s ease, transform .4s ease; }
+    .who-item { display:block; text-decoration:none; padding:30px 0; border-top:1px solid rgba(255,255,255,.06); font-size:clamp(15px,1.6vw,22px); font-weight:300; color:rgba(255,255,255,.22); line-height:1.4; transition:color .6s ease, transform .4s ease; cursor:pointer; }
     .who-item:last-child { border-bottom:1px solid rgba(255,255,255,.06); }
     .who-item:hover { color:rgba(255,255,255,.75); transform: translateX(6px); }
 
@@ -576,6 +576,8 @@
       color: rgba(255,255,255,0.1);
       font-family: 'Courier New', monospace;
     }
+    .stat-source a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.08); transition: color 0.2s, border-color 0.2s; }
+    .stat-source a:hover { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.25); }
 
     /* ── ACCESS CARD ── */
     .access-card-wrap {
@@ -679,6 +681,146 @@
       .sec { padding: 64px 20px; }
       footer { padding: 20px; font-size: 10px; }
     }
+  /* ── ONE PAGER ── */
+  #one-pager {
+    display: none;
+    position: fixed; inset: 0; z-index: 99998;
+    height: 100vh; width: 100vw;
+    font-family: 'Outfit', sans-serif; color: #fff;
+    overflow: hidden;
+  }
+  body.op-open #one-pager { display: grid; grid-template-columns: 44vw 1fr; }
+  body.op-open { overflow: hidden; }
+
+  /* LEFT: foto editorial — logo centrado y grande */
+  .op-photo {
+    position: relative;
+    background: url('img_pol_walk.png') center/cover no-repeat;
+    height: 100vh;
+  }
+  .op-photo::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.35) 30%, #050505 100%);
+  }
+  .op-photo-brand {
+    position: absolute; inset: 0; z-index: 3;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  }
+  .op-photo-brand svg {
+    height: 80px; width: auto; display: block;
+    filter: drop-shadow(0 2px 20px rgba(0,0,0,0.8));
+  }
+  .op-photo-brand-tag {
+    font-size: 10px; letter-spacing: 0.40em; text-transform: uppercase;
+    color: rgba(255,255,255,0.42); font-family: 'Outfit', sans-serif;
+  }
+
+  /* RIGHT: panel — 9 filas con mid section */
+  .op-right {
+    background: #050505;
+    display: grid;
+    grid-template-rows: auto 1px auto 1px auto 1px auto 1px auto;
+    height: 100vh;
+    padding: clamp(14px,1.8vh,26px) clamp(32px,4vw,54px) clamp(24px,3vh,40px);
+    box-sizing: border-box;
+    align-content: start;
+    row-gap: clamp(18px,2.8vh,36px);
+    overflow: hidden; min-width: 0;
+  }
+
+  /* Nav — compacto, solo links a la derecha, sin logo */
+  div.op-nav {
+    display: flex; align-items: center; justify-content: flex-end;
+    gap: 20px; min-height: 24px;
+  }
+  div.op-nav .op-nav-links {
+    list-style: none; margin: 0; padding: 0; display: flex; gap: 18px; align-items: center;
+  }
+  div.op-nav .op-nav-links li { margin: 0; padding: 0; }
+  div.op-nav .op-nav-links a {
+    font-size: 8px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.50) !important; text-decoration: none !important;
+    font-family: 'Outfit', sans-serif; transition: color 0.25s; display: block;
+  }
+  div.op-nav .op-nav-links a:hover { color: #fff !important; }
+  div.op-nav .op-nav-links .op-1p-link { color: rgba(255,255,255,0.30) !important; letter-spacing: 0.26em; }
+  .op-print-btn {
+    background: none; border: 1px solid rgba(255,255,255,0.20); cursor: pointer;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.50); font-family: 'Outfit', sans-serif;
+    padding: 5px 12px; border-radius: 2px; transition: all 0.25s; white-space: nowrap;
+  }
+  .op-print-btn:hover { color: #fff; border-color: rgba(255,255,255,0.50); }
+
+  .op-rule { width: 100%; height: 1px; background: rgba(255,255,255,0.09); display: block; }
+
+  /* WOW */
+  .op-wow p {
+    font-size: clamp(22px,2.8vw,42px); font-weight: 200;
+    line-height: 1.25; letter-spacing: -0.03em;
+    color: rgba(255,255,255,0.38); margin: 0;
+  }
+  .op-wow em { font-style: italic; color: #fff; font-weight: 300; }
+
+  /* Labels */
+  .op-section-label {
+    font-size: 9px; letter-spacing: 0.30em; text-transform: uppercase;
+    color: rgba(255,255,255,0.36); display: block; margin-bottom: 10px;
+  }
+
+  /* Mid: WHO WE ARE + WHAT WE PROTECT */
+  .op-mid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+  .op-about-text, .op-protects-text {
+    font-size: 11px; font-weight: 300;
+    color: rgba(255,255,255,0.58); line-height: 1.85; margin: 0;
+  }
+
+  /* Solutions */
+  .op-svc-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 18px; margin-top: 10px; }
+  a.op-svc-link { text-decoration: none; display: block; }
+  .op-svc-name {
+    display: block; font-size: 17px; font-weight: 600;
+    letter-spacing: -0.02em; color: #fff; margin-bottom: 6px; transition: color 0.2s;
+  }
+  a.op-svc-link:hover .op-svc-name { color: rgba(255,255,255,0.50); }
+  .op-svc-desc {
+    display: block; font-size: 11px; font-weight: 300;
+    color: rgba(255,255,255,0.56); line-height: 1.65; margin-bottom: 8px;
+  }
+  .op-svc-caps {
+    display: block; font-size: 8px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: rgba(255,255,255,0.26);
+    font-family: 'Courier New', monospace; line-height: 2;
+  }
+
+  /* Who We Protect — label arriba izquierda, caja abajo */
+  .op-who { display: flex; flex-direction: column; gap: 8px; }
+  .op-who-label {
+    font-size: 9px; letter-spacing: 0.26em; text-transform: uppercase;
+    color: rgba(255,255,255,0.36);
+  }
+  .op-who-box {
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,0.11);
+    border-radius: 0; padding: 12px 20px;
+    background: rgba(255,255,255,0.03);
+  }
+  .op-who-list {
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: rgba(255,255,255,0.60); text-align: center;
+  }
+  .op-who-list a { color: inherit; text-decoration: none; transition: color 0.2s; }
+  .op-who-list a:hover { color: #fff; }
+
+  @media print {
+    @page { margin: 0; size: letter landscape; }
+    nav#nav, #page-veil, #dot, #site { display: none !important; }
+    body.op-open { overflow: visible !important; }
+    #one-pager {
+      display: grid !important; position: fixed; inset: 0;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact;
+    }
+  }
   </style>
 </head>
 <body>
@@ -705,6 +847,7 @@
       <li><a href="who-what.html">Who We Protect</a></li>
       <li><a href="solutions.html">Solutions</a></li>
       <li><a href="#contact">Contact</a></li>
+      <li><a href="#" id="op-open-btn" style="opacity:0.45;letter-spacing:0.28em;">1P</a></li>
     </ul>
   </nav>
 
@@ -761,17 +904,17 @@
           <div class="stat-cell r-fade d1">
             <span class="stat-num">12×</span>
             <p class="stat-desc">C-suite executives are 12 times more likely to be targeted in a cyberattack than any other employee in their organization.</p>
-            <span class="stat-source">HP Wolf Security, 2022</span>
+            <span class="stat-source"><a href="https://www.verizon.com/business/resources/reports/dbir/" target="_blank" rel="noopener">Verizon DBIR · 2019</a></span>
           </div>
           <div class="stat-cell r-fade d2">
             <span class="stat-num">$4.88M</span>
             <p class="stat-desc">Average total cost of a data breach in 2024 — the highest in the 19-year history of the IBM report.</p>
-            <span class="stat-source">IBM Cost of a Data Breach Report, 2024</span>
+            <span class="stat-source"><a href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">IBM Cost of a Data Breach Report · 2024</a></span>
           </div>
           <div class="stat-cell r-fade d3">
-            <span class="stat-num">68%</span>
-            <p class="stat-desc">Of business leaders personally confirmed being targeted in at least one phishing or social engineering attack in the past year.</p>
-            <span class="stat-source">Proofpoint State of the Phish, 2023</span>
+            <span class="stat-num">71%</span>
+            <p class="stat-desc">Of organizations experienced a successful phishing attack in 2023 — making the human layer the most consistently exploited entry point year after year.</p>
+            <span class="stat-source"><a href="https://www.proofpoint.com/us/resources/threat-reports/state-of-phish" target="_blank" rel="noopener">Proofpoint State of the Phish · 2024</a></span>
           </div>
         </div>
       </div>
@@ -821,10 +964,11 @@
         <div class="ww-inner who-panel">
           <div class="r-fade"><p class="lbl">Who We Protect</p></div>
           <div class="r-clip"><p class="r-inner who-intro">We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality.</p></div>
-          <div class="r-clip d1"><div class="r-inner who-item">The executive whose decisions move markets.</div></div>
-          <div class="r-clip d2"><div class="r-inner who-item">The artist whose identity is their most valuable asset.</div></div>
-          <div class="r-clip d3"><div class="r-inner who-item">The family that built generational wealth and intends to protect it.</div></div>
-          <div class="r-clip d4"><div class="r-inner who-item">The public figure who lives under permanent scrutiny.</div></div>
+          <div class="r-clip d1"><a class="r-inner who-item" href="who-what.html#executive-detail">The executive whose decisions move markets.</a></div>
+          <div class="r-clip d2"><a class="r-inner who-item" href="who-what.html#artist-detail">The artist whose identity is their most valuable asset.</a></div>
+          <div class="r-clip d3"><a class="r-inner who-item" href="who-what.html#family-detail">The family that built generational wealth and intends to protect it.</a></div>
+          <div class="r-clip d4"><a class="r-inner who-item" href="who-what.html#pubfig-detail">The public figure who lives under permanent scrutiny.</a></div>
+          <div class="r-clip d5"><a class="r-inner who-item" href="who-what.html#politician-detail">The politician whose every communication is a target.</a></div>
         </div>
       </div>
     </section>
@@ -1031,5 +1175,168 @@
       });
     })();
   </script>
+
+  <!-- ── ONE PAGER ── -->
+  <section id="one-pager">
+
+    <!-- LEFT: foto editorial -->
+    <div class="op-photo">
+      <div class="op-photo-brand">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+          <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+          <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+          <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+          <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+          <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+          <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+          <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+          <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+        </svg>
+        <span class="op-photo-brand-tag">Turn on security.</span>
+      </div>
+    </div>
+
+    <!-- RIGHT: contenido -->
+    <div class="op-right">
+
+      <!-- Nav — compacto, solo links -->
+      <div class="op-nav">
+        <ul class="op-nav-links">
+          <li><a href="javascript:void(0)" onclick="closeOP()">Home</a></li>
+          <li><a href="who-what.html">Who We Protect</a></li>
+          <li><a href="solutions.html">Solutions</a></li>
+          <li><a href="#contact" onclick="closeOP()">Contact</a></li>
+          <li><a href="javascript:void(0)" id="op-close" class="op-1p-link">1P</a></li>
+        </ul>
+        <button class="op-print-btn" onclick="var t=document.title;document.title='Obscural — One Pager';window.print();document.title=t;" title="Guardar como PDF">↓ PDF</button>
+      </div>
+
+      <div class="op-rule"></div>
+
+      <!-- WOW -->
+      <div class="op-wow">
+        <p>The higher the profile,<br>the more personal the threat.<br><em>We were built for that.</em></p>
+      </div>
+
+      <div class="op-rule"></div>
+
+      <!-- WHO WE ARE + WHAT WE PROTECT -->
+      <div class="op-mid">
+        <div>
+          <span class="op-section-label">Who We Are</span>
+          <p class="op-about-text">Obscural is a private digital intelligence and protection firm working directly with high-profile individuals and those closest to them. We operate where institutional security ends — at the personal level, where exposure is real and consequences are permanent.</p>
+        </div>
+        <div>
+          <span class="op-section-label">What We Protect</span>
+          <p class="op-protects-text">Devices &nbsp;·&nbsp; Identity &nbsp;·&nbsp; Communications &nbsp;·&nbsp; Family &nbsp;·&nbsp; Private spaces &nbsp;·&nbsp; Reputation &nbsp;·&nbsp; Trusted circle</p>
+        </div>
+      </div>
+
+      <div class="op-rule"></div>
+
+      <!-- Solutions -->
+      <div>
+        <span class="op-section-label">Solutions</span>
+        <div class="op-svc-grid">
+          <a class="op-svc-link" href="solutions.html#veil">
+            <span class="op-svc-name">Veil</span>
+            <span class="op-svc-desc">Continuous protection of every personal device in your ecosystem.</span>
+            <span class="op-svc-caps">24/7 monitoring · Emergency response · Device protection</span>
+          </a>
+          <a class="op-svc-link" href="solutions.html#pulse">
+            <span class="op-svc-name">Pulse</span>
+            <span class="op-svc-desc">Real-time intelligence monitoring across the open, deep, and dark web.</span>
+            <span class="op-svc-caps">Credential leaks · Impersonation alerts · Weekly briefings</span>
+          </a>
+          <a class="op-svc-link" href="solutions.html#sanctum">
+            <span class="op-svc-name">Sanctum</span>
+            <span class="op-svc-desc">Security architecture for your home, office, and private spaces.</span>
+            <span class="op-svc-caps">Network hardening · Smart device control · Physical access</span>
+          </a>
+          <a class="op-svc-link" href="solutions.html#phantom">
+            <span class="op-svc-name">Phantom</span>
+            <span class="op-svc-desc">Advanced countermeasures and incident response for active threats.</span>
+            <span class="op-svc-caps">Active threats · Crisis situations · Sophisticated attacks</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="op-rule"></div>
+
+      <!-- Who We Protect — label arriba izquierda, caja abajo -->
+      <div class="op-who">
+        <span class="op-who-label">Who We Protect</span>
+        <div class="op-who-box">
+          <span class="op-who-list">
+            <a href="who-what.html#executive-detail">The Executive</a> &nbsp;·&nbsp;
+            <a href="who-what.html#artist-detail">The Artist</a> &nbsp;·&nbsp;
+            <a href="who-what.html#family-detail">The Family</a> &nbsp;·&nbsp;
+            <a href="who-what.html#pubfig-detail">The Public Figure</a> &nbsp;·&nbsp;
+            <a href="who-what.html#politician-detail">The Politician</a>
+          </span>
+        </div>
+      </div>
+
+    </div><!-- /.op-right -->
+  </section>
+
+  <script>
+  function openOP() {
+    document.body.classList.add('op-open');
+    history.replaceState(null, null, '#1p');
+  }
+  function closeOP() {
+    document.body.classList.remove('op-open');
+    history.replaceState(null, null, location.pathname);
+  }
+  (function(){
+    const btn = document.getElementById('op-open-btn');
+    const closeBtn = document.getElementById('op-close');
+    if (btn) btn.addEventListener('click', function(e){
+      e.preventDefault();
+      document.body.classList.contains('op-open') ? closeOP() : openOP();
+    });
+    if (closeBtn) closeBtn.addEventListener('click', function(e){
+      e.preventDefault(); closeOP();
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape') closeOP();
+    });
+    // Persistir en refresh
+    if (location.hash === '#1p') document.body.classList.add('op-open');
+  })();
+  </script>
+
+<!-- Brand-alias: ?alias=trace activa modo Trace; botón T/S bottom-left -->
+<script>
+(function(){
+  var KEY = 'ob-alias';
+  if (new URLSearchParams(location.search).get('alias') === 'trace') {
+    sessionStorage.setItem(KEY, 'trace');
+    history.replaceState(null, null, location.pathname + location.hash);
+  }
+  var isTrace = sessionStorage.getItem(KEY) === 'trace';
+  if (isTrace) {
+    (function walk(n) {
+      if (n.nodeType === 3) {
+        n.nodeValue = n.nodeValue.replace(/Pulse/g,'Trace').replace(/PULSE/g,'TRACE');
+      } else if (n.nodeType === 1 && !/^(script|style)$/i.test(n.tagName)) {
+        n.childNodes.forEach(walk);
+      }
+    })(document.body);
+  }
+  var s = document.createElement('style');
+  s.textContent = '#ob-at{position:fixed;bottom:20px;left:20px;display:flex;gap:3px;z-index:99999;opacity:0.28;transition:opacity .3s}#ob-at:hover{opacity:1}#ob-at button{width:22px;height:22px;border:1px solid;background:rgba(5,5,5,.90);font-size:8px;font-family:\'Outfit\',sans-serif;cursor:pointer;padding:0;transition:all .2s;letter-spacing:.04em}#ob-at .ob-on{color:#fff;border-color:rgba(255,255,255,.60)}#ob-at .ob-off{color:rgba(210,45,45,.75);border-color:rgba(210,45,45,.22)}';
+  document.head.appendChild(s);
+  var d = document.createElement('div');
+  d.id = 'ob-at';
+  d.innerHTML = '<button id="ob-t" title="Trace">T</button><button id="ob-s" title="Standard">S</button>';
+  document.body.appendChild(d);
+  document.getElementById('ob-t').className = isTrace ? 'ob-on' : 'ob-off';
+  document.getElementById('ob-s').className = isTrace ? 'ob-off' : 'ob-on';
+  document.getElementById('ob-t').onclick = function(){ if(!isTrace){ sessionStorage.setItem(KEY,'trace'); location.reload(); }};
+  document.getElementById('ob-s').onclick = function(){ if(isTrace){ sessionStorage.removeItem(KEY); location.reload(); }};
+})();
+</script>
 </body>
 </html>
