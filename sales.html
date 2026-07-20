@@ -110,6 +110,34 @@ body {
   50%       { text-shadow: 0 0 18px rgba(255,255,255,0.5), 0 0 40px rgba(255,255,255,0.18); }
 }
 
+/* — POL PW mandate — */
+.pol-pw-mandate {
+  margin: 0;
+  text-align: center;
+  line-height: 1.1;
+  font-size: clamp(26px, 3.8vw, 62px);
+  font-weight: 200;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+.pol-pw-ghost {
+  color: rgba(255,255,255,0.22);
+  font-style: italic;
+  font-weight: 100;
+  letter-spacing: 0.01em;
+}
+.pol-pw-solid {
+  color: rgba(255,255,255,0.85);
+  font-weight: 200;
+  letter-spacing: -0.015em;
+}
+.pol-pw-italic {
+  color: rgba(255,255,255,0.42);
+  font-style: italic;
+  font-weight: 100;
+  letter-spacing: 0.01em;
+}
+
 /* — PW 2: pero hay más —*/
 .pw-pero {
   height: 100vh;
@@ -344,6 +372,131 @@ nav {
   border: 1px solid rgba(255,255,255,0.07);
   padding: 6px 14px;
 }
+#nav-stickers {
+  position: fixed; top: 27px; right: clamp(32px, 4vw, 80px);
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  z-index: 9000;
+}
+
+/* ── PRINT BAR ── */
+#pol-print-bar {
+  display: none;
+  position: fixed; bottom: clamp(28px, 4vh, 48px); right: clamp(32px, 4vw, 80px);
+  display: none; align-items: center; gap: 0;
+  z-index: 9000;
+}
+body.mode-pol #pol-print-bar { display: flex; }
+#pol-recipient {
+  background: none;
+  border: 1px solid rgba(255,255,255,0.18); border-right: none;
+  color: rgba(255,255,255,0.55); font-family: inherit;
+  font-size: 8px; letter-spacing: 0.22em; text-transform: uppercase;
+  padding: 8px 14px; width: 160px; outline: none;
+}
+#pol-recipient::placeholder { color: rgba(255,255,255,0.2); }
+#pol-recipient:focus { border-color: rgba(255,255,255,0.35); color: rgba(255,255,255,0.8); }
+#pol-print-bar button {
+  background: none; border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.5); font-family: inherit;
+  font-size: 8px; letter-spacing: 0.32em; text-transform: uppercase;
+  padding: 8px 16px; cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+#pol-print-bar button:hover { color: #fff; border-color: rgba(255,255,255,0.6); }
+
+/* ── RECIPIENT WATERMARK ── */
+.doc-recipient {
+  position: absolute; right: 28px; bottom: 48px;
+  writing-mode: vertical-rl; text-orientation: mixed;
+  transform: rotate(180deg);
+  font-size: 7px; letter-spacing: 0.28em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); font-weight: 300; pointer-events: none;
+  z-index: 100; white-space: nowrap;
+}
+/* sections need position:relative for the watermark to anchor */
+section.pol-only, #pol-shared-nosotros, #pol-shared-the-agency,
+#pol-shared-infosec, #cta { position: relative !important; }
+
+/* ── PRINT STYLES ── */
+/* Fallback @page — overwritten by polSyncPageHeight() (in #pol-page-size style tag) before print fires */
+@page {
+  size: 381mm 200mm;
+  margin: 0;
+}
+
+@media print {
+  /* Full bleed, exact colors */
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0 !important; padding: 0 !important;
+    background: #000 !important; color: #fff !important;
+    width: 100% !important; max-width: none !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  /* Nav: show logo only, overlay on every page */
+  nav {
+    position: fixed !important; top: 0; left: 0; right: 0;
+    background: transparent !important;
+    padding: 20px clamp(32px,6vw,96px) !important;
+    z-index: 9999;
+  }
+  nav .nav-badge, nav .lang-btn, #pol-lang-switch,
+  nav button, #nav-stickers { display: none !important; }
+
+  /* Hide non-pol content */
+  #nav-stickers, #pol-print-bar,
+  #section-dots, #section-tabs, #pol-section-tabs,
+  #hero, #mundo, #pw-question, #nosotros, #protegemos,
+  #quienes, #como, #servicios, #svc-veil, #svc-pulse,
+  #svc-sanctum, #svc-phantom, #pw-pero, #sfe,
+  #pw-agency, #the-agency, #paq-confianza, #infosec,
+  #anexo, #annexo, #dot { display: none !important; }
+
+  /* Show pol sections */
+  .pol-only, #pol-shared-nosotros, #pol-shared-the-agency,
+  #pol-shared-infosec, #cta { display: block !important; }
+
+  /* Each section = one page */
+  section.pol-only, #pol-shared-nosotros, #pol-shared-the-agency,
+  #pol-shared-infosec, #cta {
+    width: 100vw !important;
+    height: 100vh !important;
+    min-height: unset !important; max-height: 100vh !important;
+    margin: 0 !important;
+    page-break-after: always; break-after: page;
+    position: relative !important;
+    overflow: hidden !important;
+    display: block !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Hide canvases (animated charts) */
+  canvas { display: none !important; }
+
+  /* Recipient watermark */
+  .doc-recipient { color: rgba(255,255,255,0.3) !important; }
+
+  /* Marco: thin inset frame on every page */
+  section.pol-only::after,
+  #pol-shared-nosotros::after, #pol-shared-the-agency::after,
+  #pol-shared-infosec::after, #cta::after {
+    content: '';
+    position: absolute;
+    inset: 8mm;
+    border: 0.4pt solid rgba(255,255,255,0.10);
+    pointer-events: none;
+    z-index: 9000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
 
 /* ── LANG BUTTONS ── */
 .lang-btn {
@@ -375,10 +528,45 @@ nav {
 }
 
 /* ── SECTION TABS (nav center) ── */
-#section-tabs {
+#section-tabs, #pol-section-tabs {
   position: absolute; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: center; gap: clamp(10px, 1.2vw, 20px);
+  display: flex; align-items: center; gap: clamp(6px, 0.9vw, 16px);
   white-space: nowrap;
+}
+/* Two-row layout for pol-mode */
+#pol-section-tabs {
+  flex-direction: column; gap: 5px; align-items: center;
+}
+.pol-tabs-main,
+.pol-tabs-svcs {
+  display: flex; align-items: center; gap: clamp(5px, 0.8vw, 14px);
+  white-space: nowrap;
+}
+.pol-tabs-svcs {
+  position: relative; padding-top: 5px;
+}
+.pol-tabs-svcs::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 80%; height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+.pol-tabs-svcs .s-tab {
+  color: rgba(255,255,255,0.12);
+  font-size: 6.5px;
+}
+.pol-tabs-svcs .s-tab:hover  { color: rgba(255,255,255,0.42); }
+.pol-tabs-svcs .s-tab.active { color: rgba(255,255,255,0.80); }
+
+/* Pol-mode: tighter nav padding to fit 2 rows */
+body.mode-pol nav {
+  padding-top: 16px;
+  padding-bottom: 12px;
+  align-items: flex-start;
+}
+body.mode-pol nav .nav-logo,
+body.mode-pol nav > div:last-of-type {
+  margin-top: 4px; /* align logo & lang with top tab row */
 }
 .s-tab {
   font-family: 'Outfit', sans-serif;
@@ -1080,6 +1268,22 @@ nav {
   color: #fff;
   margin: 0;
 }
+/* Project tag — pulsing descriptor */
+.svc-project-tag {
+  display: block;
+  margin-top: clamp(18px, 2.5vh, 30px);
+  font-size: clamp(13px, 1.1vw, 18px);
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.55);
+  animation: svc-tag-pulse 3.5s ease-in-out infinite;
+}
+@keyframes svc-tag-pulse {
+  0%, 100% { color: rgba(255,255,255,0.40); }
+  50%       { color: rgba(255,255,255,0.80); text-shadow: 0 0 22px rgba(255,255,255,0.18); }
+}
+
 /* Derecha: 4 bloques */
 .svc-intro-right {
   flex: 0 0 clamp(340px, 40%, 560px);
@@ -1913,8 +2117,195 @@ nav {
   padding: 4px 10px;
 }
 /* Phantom — title smaller than other products */
-#phantom-intro .svc-intro-left h2 {
-  font-size: clamp(80px, 12vw, 180px);
+#phantom-intro .svc-intro-left h2,
+#pol-phantom-intro .svc-intro-left h2 {
+  font-size: clamp(60px, 8.5vw, 130px);
+}
+/* E-Sweep / Social Lock — two-word titles need smaller size to avoid blowout */
+#pol-esweep-intro .svc-intro-left h2,
+#pol-sociallock-intro .svc-intro-left h2 {
+  font-size: clamp(64px, 9vw, 140px);
+  white-space: nowrap;
+}
+/* Panoptica / Research — long words, keep contained */
+#pol-panoptica-intro .svc-intro-left h2,
+#pol-research-intro .svc-intro-left h2 {
+  font-size: clamp(60px, 8.5vw, 130px);
+  white-space: nowrap;
+}
+/* DeepLynx — compact stacked overlay */
+#pol-deeplink-intro .svc-intro-overlay--stacked {
+  padding: clamp(36px,5vh,60px) clamp(32px,6vw,96px) clamp(20px,3vh,36px);
+  justify-content: flex-start;
+  gap: 0;
+}
+
+/* DeepLynx — title in horizontal strip, must stay compact */
+#pol-deeplink-intro .svc-intro-stacked-top h2,
+#pol-deeplink-intro .pol-deeplink-top-left h2 {
+  font-size: clamp(72px, 10vw, 160px);
+  white-space: nowrap;
+  line-height: 0.85;
+}
+
+/* ── DEEP LINK — custom layout ── */
+
+/* Top strip: título izq + descripción der */
+.pol-deeplink-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(32px, 5vw, 80px);
+  width: 100%;
+  padding-bottom: clamp(8px, 1.2vh, 14px);
+}
+.pol-deeplink-top-left {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.pol-deeplink-top-right {
+  max-width: clamp(280px, 38vw, 520px);
+  padding-bottom: 4px;
+}
+.pol-deeplink-top-right p {
+  font-size: clamp(11px, 0.95vw, 14px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.58);
+  line-height: 1.65;
+  margin: 0;
+}
+.pol-deeplink-top-right strong {
+  color: rgba(255,255,255,0.85);
+  font-weight: 500;
+}
+
+/* Split principal */
+.pol-deeplink-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0.72fr;
+  gap: clamp(16px, 2vw, 28px);
+  width: 100%;
+  flex: none;
+  min-height: 0;
+  margin-top: clamp(10px, 1.5vh, 18px);
+  margin-bottom: clamp(10px, 1.5vh, 18px);
+}
+
+/* Neural canvas column */
+.pol-deeplink-neural { position: relative; overflow: hidden; padding: 0 !important; }
+.pol-deeplink-neural-head { padding: clamp(14px,1.8vh,22px) clamp(16px,1.6vw,22px) 0; }
+.pol-deeplink-neural-wrap { flex: 1; min-height: 0; position: relative; }
+.pol-deeplink-neural-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.pol-deeplink-half {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 0.9vh, 10px);
+  padding: clamp(14px, 1.8vh, 22px) clamp(16px, 1.6vw, 22px);
+  background: rgba(0,0,0,0.28);
+  border: 1px solid rgba(255,255,255,0.09);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+.pol-deeplink-half-title {
+  font-size: clamp(9px, 0.72vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.38);
+  margin: 0;
+}
+.pol-deeplink-hard {
+  font-size: clamp(15px, 1.4vw, 22px);
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.25;
+  margin: 0;
+}
+.pol-deeplink-body {
+  font-size: clamp(10px, 0.8vw, 12px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  margin: 0;
+}
+/* Chips horizontales */
+.pol-deeplink-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 7px;
+  margin-top: 2px;
+}
+.pol-deeplink-chip {
+  font-size: clamp(8px, 0.68vw, 10px);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.62);
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  padding: 3px 9px;
+}
+/* What we do — mini sección entre chips y ejemplos */
+.pol-deeplink-whatwedo {
+  padding: clamp(8px, 1.2vh, 14px) 0;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pol-deeplink-whatwedo-label {
+  font-size: clamp(7px, 0.62vw, 9px);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+  display: block;
+  margin-bottom: 5px;
+}
+.pol-deeplink-whatwedo p {
+  font-size: clamp(9px, 0.78vw, 11px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.60);
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* Ejemplos al fondo */
+.pol-deeplink-examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: clamp(10px, 1.5vh, 18px);
+  padding-top: clamp(10px, 1.4vh, 16px);
+  border-top: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+}
+.pol-deeplink-example p {
+  font-size: clamp(9px, 0.74vw, 11px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.55;
+  margin: 0;
+}
+.pol-deeplink-example {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.pol-deeplink-ex-label {
+  font-size: clamp(7px, 0.6vw, 9px);
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+}
+.pol-deeplink-example p {
+  font-size: clamp(9px, 0.74vw, 11px);
+  font-weight: 300;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.55;
+  margin: 0;
 }
 
 /* Phantom — editorial text, no boxes */
@@ -1937,6 +2328,39 @@ nav {
   letter-spacing: 0.01em;
   color: rgba(255,255,255,0.32);
   line-height: 1.75;
+}
+
+/* ── Phantom pol-mode layout overrides ── */
+#pol-phantom .svc-intro-right {
+  justify-content: center;
+  gap: clamp(10px, 1.8vh, 20px);
+}
+#pol-phantom .phantom-trio {
+  font-size: clamp(9px, 0.75vw, 11px);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  font-weight: 500;
+  margin: 0;
+  padding: 0 0 clamp(6px,0.9vh,10px) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+#pol-phantom .phantom-trio:last-of-type {
+  margin-bottom: clamp(12px, 2vh, 20px);
+}
+#pol-phantom .phantom-body {
+  font-size: clamp(10px, 0.82vw, 12px);
+  color: rgba(255,255,255,0.38);
+  line-height: 1.68;
+  margin-bottom: clamp(12px, 2vh, 20px);
+}
+#pol-phantom .svc-intro-right .svc-intro-block:nth-child(n) {
+  flex: none;
+}
+#pol-phantom .phantom-blocks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(8px, 1.2vh, 14px) clamp(16px, 2vw, 28px);
 }
 
 /* Sanctum — mid boxes between title and columns */
@@ -1981,6 +2405,37 @@ nav {
   color: rgba(255,255,255,0.14);
 }
 .svc-sanctum-item:last-child::after { content: ''; }
+
+/* Sanctum pol-mode — location boxes (Oficina / Casa / Campaign HQ / War Room) */
+.pol-sanctum-stacked {
+  grid-template-columns: repeat(3, 1fr) 1.3fr !important;
+}
+.pol-sanctum-locs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 8px;
+  padding-left: 24px;
+  border-left: 1px solid rgba(255,255,255,0.07);
+  align-self: stretch;
+}
+.pol-loc-box {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 8px;
+  text-align: center;
+}
+.pol-loc-name {
+  font-size: clamp(8px, 0.72vw, 10px);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.4;
+}
 
 /* Veil — device chips */
 .svc-intro-chips {
@@ -2320,7 +2775,7 @@ body.lang-es .nos-cap-big {
 /* ══════════════════════════════════════════
    MOBILE — iPhone first (≤ 768px)
 ══════════════════════════════════════════ */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
 
   /* === GLOBAL === */
   #dot { display: none !important; }
@@ -2331,6 +2786,8 @@ body.lang-es .nos-cap-big {
   nav { padding: 18px 24px; }
   #section-tabs { display: none !important; }
   .nav-badge { display: none !important; }
+  #nav-stickers { display: none !important; }
+  #pol-print-bar button { display: none !important; }
 
   /* === HERO === */
   #hero-logo svg { width: clamp(200px, 70vw, 280px); }
@@ -2563,7 +3020,959 @@ body.lang-es .nos-cap-big {
   .agency-callout-n { font-size: 36px; }
 
 }
+
+/* ══════════════════════════════════════════
+   POLITICIAN MODE — body.mode-pol
+══════════════════════════════════════════ */
+
+/* Hide all regular sections in pol mode */
+body.mode-pol #hero,
+body.mode-pol #mundo,
+body.mode-pol #pw-question,
+body.mode-pol #protegemos,
+body.mode-pol #quienes,
+body.mode-pol #como,
+body.mode-pol #servicios,
+body.mode-pol #svc-veil,
+body.mode-pol #svc-pulse,
+body.mode-pol #svc-sanctum,
+body.mode-pol #svc-phantom,
+body.mode-pol #pw-pero,
+body.mode-pol #sfe,
+body.mode-pol #pw-agency,
+body.mode-pol #paq-confianza    { display: none !important; }
+body.mode-pol #nosotros        { display: none !important; }
+body.mode-pol #the-agency      { display: none !important; }
+body.mode-pol #infosec         { display: none !important; }
+/* #cta hidden until JS moves it to correct position after pol-shared-infosec */
+body.mode-pol #cta:not(.pol-cta-ready) { display: none !important; }
+body.mode-pol #cta.pol-cta-ready { display: flex !important; }
+
+/* ── CLONED SHARED SECTIONS — pol mode inherits layout from originals ── */
+#pol-shared-nosotros {
+  padding: clamp(64px,9vh,110px) clamp(32px,6vw,96px) clamp(64px,9vh,110px);
+  background: #020202;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  position: relative; overflow: hidden;
+}
+#pol-shared-the-agency {
+  background: #020202;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: space-between;
+  padding: clamp(32px,4.5vh,56px) clamp(32px,6vw,96px) clamp(72px,10vh,96px);
+  position: relative; overflow: hidden;
+}
+#pol-shared-the-agency > *:not(.agency-photo) { position: relative; z-index: 2; }
+#pol-shared-infosec {
+  background: #000;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  min-height: 100vh;
+  padding: clamp(80px,10vh,140px) clamp(32px,6vw,96px) clamp(60px,8vh,100px);
+  display: grid; grid-template-columns: 1fr 1fr;
+  align-content: center; gap: clamp(60px,8vw,140px); align-items: start;
+}
+
+@media screen and (max-width: 768px) {
+  #pol-shared-nosotros   { padding: 72px 24px 80px !important; }
+  #pol-shared-the-agency { min-height: unset; height: auto; padding: 48px 20px 0; }
+  #pol-shared-infosec    { grid-template-columns: 1fr !important; gap: 40px !important; padding: 72px 24px 80px !important; }
+}
+
+/* Hide pol-only sections in normal mode */
+body:not(.mode-pol) .pol-only { display: none !important; }
+
+/* Pol nav tabs */
+body.mode-pol  #section-tabs     { display: none !important; }
+body.mode-pol  #section-dots     { display: none !important; }
+body:not(.mode-pol) #pol-section-tabs { display: none !important; }
+
+/* ── POL HERO ── */
+#pol-hero {
+  height: 100vh; min-height: 600px;
+  background: #000;
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(48px,8vh,96px) clamp(32px,6vw,96px);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
+}
+#pol-hero-photo {
+  position: absolute; inset: 0;
+  z-index: 0;
+}
+#pol-hero-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  display: block;
+}
+#pol-hero-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.35) 0%,
+    rgba(0,0,0,0.55) 55%,
+    rgba(0,0,0,0.82) 100%
+  );
+}
+#pol-hero .pol-hero-eyebrow,
+#pol-hero .pol-hero-h1,
+#pol-hero .pol-hero-sub {
+  position: relative; z-index: 1;
+}
+.pol-hero-eyebrow {
+  font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase;
+  font-weight: 400; color: rgba(255,255,255,0.28);
+  margin-bottom: clamp(24px,3.5vh,40px);
+}
+.pol-hero-h1 {
+  font-size: clamp(44px, 7vw, 108px);
+  font-weight: 700; letter-spacing: -0.04em;
+  line-height: 1.0; color: #fff;
+  margin: 0 0 clamp(20px,3vh,36px);
+  max-width: 820px;
+}
+.pol-hero-sub {
+  font-size: clamp(13px, 1.2vw, 17px);
+  font-weight: 300; color: rgba(255,255,255,0.45);
+  line-height: 1.6; max-width: 560px;
+  letter-spacing: 0.01em;
+}
+
+/* ── POL STATS ── */
+#pol-stats {
+  background: #000;
+  padding: clamp(48px,7vh,88px) clamp(32px,6vw,96px);
+  display: flex; flex-direction: column;
+  justify-content: center;
+  gap: clamp(28px,4vh,52px);
+  height: 100vh; overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pol-stats-header {
+  display: flex; flex-direction: column;
+  gap: clamp(6px,1vh,10px);
+}
+.pol-stats-eyebrow {
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28); font-weight: 400;
+}
+.pol-stats-title {
+  font-size: clamp(22px,2.5vw,38px); font-weight: 300;
+  letter-spacing: -0.02em; color: #fff; margin: 0; line-height: 1.15;
+}
+.pol-stats-body {
+  display: flex; gap: clamp(40px,5vw,80px);
+  align-items: flex-start;
+}
+.pol-stats-left {
+  flex: 0 0 62%;
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: rgba(255,255,255,0.06);
+}
+.pol-stat {
+  background: #000;
+  padding: clamp(24px,3.5vh,40px) clamp(20px,2vw,32px);
+  display: flex; flex-direction: column; gap: 10px;
+  position: relative;
+  transition: background 0.35s ease;
+  overflow: hidden;
+  cursor: default;
+}
+.pol-stat::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.12) 60%, transparent 100%);
+  transform: translateX(-101%);
+  transition: transform 0.5s cubic-bezier(0.25,0.1,0.25,1);
+}
+.pol-stat:hover { background: rgba(255,255,255,0.032); }
+.pol-stat:hover::before { transform: translateX(0); }
+.pol-stat:hover .pol-stat-n { text-shadow: 0 0 55px rgba(255,255,255,0.18); }
+
+/* Ambient pulse per box — slow sequential glow */
+@keyframes pol-stat-ambient {
+  0%,85%,100% { background: #000; }
+  42%          { background: rgba(255,255,255,0.028); }
+}
+.pol-stat:nth-child(1) { animation: pol-stat-ambient 9s ease-in-out infinite 0.0s; }
+.pol-stat:nth-child(2) { animation: pol-stat-ambient 9s ease-in-out infinite 1.5s; }
+.pol-stat:nth-child(3) { animation: pol-stat-ambient 9s ease-in-out infinite 3.0s; }
+.pol-stat:nth-child(4) { animation: pol-stat-ambient 9s ease-in-out infinite 4.5s; }
+.pol-stat:nth-child(5) { animation: pol-stat-ambient 9s ease-in-out infinite 6.0s; }
+.pol-stat:nth-child(6) { animation: pol-stat-ambient 9s ease-in-out infinite 7.5s; }
+.pol-stat:hover { animation: none; background: rgba(255,255,255,0.032); }
+.pol-stat-n {
+  font-size: clamp(28px, 3.5vw, 52px);
+  font-weight: 700; letter-spacing: -0.04em;
+  color: #fff; line-height: 1;
+  transition: text-shadow 0.35s ease;
+}
+.pol-stat-label {
+  font-size: clamp(10px, 0.85vw, 12px);
+  font-weight: 300; color: rgba(255,255,255,0.42);
+  line-height: 1.5;
+}
+.pol-stat-source {
+  font-size: 8px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,255,255,0.16); margin-top: 4px;
+}
+.pol-stat-source a {
+  color: inherit; text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  transition: color 0.2s, border-color 0.2s;
+}
+.pol-stat-source a:hover {
+  color: rgba(255,255,255,0.45);
+  border-bottom-color: rgba(255,255,255,0.35);
+}
+.pol-stats-right {
+  flex: 1; display: flex; flex-direction: column; gap: 16px;
+  padding-top: 4px;
+}
+.pol-chart-label {
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28);
+}
+.pol-chart-title {
+  font-size: clamp(13px,1.2vw,17px); font-weight: 300;
+  color: rgba(255,255,255,0.7); line-height: 1.4;
+  margin-bottom: 8px;
+}
+#pol-chart-svg { width: 100%; height: auto; overflow: visible; }
+
+/* ── POL HOW ── */
+#pol-how {
+  height: 100vh; min-height: 600px;
+  position: relative;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: clamp(48px,8vh,96px) clamp(32px,6vw,96px) clamp(72px,12vh,130px);
+  overflow: hidden;
+}
+#pol-how-photo { position: absolute; inset: 0; z-index: 0; }
+#pol-how-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 20%;
+  display: block;
+}
+#pol-how-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.10) 0%,
+    rgba(0,0,0,0.45) 50%,
+    rgba(0,0,0,0.88) 100%
+  );
+}
+.pol-how-content { position: relative; z-index: 1; }
+.pol-how-word {
+  font-size: clamp(100px, 17vw, 260px);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.80;
+  color: rgba(255,255,255,0.07);
+  margin: 0 0 clamp(20px,3vh,36px) -6px;
+  user-select: none;
+  pointer-events: none;
+}
+.pol-how-label {
+  font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase;
+  font-weight: 400; color: rgba(255,255,255,0.30);
+  margin-bottom: clamp(16px,2.2vh,24px);
+}
+.pol-how-headline {
+  font-size: clamp(28px, 3.8vw, 58px);
+  font-weight: 700; letter-spacing: -0.04em;
+  line-height: 1.0; color: #fff;
+  margin: 0 0 clamp(16px,2.2vh,24px);
+}
+.pol-how-tag {
+  display: inline-block;
+  font-size: clamp(13px, 1.1vw, 18px);
+  font-weight: 300;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.45);
+  margin: 0 0 clamp(24px,3.5vh,40px);
+}
+.pol-how-cats {
+  display: flex; flex-wrap: wrap;
+  gap: clamp(8px,1vw,14px);
+}
+.pol-how-cat {
+  font-size: clamp(9px, 0.75vw, 11px);
+  font-weight: 600; letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.70);
+  border: 1px solid rgba(255,255,255,0.20);
+  padding: clamp(13px,1.8vh,20px) clamp(28px,3vw,44px);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s, color 0.2s;
+}
+.pol-how-cat:hover {
+  background: rgba(255,255,255,0.10);
+  color: #fff;
+}
+
+/* ── POL SERVICIOS ── */
+#pol-servicios {
+  background: #000;
+  padding: clamp(28px,3.5vh,48px) clamp(32px,6vw,96px);
+  height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pol-svc-sub-br {
+  position: absolute;
+  bottom: clamp(140px,19vh,210px);
+  right: clamp(32px,6vw,96px);
+  max-width: clamp(260px,28vw,400px);
+  text-align: right;
+  z-index: 1;
+}
+.pol-svc-sub-br .pol-eco-eyebrow {
+  display: block; margin-bottom: 6px;
+  color: rgba(255,255,255,0.22);
+}
+.pol-svc-sub-br .pol-eco-headline {
+  font-size: clamp(16px,1.6vw,24px);
+  font-weight: 700; letter-spacing: -0.03em;
+  color: #fff; margin: 0 0 8px;
+}
+.pol-svc-sub-br p {
+  font-size: clamp(10px,0.78vw,11px); font-weight: 300;
+  color: rgba(255,255,255,0.28); line-height: 1.55; margin: 0;
+}
+.pol-svc-grid {
+  display: grid;
+  grid-template-columns: clamp(90px,10vw,140px) repeat(5,1fr);
+  grid-template-rows: repeat(4,1fr);
+  gap: 1px;
+  background: rgba(255,255,255,0.07);
+  margin-top: 0;
+  height: 80vh; max-height: 80vh; min-height: 0; flex: none; margin: auto 0 0;
+}
+.pol-svc-cat-label {
+  background: rgba(255,255,255,0.025);
+  font-size: 8px; letter-spacing: 0.32em; text-transform: uppercase;
+  font-weight: 600; color: rgba(255,255,255,0.45);
+  padding: clamp(10px,1.3vh,16px) clamp(10px,1vw,16px);
+  display: flex; align-items: flex-start;
+  border-right: 1px solid rgba(255,255,255,0.10);
+}
+.pol-svc-empty { background: #000; }
+.pol-svc-card {
+  background: #000;
+  padding: clamp(10px,1.3vh,16px) clamp(12px,1.2vw,18px);
+  display: flex; flex-direction: column; gap: 5px;
+  transition: background 0.3s ease;
+}
+.pol-svc-card:hover { background: rgba(255,255,255,0.02); }
+.pol-svc-name {
+  font-size: clamp(11px,1vw,15px); font-weight: 600;
+  letter-spacing: -0.01em; color: #fff;
+}
+.pol-svc-tag {
+  font-size: 7.5px; letter-spacing: 0.20em; text-transform: uppercase;
+  color: rgba(255,255,255,0.22); font-weight: 400;
+  margin-bottom: 3px;
+}
+.pol-svc-body {
+  font-size: clamp(9px,0.78vw,11px); font-weight: 300;
+  color: rgba(255,255,255,0.34); line-height: 1.65;
+}
+.pol-svc-card--phantom { grid-column: 6; }
+
+/* ── POL RIESGOS ── */
+#pol-riesgos {
+  background: #000;
+  padding: clamp(24px,3.5vh,44px) clamp(32px,6vw,96px);
+  height: 100vh; overflow: hidden;
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.pol-riesgos-top {
+  margin-bottom: clamp(12px,2vh,24px);
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: clamp(32px,6vw,96px);
+}
+.pol-riesgos-top-left { flex: 0 0 auto; max-width: 520px; }
+.pol-riesgos-top-right {
+  font-size: clamp(10px,0.85vw,13px); font-weight: 300;
+  color: rgba(255,255,255,0.32); line-height: 1.6;
+  max-width: 340px; text-align: right;
+  padding-bottom: 4px;
+}
+.pol-riesgo-table {
+  display: flex; flex-direction: column;
+  border-top: 1px solid rgba(255,255,255,0.10);
+  flex: 1; overflow: hidden;
+}
+.pol-riesgo-row {
+  display: grid;
+  grid-template-columns: clamp(32px,3.5vw,52px) clamp(88px,9vw,120px) 1fr 1.8fr;
+  gap: 0 clamp(16px,2vw,36px);
+  padding: clamp(7px,1.1vh,12px) 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-items: center;
+  transition: background 0.2s;
+}
+.pol-riesgo-row:hover { background: rgba(255,255,255,0.018); margin: 0 -clamp(32px,6vw,96px); padding-left: clamp(32px,6vw,96px); padding-right: clamp(32px,6vw,96px); }
+.pol-riesgo-num {
+  font-size: clamp(9px,0.75vw,11px); font-weight: 400;
+  letter-spacing: 0.08em; color: rgba(255,255,255,0.18);
+  font-variant-numeric: tabular-nums;
+}
+.pol-riesgo-cat {
+  display: inline-block;
+  font-size: 7px; letter-spacing: 0.30em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); font-weight: 500;
+  border: 1px solid rgba(255,255,255,0.12);
+  padding: 3px 9px;
+  animation: pol-chip-glow 11s ease-in-out infinite;
+}
+@keyframes pol-chip-glow {
+  0%, 70%, 100% { box-shadow: none; border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.35); }
+  35%            { box-shadow: 0 0 8px rgba(255,255,255,0.18), inset 0 0 6px rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.32); color: rgba(255,255,255,0.65); }
+}
+/* Staggered delays — disordered */
+.pol-riesgo-row:nth-child(1)  .pol-riesgo-cat { animation-delay:  0.0s; }
+.pol-riesgo-row:nth-child(2)  .pol-riesgo-cat { animation-delay:  7.3s; }
+.pol-riesgo-row:nth-child(3)  .pol-riesgo-cat { animation-delay:  2.1s; }
+.pol-riesgo-row:nth-child(4)  .pol-riesgo-cat { animation-delay:  9.6s; }
+.pol-riesgo-row:nth-child(5)  .pol-riesgo-cat { animation-delay:  4.4s; }
+.pol-riesgo-row:nth-child(6)  .pol-riesgo-cat { animation-delay:  1.2s; }
+.pol-riesgo-row:nth-child(7)  .pol-riesgo-cat { animation-delay:  8.0s; }
+.pol-riesgo-row:nth-child(8)  .pol-riesgo-cat { animation-delay:  5.7s; }
+.pol-riesgo-row:nth-child(9)  .pol-riesgo-cat { animation-delay:  3.3s; }
+.pol-riesgo-row:nth-child(10) .pol-riesgo-cat { animation-delay:  6.8s; }
+.pol-riesgo-row:nth-child(11) .pol-riesgo-cat { animation-delay:  2.9s; }
+.pol-riesgo-row:nth-child(12) .pol-riesgo-cat { animation-delay:  8.4s; }
+
+/* Physical rows — ambient glow */
+@keyframes pol-physical-glow {
+  0%, 100% { background: transparent; box-shadow: none; }
+  50%       { background: rgba(255,255,255,0.07); box-shadow: inset 0 0 60px rgba(255,255,255,0.10), 0 0 20px rgba(255,255,255,0.06); }
+}
+.pol-riesgo-row:nth-child(11) {
+  animation: pol-physical-glow 6s ease-in-out infinite 0s;
+}
+.pol-riesgo-row:nth-child(12) {
+  animation: pol-physical-glow 6s ease-in-out infinite 3s;
+}
+.pol-riesgo-row:nth-child(11) .pol-riesgo-cat,
+.pol-riesgo-row:nth-child(12) .pol-riesgo-cat {
+  color: rgba(255,255,255,0.60);
+  border-color: rgba(255,255,255,0.28);
+}
+.pol-riesgo-row:nth-child(11) .pol-riesgo-title,
+.pol-riesgo-row:nth-child(12) .pol-riesgo-title {
+  color: #fff;
+}
+.pol-riesgo-row:nth-child(11) .pol-riesgo-body,
+.pol-riesgo-row:nth-child(12) .pol-riesgo-body {
+  color: rgba(255,255,255,0.48);
+}
+.pol-riesgo-title {
+  font-size: clamp(11px,1vw,15px); font-weight: 500;
+  letter-spacing: -0.01em; color: rgba(255,255,255,0.88);
+}
+.pol-riesgo-body {
+  font-size: clamp(9px,0.8vw,12px); font-weight: 300;
+  color: rgba(255,255,255,0.34); line-height: 1.55;
+}
+
+/* ── POL ECOSISTEMA ── */
+#pol-ecosistema {
+  height: 100vh; min-height: 600px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+#pol-eco-photo { position: absolute; inset: 0; z-index: 0; }
+#pol-eco-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 35%;
+  display: block;
+}
+#pol-eco-photo::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0,0,0,0.88) 0%,
+    rgba(0,0,0,0.78) 42%,
+    rgba(0,0,0,0.50) 70%,
+    rgba(0,0,0,0.28) 100%
+  );
+}
+.pol-eco-content {
+  position: relative; z-index: 1;
+  width: 52%;
+  display: flex; flex-direction: column;
+  gap: clamp(20px,2.8vh,36px);
+  padding: clamp(40px,6vh,72px) 0 clamp(140px,22vh,210px) clamp(32px,6vw,96px);
+}
+.pol-eco-text-block {
+  display: flex; flex-direction: column;
+  gap: clamp(6px,1vh,10px);
+}
+.pol-eco-what {
+  position: absolute;
+  right: -0.06em;
+  bottom: clamp(30px, 12vh, 90px);
+  font-size: clamp(110px, 17vw, 270px);
+  font-weight: 800; letter-spacing: -0.055em;
+  line-height: 1; white-space: nowrap;
+  color: rgba(255,255,255,0.14);
+  user-select: none; pointer-events: none;
+  z-index: 1;
+}
+.pol-eco-eyebrow {
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(255,255,255,0.28); margin-bottom: clamp(8px,1.2vh,14px);
+  display: block;
+}
+.pol-eco-headline {
+  font-size: clamp(22px,2.8vw,42px); font-weight: 700;
+  letter-spacing: -0.03em; color: #fff;
+  margin: 0 0 clamp(8px,1.2vh,14px); line-height: 1.1;
+}
+.pol-eco-sub {
+  font-size: clamp(11px,0.95vw,14px); font-weight: 300;
+  color: rgba(255,255,255,0.38); line-height: 1.6;
+  margin: 0;
+}
+.pol-eco-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 1px; background: rgba(255,255,255,0.08);
+}
+.pol-eco-card {
+  background: rgba(0,0,0,0.72);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  padding: clamp(16px,2.2vh,28px) clamp(14px,1.5vw,22px);
+  display: flex; flex-direction: column; gap: 8px;
+  transition: background 0.3s ease;
+}
+.pol-eco-card:hover { background: rgba(255,255,255,0.04); }
+.pol-eco-n {
+  font-size: clamp(24px,2.4vw,38px); font-weight: 700;
+  letter-spacing: -0.05em; color: rgba(255,255,255,0.07);
+  line-height: 1;
+}
+.pol-eco-name {
+  font-size: clamp(10px,0.9vw,13px); font-weight: 500;
+  letter-spacing: 0.01em; color: rgba(255,255,255,0.82);
+  line-height: 1.3;
+}
+.pol-eco-body {
+  font-size: clamp(9px,0.78vw,11px); font-weight: 300;
+  color: rgba(255,255,255,0.34); line-height: 1.65;
+}
+
+/* ── pol-remate ── */
+#pol-remate {
+  background: #000;
+  height: 100vh; min-height: 600px;
+  display: flex;
+  border-top: 1px solid rgba(255,255,255,0.04);
+  overflow: hidden;
+  position: relative;
+}
+.pol-rm-left {
+  flex: 0 0 44%;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: clamp(48px,8vh,96px) clamp(32px,4vw,72px);
+  border-right: 1px solid rgba(255,255,255,0.04);
+  z-index: 1;
+}
+.pol-rm-eyebrow {
+  display: block;
+  font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+  color: rgba(255,255,255,0.22); margin-bottom: clamp(28px,4.5vh,52px);
+}
+.pol-rm-list { display: flex; flex-direction: column; }
+.pol-rm-item {
+  font-size: clamp(10px, 0.95vw, 14px);
+  font-weight: 300; letter-spacing: -0.01em;
+  color: rgba(255,255,255,0.68);
+  padding: clamp(5px,0.65vh,8px) 0;
+  position: relative;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.65s cubic-bezier(.16,1,.3,1), transform 0.65s cubic-bezier(.16,1,.3,1);
+}
+.pol-rm-item::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, rgba(255,255,255,0.09) 0%, transparent 72%);
+}
+.pol-rm-item.visible { opacity: 1; transform: translateY(0); }
+.pol-rm-item--heavy {
+  font-size: clamp(12px, 1.15vw, 17px);
+  font-weight: 400;
+  color: rgba(255,255,255,0.90);
+}
+.pol-rm-tag {
+  display: block;
+  font-size: clamp(7px, 0.58vw, 9px);
+  font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+  color: rgba(255,255,255,0.24); margin-top: 2px;
+}
+.pol-rm-nav {
+  display: flex; gap: 16px; margin-top: clamp(28px,4vh,52px);
+  align-items: center;
+}
+.pol-rm-btn {
+  background: none; border: 1px solid rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.45); font-size: 16px;
+  cursor: pointer; padding: 8px 14px; font-family: inherit;
+  transition: color 0.2s, border-color 0.2s;
+}
+.pol-rm-btn:hover { color: rgba(255,255,255,0.75); border-color: rgba(255,255,255,0.35); }
+.pol-rm-right { flex: 1; position: relative; }
+#pol-rm-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ════════════════════════════════════════════════════
+   POL-MODE — AMBIENT EFFECTS
+   ════════════════════════════════════════════════════ */
+
+/* Ken Burns: slow photo drift */
+@keyframes pol-photo-drift {
+  from { transform: scale(1); }
+  to   { transform: scale(1.055); }
+}
+#pol-hero-photo img,
+#pol-how-photo img,
+#pol-eco-photo img {
+  animation: pol-photo-drift 24s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+
+/* Ghost word breathe */
+@keyframes pol-ghost-breathe {
+  0%,100% { opacity: 1; }
+  50%     { opacity: 0.45; }
+}
+.pol-eco-what { animation: pol-ghost-breathe 8s ease-in-out infinite; }
+.pol-how-word { animation: pol-ghost-breathe 9s ease-in-out infinite 2s; }
+
+
+/* Divider line glow: travels across top border of riesgo table */
+@keyframes pol-line-travel {
+  0%,62%  { background-position: -25% 0; opacity: 0; }
+  5%      { opacity: 1; }
+  48%     { opacity: 1; }
+  58%,100%{ background-position: 125% 0; opacity: 0; }
+}
+.pol-riesgo-table {
+  position: relative;
+}
+.pol-riesgo-table::before {
+  content: '';
+  position: absolute; top: 0; left: 0; width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 50%, transparent 100%);
+  background-size: 22% 100%; background-repeat: no-repeat;
+  animation: pol-line-travel 8s ease-in-out infinite 1.5s;
+  pointer-events: none;
+}
+
+/* Scan sweep on servicios grid */
+@keyframes pol-grid-scan {
+  0%,72% { transform: translateX(-100%); opacity: 0; }
+  5%     { opacity: 1; }
+  65%    { opacity: 1; }
+  70%,100%{ transform: translateX(160vw); opacity: 0; }
+}
+#pol-servicios .pol-svc-grid::after {
+  content: '';
+  position: absolute; top: 0; left: 0;
+  width: 80px; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.022), transparent);
+  animation: pol-grid-scan 10s ease-in-out infinite 3s;
+  pointer-events: none;
+}
+#pol-servicios .pol-svc-grid { position: relative; overflow: hidden; }
+
+/* ════════════════════════════════════════════════════
+   POL-MODE — ENTRANCE ANIMATIONS
+   ════════════════════════════════════════════════════ */
+@media screen {
+
+  /* ── Hero ── */
+  #pol-hero .pol-hero-eyebrow { opacity:0; transform:translateY(14px); transition:opacity .75s ease .06s,transform .75s ease .06s; }
+  #pol-hero .pol-hero-h1      { opacity:0; transform:translateY(18px); transition:opacity .9s  ease .22s,transform .9s  ease .22s; }
+  #pol-hero .pol-hero-sub     { opacity:0; transform:translateY(12px); transition:opacity .75s ease .44s,transform .75s ease .44s; }
+  #pol-hero.in-view .pol-hero-eyebrow,
+  #pol-hero.in-view .pol-hero-h1,
+  #pol-hero.in-view .pol-hero-sub { opacity:1; transform:none; }
+
+  /* ── Stats ── */
+  #pol-stats .pol-stats-header  { opacity:0; transform:translateY(12px); transition:opacity .7s ease,transform .7s ease; }
+  #pol-stats .pol-stats-right   { opacity:0; transition:opacity .9s ease .35s; }
+  #pol-stats .pol-stat          { opacity:0; transform:translateY(10px); }
+  #pol-stats .pol-stat:nth-child(1){transition:opacity .6s ease .08s,transform .6s ease .08s;}
+  #pol-stats .pol-stat:nth-child(2){transition:opacity .6s ease .16s,transform .6s ease .16s;}
+  #pol-stats .pol-stat:nth-child(3){transition:opacity .6s ease .24s,transform .6s ease .24s;}
+  #pol-stats .pol-stat:nth-child(4){transition:opacity .6s ease .32s,transform .6s ease .32s;}
+  #pol-stats .pol-stat:nth-child(5){transition:opacity .6s ease .40s,transform .6s ease .40s;}
+  #pol-stats .pol-stat:nth-child(6){transition:opacity .6s ease .48s,transform .6s ease .48s;}
+  #pol-stats.in-view .pol-stats-header,
+  #pol-stats.in-view .pol-stats-right,
+  #pol-stats.in-view .pol-stat { opacity:1; transform:none; }
+
+  /* ── Riesgos ── */
+  #pol-riesgos .pol-riesgos-top { opacity:0; transform:translateY(10px); transition:opacity .7s ease,transform .7s ease; }
+  #pol-riesgos .pol-riesgo-row  { opacity:0; }
+  #pol-riesgos .pol-riesgo-row:nth-child(1) {transition:opacity .5s ease .04s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(2) {transition:opacity .5s ease .09s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(3) {transition:opacity .5s ease .14s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(4) {transition:opacity .5s ease .19s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(5) {transition:opacity .5s ease .24s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(6) {transition:opacity .5s ease .29s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(7) {transition:opacity .5s ease .34s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(8) {transition:opacity .5s ease .39s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(9) {transition:opacity .5s ease .44s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(10){transition:opacity .5s ease .49s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(11){transition:opacity .5s ease .54s;}
+  #pol-riesgos .pol-riesgo-row:nth-child(12){transition:opacity .5s ease .59s;}
+  #pol-riesgos.in-view .pol-riesgos-top,
+  #pol-riesgos.in-view .pol-riesgo-row { opacity:1; }
+
+  /* ── Ecosistema ── */
+  #pol-ecosistema .pol-eco-text-block { opacity:0; transform:translateY(12px); transition:opacity .8s ease .1s,transform .8s ease .1s; }
+  #pol-ecosistema .pol-eco-card { opacity:0; transform:translateY(8px); }
+  #pol-ecosistema .pol-eco-card:nth-child(1){transition:opacity .55s ease .14s,transform .55s ease .14s;}
+  #pol-ecosistema .pol-eco-card:nth-child(2){transition:opacity .55s ease .21s,transform .55s ease .21s;}
+  #pol-ecosistema .pol-eco-card:nth-child(3){transition:opacity .55s ease .28s,transform .55s ease .28s;}
+  #pol-ecosistema .pol-eco-card:nth-child(4){transition:opacity .55s ease .35s,transform .55s ease .35s;}
+  #pol-ecosistema .pol-eco-card:nth-child(5){transition:opacity .55s ease .42s,transform .55s ease .42s;}
+  #pol-ecosistema .pol-eco-card:nth-child(6){transition:opacity .55s ease .49s,transform .55s ease .49s;}
+  #pol-ecosistema .pol-eco-card:nth-child(7){transition:opacity .55s ease .56s,transform .55s ease .56s;}
+  #pol-ecosistema .pol-eco-card:nth-child(8){transition:opacity .55s ease .63s,transform .55s ease .63s;}
+  #pol-ecosistema .pol-eco-card:nth-child(9){transition:opacity .55s ease .70s,transform .55s ease .70s;}
+  #pol-ecosistema.in-view .pol-eco-text-block,
+  #pol-ecosistema.in-view .pol-eco-card { opacity:1; transform:none; }
+
+  /* ── HOW ── */
+  #pol-how .pol-how-label    { opacity:0; transform:translateY(8px);  transition:opacity .7s ease .28s,transform .7s ease .28s; }
+  #pol-how .pol-how-headline { opacity:0; transform:translateY(14px); transition:opacity .85s ease .44s,transform .85s ease .44s; }
+  #pol-how .pol-how-tag      { opacity:0; transform:translateY(8px);  transition:opacity .7s ease .54s,transform .7s ease .54s; }
+  #pol-how .pol-how-cat:nth-child(1){opacity:0;transform:translateY(8px);transition:opacity .6s ease .68s,transform .6s ease .68s;}
+  #pol-how .pol-how-cat:nth-child(2){opacity:0;transform:translateY(8px);transition:opacity .6s ease .78s,transform .6s ease .78s;}
+  #pol-how .pol-how-cat:nth-child(3){opacity:0;transform:translateY(8px);transition:opacity .6s ease .88s,transform .6s ease .88s;}
+  #pol-how .pol-how-cat:nth-child(4){opacity:0;transform:translateY(8px);transition:opacity .6s ease .98s,transform .6s ease .98s;}
+  #pol-how.in-view .pol-how-label,
+  #pol-how.in-view .pol-how-headline,
+  #pol-how.in-view .pol-how-tag,
+  #pol-how.in-view .pol-how-cat { opacity:1; transform:none; }
+
+  /* ── Servicios ── */
+  #pol-servicios .pol-svc-sub-br { opacity:0; transform:translateY(10px); transition:opacity .7s ease .08s,transform .7s ease .08s; }
+  #pol-servicios .pol-svc-cat-label,
+  #pol-servicios .pol-svc-card   { opacity:0; transition:opacity .5s ease; }
+  #pol-servicios .pol-svc-card:nth-child(2) {transition-delay:.05s;}
+  #pol-servicios .pol-svc-card:nth-child(3) {transition-delay:.10s;}
+  #pol-servicios .pol-svc-card:nth-child(4) {transition-delay:.15s;}
+  #pol-servicios .pol-svc-card:nth-child(5) {transition-delay:.20s;}
+  #pol-servicios .pol-svc-card:nth-child(6) {transition-delay:.25s;}
+  #pol-servicios .pol-svc-card:nth-child(7) {transition-delay:.30s;}
+  #pol-servicios .pol-svc-card:nth-child(8) {transition-delay:.35s;}
+  #pol-servicios .pol-svc-card:nth-child(9) {transition-delay:.40s;}
+  #pol-servicios .pol-svc-card:nth-child(10){transition-delay:.45s;}
+  #pol-servicios.in-view .pol-svc-sub-br,
+  #pol-servicios.in-view .pol-svc-cat-label,
+  #pol-servicios.in-view .pol-svc-card { opacity:1; }
+
+  /* ── Individual service sections (pol-veil, pol-pulse, etc.) ── */
+  #pol-veil .svc-intro-left,
+  #pol-pulse .svc-intro-left,
+  #pol-sanctum .svc-intro-left,
+  #pol-esweep .svc-intro-left,
+  #pol-deeplink .svc-intro-left,
+  #pol-sociallock .svc-intro-left,
+  #pol-panoptica .svc-intro-left,
+  #pol-research .svc-intro-left,
+  #pol-argos .svc-intro-left,
+  #pol-aegis .svc-intro-left,
+  #pol-phantom .svc-intro-left {
+    opacity: 0; transform: translateX(-20px);
+    transition: opacity .9s ease .05s, transform .9s ease .05s;
+  }
+
+  #pol-veil .svc-intro-right,
+  #pol-pulse .svc-intro-right,
+  #pol-sanctum .svc-intro-right,
+  #pol-esweep .svc-intro-right,
+  #pol-deeplink .svc-intro-right,
+  #pol-sociallock .svc-intro-right,
+  #pol-panoptica .svc-intro-right,
+  #pol-research .svc-intro-right,
+  #pol-argos .svc-intro-right,
+  #pol-aegis .svc-intro-right,
+  #pol-phantom .svc-intro-right {
+    opacity: 0; transform: translateY(14px);
+    transition: opacity .8s ease .30s, transform .8s ease .30s;
+  }
+
+  #pol-veil.in-view .svc-intro-left,   #pol-veil.in-view .svc-intro-right,
+  #pol-pulse.in-view .svc-intro-left,  #pol-pulse.in-view .svc-intro-right,
+  #pol-sanctum.in-view .svc-intro-left,#pol-sanctum.in-view .svc-intro-right,
+  #pol-esweep.in-view .svc-intro-left, #pol-esweep.in-view .svc-intro-right,
+  #pol-deeplink.in-view .svc-intro-left,#pol-deeplink.in-view .svc-intro-right,
+  #pol-sociallock.in-view .svc-intro-left,#pol-sociallock.in-view .svc-intro-right,
+  #pol-panoptica.in-view .svc-intro-left,#pol-panoptica.in-view .svc-intro-right,
+  #pol-research.in-view .svc-intro-left,#pol-research.in-view .svc-intro-right,
+  #pol-argos.in-view .svc-intro-left,  #pol-argos.in-view .svc-intro-right,
+  #pol-aegis.in-view .svc-intro-left,  #pol-aegis.in-view .svc-intro-right,
+  #pol-phantom.in-view .svc-intro-left,#pol-phantom.in-view .svc-intro-right {
+    opacity: 1; transform: none;
+  }
+
+} /* end @media screen */
+
+@media screen and (max-width: 768px) {
+  #pol-stats { flex-direction: column !important; }
+  .pol-stats-left { flex: none !important; width: 100% !important; grid-template-columns: repeat(2,1fr) !important; }
+  .pol-eco-grid { grid-template-columns: repeat(2,1fr) !important; }
+  .pol-hero-h1 { font-size: clamp(32px,9vw,52px) !important; }
+  .pol-svc-grid { grid-template-columns: repeat(2,1fr) !important; }
+  #pol-remate { flex-direction: column !important; height: auto !important; min-height: 100vh !important; }
+  .pol-rm-left { flex: none !important; border-right: none !important; border-bottom: 1px solid rgba(255,255,255,0.04) !important; padding-bottom: 32px !important; }
+  .pol-rm-right { min-height: 50vw !important; }
+}
+
+/* ── PRINT: desktop layout overrides (must come AFTER mobile breakpoint) ── */
+@media print {
+  /* ── Per-section display overrides (ID rules beat base block rule automatically) ── */
+  #pol-hero {
+    display: flex !important; flex-direction: column !important;
+    justify-content: flex-end !important;
+  }
+  #pol-pw-nosotros, #pol-pw-agency {
+    display: flex !important; flex-direction: column !important;
+    align-items: center !important; justify-content: center !important;
+  }
+  #pol-shared-the-agency {
+    display: flex !important; flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  #pol-shared-infosec {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    align-content: center !important;
+    gap: clamp(60px,8vw,140px) !important;
+    padding: clamp(80px,10vh,140px) clamp(32px,6vw,96px) clamp(60px,8vh,100px) !important;
+  }
+  #cta {
+    display: flex !important; align-items: center !important; justify-content: center !important;
+  }
+  #pol-stats  { display: flex !important; flex-direction: row !important; }
+  #pol-remate { display: flex !important; }
+  .pol-stats-left   { flex: 0 0 62% !important; width: auto !important; grid-template-columns: repeat(3,1fr) !important; }
+  .pol-svc-grid     { grid-template-columns: repeat(5,1fr) !important; }
+  .pol-eco-grid     { grid-template-columns: repeat(3,1fr) !important; }
+  #pol-remate         { flex-direction: row !important; height: 100vh !important; min-height: unset !important; }
+  #pol-remate .pol-rm-right { flex: 1 !important; }
+  #pol-remate .pol-rm-left  { flex: none !important; width: 48% !important; border-right: none !important; }
+
+  /* pol-veil: restore desktop svc-intro layout */
+  #pol-veil .svc-intro              { height: 100vh !important; min-height: unset !important; }
+  #pol-veil .svc-intro-overlay      { flex-direction: row !important; padding: clamp(32px,4vh,56px) clamp(32px,6vw,96px) !important; justify-content: space-between !important; align-items: stretch !important; }
+  #pol-veil .svc-intro-left         { flex: 1.15 !important; margin-bottom: 0 !important; }
+  #pol-veil .svc-intro-left h2      { font-size: clamp(140px, 19vw, 280px) !important; line-height: 0.80 !important; }
+  #pol-veil .svc-intro-right        { flex: 0 0 clamp(340px,40%,520px) !important; width: auto !important; }
+  #pol-veil .svc-intro-block        { display: flex !important; }
+  #pol-veil .svc-intro-block:nth-child(2) { padding: 0 !important; }
+  #pol-veil .svc-intro-chips        { display: none !important; }
+
+  /* Fix agency-callouts collapsing to 1 col due to mobile breakpoint cascade */
+  .agency-callouts { grid-template-columns: repeat(3,1fr) !important; }
+  .agency-body     { display: flex !important; flex-direction: row !important; gap: clamp(32px,5vw,80px) !important; }
+
+  /* ── pol-shared-nosotros: compact for 100vh ── */
+  #pol-shared-nosotros {
+    padding: 28px clamp(32px,6vw,96px) 20px !important;
+  }
+  /* nos-franja: tagline area — padding+margin was ~83px, reduce to 24px total */
+  #pol-shared-nosotros .nos-franja {
+    padding-bottom: 12px !important;
+    margin-bottom: 12px !important;
+  }
+  #pol-shared-nosotros .nos-band {
+    grid-template-columns: 1fr 1fr !important;
+    gap: clamp(48px,7vw,100px) !important;
+    padding-bottom: 14px !important;
+    margin-bottom: 14px !important;
+  }
+  #pol-shared-nosotros .nos-band-line {
+    padding-top: 6px !important;
+    padding-bottom: 6px !important;
+  }
+  #pol-shared-nosotros .nos-band-right {
+    padding: 14px 18px !important;
+    gap: 8px !important;
+  }
+  #pol-shared-nosotros .nos-pillars {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 4px !important;
+  }
+  #pol-shared-nosotros .nos-pillar {
+    padding: 12px 14px !important;
+  }
+
+  /* ── pol-servicios: compact for 100vw × 100vh (matches desktop viewport dynamically) ── */
+  #pol-servicios { padding: 24px 48px 16px !important; }
+  #pol-servicios .pol-eco-eyebrow  { margin-bottom: 4px !important; }
+  #pol-servicios .pol-eco-headline { font-size: 26px !important; margin-bottom: 4px !important; }
+  #pol-servicios .pol-eco-sub      { font-size: 9.5px !important; line-height: 1.35 !important; margin-bottom: 0 !important; }
+  .pol-svc-grid  { margin-top: 8px !important; gap: 1px !important; }
+  .pol-svc-card  { padding: 9px 11px !important; gap: 5px !important; }
+  /* Electronic Sweep: compact for print */
+  .pol-svc-card--sweep { padding-top: 7px !important; padding-bottom: 7px !important; }
+
+  /* Scroll-reveal fix: .reveal { opacity:0 !important } has specificity (0,1,0).
+     We beat it with ID-scoped selectors (1,1,0 > 0,1,0) so !important wins. */
+  #pol-hero .reveal, #pol-hero .reveal-fade, #pol-hero .reveal-left, #pol-hero .reveal-right, #pol-hero .reveal-scale,
+  #pol-stats .reveal, #pol-stats .reveal-fade, #pol-stats .nos-pillar,
+  #pol-riesgos .reveal, #pol-riesgos .reveal-fade, #pol-riesgos .t-row,
+  #pol-shared-nosotros .reveal, #pol-shared-nosotros .nos-pillar,
+  #pol-ecosistema .reveal, #pol-ecosistema .reveal-fade,
+  #pol-servicios .reveal, #pol-servicios .reveal-fade,
+  #pol-veil .reveal, #pol-veil .reveal-fade,
+  #pol-shared-the-agency .reveal, #pol-shared-the-agency .reveal-fade, #pol-shared-the-agency .profile-col,
+  #pol-shared-infosec .reveal, #pol-shared-infosec .reveal-fade, #pol-shared-infosec .prot-card,
+  #cta .reveal, #cta .reveal-fade, #cta .cta-logo-wrap, #cta .cta-eyebrow, #cta .cta-qr-wrap,
+  #pol-remate .reveal, #pol-remate .reveal-fade,
+  #pol-pw-nosotros .reveal, #pol-pw-agency .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+  /* Also cover any missed elements globally (lower specificity backup) */
+  .nos-pillar, .prot-card, .profile-col, .como-ghost, .t-row, .cta-logo-wrap,
+  .pol-hero-eyebrow, .pol-hero-h1, .pol-hero-sub {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
 </style>
+<!-- @page height matched to viewport — JS writes before print so all vh in print = vh in browser -->
+<style id="pol-page-size"></style>
 </head>
 <body>
 
@@ -2583,6 +3992,34 @@ body.lang-es .nos-cap-big {
       <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
     </svg>
   </a>
+  <div id="pol-section-tabs">
+    <div class="pol-tabs-main">
+      <button class="s-tab" data-pol-target="pol-hero">Intro</button>
+      <button class="s-tab" data-pol-target="pol-stats">Contexto</button>
+      <button class="s-tab" data-pol-target="pol-riesgos">Riesgos</button>
+      <button class="s-tab" data-pol-target="nosotros">Who We Are</button>
+      <button class="s-tab" data-pol-target="pol-ecosistema">Ecosistema</button>
+      <button class="s-tab" data-pol-target="pol-how">How</button>
+      <button class="s-tab" data-pol-target="pol-servicios">Servicios</button>
+      <button class="s-tab" data-pol-target="the-agency">The Agency</button>
+      <button class="s-tab" data-pol-target="pol-remate">Cierre</button>
+      <button class="s-tab" data-pol-target="infosec">Privacidad</button>
+      <button class="s-tab" data-pol-target="cta">Acceso</button>
+    </div>
+    <div class="pol-tabs-svcs">
+      <button class="s-tab" data-pol-target="pol-veil">Veil</button>
+      <button class="s-tab" data-pol-target="pol-pulse">Pulse</button>
+      <button class="s-tab" data-pol-target="pol-sanctum">Sanctum</button>
+      <button class="s-tab" data-pol-target="pol-esweep">E-Sweep</button>
+      <button class="s-tab" data-pol-target="pol-deeplink">DeepLynx</button>
+      <button class="s-tab" data-pol-target="pol-sociallock">Social Lock</button>
+      <button class="s-tab" data-pol-target="pol-panoptica">Panoptica</button>
+      <button class="s-tab" data-pol-target="pol-research">Threat Intel</button>
+      <button class="s-tab" data-pol-target="pol-argos">Argos</button>
+      <button class="s-tab" data-pol-target="pol-aegis">Aegis</button>
+      <button class="s-tab" data-pol-target="pol-phantom">Phantom</button>
+    </div>
+  </div>
   <div id="section-tabs">
     <button class="s-tab" data-target="hero" data-en="Cover" data-es="Portada">Cover</button>
     <button class="s-tab" data-target="mundo" data-en="Context" data-es="Contexto">Context</button>
@@ -2594,15 +4031,25 @@ body.lang-es .nos-cap-big {
     <button class="s-tab" data-target="paquetes" data-en="Packages" data-es="Paquetes">Packages</button>
     <button class="s-tab" data-target="cta" data-en="Access" data-es="Acceso">Access</button>
   </div>
-  <div style="display:flex; align-items:center; gap:20px;">
-    <div style="display:flex; align-items:center; gap:8px;">
-      <button class="lang-btn lang-active" id="btn-en" onclick="setLang('en')">ENG</button>
-      <span class="lang-sep">/</span>
-      <button class="lang-btn lang-idle"   id="btn-es" onclick="setLang('es')">ESP</button>
-    </div>
-    <span class="nav-badge">PRIVATE DOCUMENT</span>
+  <div style="display:flex; align-items:center; gap:8px; margin-right: 170px;">
+    <button class="lang-btn lang-active" id="btn-en" onclick="setLang('en')">ENG</button>
+    <span class="lang-sep">/</span>
+    <button class="lang-btn lang-idle"   id="btn-es" onclick="setLang('es')">ESP</button>
   </div>
 </nav>
+
+<!-- ── PRINT STICKER (pol mode only) ── -->
+<div id="pol-print-bar">
+  <input id="pol-recipient" class="recipient-input" type="text" placeholder="Recipient name" spellcheck="false" autocomplete="off" oninput="updateRecipient(this.value)" onkeydown="if(event.key==='Enter'){updateRecipient(this.value);this.blur();}">
+  <button id="pol-print-btn" onclick="obscuralPrint()">PRINT →</button>
+</div>
+
+<!-- ── NAV STICKERS ── -->
+<div id="nav-stickers">
+  <span class="nav-badge">PRIVATE DOCUMENT</span>
+  <button class="nav-badge" style="cursor:pointer; background:none; font-family:inherit;" title="Quick View— coming soon">QUICK VIEW</button>
+  <button class="nav-badge" id="btn-pol" style="cursor:pointer; background:none; font-family:inherit;" onclick="togglePolMode()">POLITICIANS VIEW</button>
+</div>
 
 <div id="section-dots">
   <button class="s-dot" data-target="hero"       data-label="Cover" data-label-en="Cover" data-label-es="Portada"></button>
@@ -2744,6 +4191,7 @@ body.lang-es .nos-cap-big {
     </div>
   </div>
 </section>
+
 
 <!-- ══════════════════════════════════════════
      03 NOSOTROS
@@ -3304,63 +4752,6 @@ body.lang-es .nos-cap-big {
 </section>
 
 <!-- ══════════════════════════════════════════
-     THE AGENCY — Security Concierge
-══════════════════════════════════════════ -->
-<section id="the-agency">
-  <div class="agency-photo" style="background-image: url('ChatGPT Image Jul 17, 2026, 12_22_44 PM.png');"></div>
-
-  <span class="agency-tag reveal-fade" data-en="05 — The Agency" data-es="05 — The Agency">05 — The Agency</span>
-
-  <h2 class="agency-headline reveal-fade">
-    <span data-en="We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em>" data-es="No somos software.<br><em>No somos un helpdesk.<br>No somos una firma de ingeniería.</em>">We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em></span>
-  </h2>
-
-  <div class="agency-body">
-
-    <p class="agency-body-beat agency-beat-hero reveal-fade"
-       data-en="Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person."
-       data-es="Obscural es una <strong>agencia privada de seguridad digital</strong>. A cada cliente se le asigna un <strong>Security Concierge</strong> — alguien que conoce tu exposición, tus rutinas, tus riesgos personalmente. No un sistema de tickets. Una persona.">
-      Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person.
-    </p>
-
-    <p class="agency-body-beat reveal"
-       data-en="When a threat emerges, we don't send an email. <strong>We find you.</strong>"
-       data-es="Cuando surge una amenaza, no enviamos un correo. <strong>Te encontramos.</strong>">
-      When a threat emerges, we don't send an email. <strong>We find you.</strong>
-    </p>
-
-    <p class="agency-body-beat reveal"
-       data-en="Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>."
-       data-es="Detrás de tu Security Concierge hay un equipo especializado de analistas — suficientemente pequeño para moverse rápido, suficientemente experto para manejar cualquier cosa. Cubriendo infraestructura crítica y seguridad personal <strong>sin interrupciones, sin excepciones</strong>.">
-      Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>.
-    </p>
-
-  </div>
-
-  <div class="agency-callouts">
-
-    <div class="agency-callout reveal">
-      <span class="agency-callout-n">24/7</span>
-      <span class="agency-callout-title" data-en="Always On" data-es="Siempre Activo">Always On</span>
-      <span class="agency-callout-sub" data-en="No exceptions." data-es="Sin excepciones.">No exceptions.</span>
-    </div>
-
-    <div class="agency-callout reveal" style="transition-delay:0.1s">
-      <span class="agency-callout-n" style="font-size:clamp(18px,2vw,28px); letter-spacing:-0.01em; padding-top:8px;">Security<br>Concierge</span>
-      <span class="agency-callout-title" data-en="One Person. Permanent. Yours." data-es="Una Persona. Permanente. Tuya.">One Person. Permanent. Yours.</span>
-      <span class="agency-callout-sub" data-en="Not a queue. Not a rotation. Someone who knows your name." data-es="No una cola. No una rotación. Alguien que conoce tu nombre.">Not a queue. Not a rotation. Someone who knows your name.</span>
-    </div>
-
-    <div class="agency-callout reveal" style="transition-delay:0.2s">
-      <span class="agency-callout-n" style="font-size:clamp(28px,3.5vw,52px);">Pro-<br>active</span>
-      <span class="agency-callout-title" data-en="We Don't Wait to Be Called" data-es="No Esperamos la Llamada">We Don't Wait to Be Called</span>
-      <span class="agency-callout-sub" data-en="We monitor, we investigate, we reach out first." data-es="Monitoreamos, investigamos, llegamos primero.">We monitor, we investigate, we reach out first.</span>
-    </div>
-
-  </div>
-
-</section>
-
 <!-- ══════════════════════════════════════════
      09 PAQUETES DE PRIVACIDAD Y CONFIANZA
 ══════════════════════════════════════════ -->
@@ -3380,6 +4771,73 @@ body.lang-es .nos-cap-big {
   <div class="paqc-canvas-wrap">
     <canvas id="paqc-canvas"></canvas>
   </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     THE AGENCY — Security Concierge
+══════════════════════════════════════════ -->
+<section id="the-agency">
+  <div class="agency-photo" style="background-image: url('ChatGPT Image Jul 17, 2026, 12_22_44 PM.png');"></div>
+
+  <span class="agency-tag reveal-fade" data-en="05 — The Agency" data-es="05 — The Agency">05 — The Agency</span>
+
+  <h2 class="agency-headline reveal-fade">
+    <span data-en="We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em>" data-es="No somos software.<br><em>No somos un helpdesk.<br>No somos una firma de ingeniería.</em>">We are not software.<br><em>Not a helpdesk.<br>Not an engineering firm.</em></span>
+  </h2>
+
+  <div class="agency-body">
+
+    <p class="agency-body-beat agency-beat-hero reveal-fade"
+       data-en="Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person."
+       data-es="Obscural es una <strong>agencia privada de seguridad digital</strong>. A cada cliente se le asigna un <strong>Security Concierge</strong> — alguien que conoce tu exposición, tus rutinas, tus riesgos personalmente. No un sistema de tickets. Una persona."
+       data-pol-en="Obscural is a <strong>private digital security agency</strong>. In political environments, every client receives a dedicated <strong>Security Cell</strong> — a tactical team embedded in your operation. Not a single contact. <strong>A unit.</strong>"
+       data-pol-es="Obscural es una <strong>agencia privada de seguridad digital</strong>. En entornos políticos, cada cliente recibe una <strong>Security Cell</strong> dedicada — un equipo táctico integrado en su operación. No un único contacto. <strong>Una unidad.</strong>">
+      Obscural is a <strong>private digital security agency</strong>. Every client is assigned a <strong>Security Concierge</strong> — someone who knows your exposure, your routines, your risks personally. Not a ticketing system. A person.
+    </p>
+
+    <p class="agency-body-beat reveal"
+       data-en="When a threat emerges, we don't send an email. <strong>We find you.</strong>"
+       data-es="Cuando surge una amenaza, no enviamos un correo. <strong>Te encontramos.</strong>">
+      When a threat emerges, we don't send an email. <strong>We find you.</strong>
+    </p>
+
+    <p class="agency-body-beat reveal"
+       data-en="Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>."
+       data-es="Detrás de tu Security Concierge hay un equipo especializado de analistas — suficientemente pequeño para moverse rápido, suficientemente experto para manejar cualquier cosa. Cubriendo infraestructura crítica y seguridad personal <strong>sin interrupciones, sin excepciones</strong>."
+       data-pol-en="The Cell operates as your dedicated unit — specialized analysts embedded in your security perimeter, small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>."
+       data-pol-es="La Cell opera como su unidad dedicada — analistas especializados integrados en su perímetro de seguridad, suficientemente pequeña para actuar rápido, suficientemente experta para manejar cualquier cosa. Cubriendo infraestructura crítica y seguridad personal <strong>sin interrupciones, sin excepciones</strong>.">
+      Behind your Security Concierge is a specialized team of analysts — small enough to move fast, expert enough to handle anything. Covering critical infrastructure and personal security <strong>around the clock, without exceptions</strong>.
+    </p>
+
+  </div>
+
+  <div class="agency-callouts">
+
+    <div class="agency-callout reveal">
+      <span class="agency-callout-n">24/7</span>
+      <span class="agency-callout-title" data-en="Always On" data-es="Siempre Activo">Always On</span>
+      <span class="agency-callout-sub" data-en="No exceptions." data-es="Sin excepciones.">No exceptions.</span>
+    </div>
+
+    <div class="agency-callout reveal" style="transition-delay:0.1s">
+      <span class="agency-callout-n" style="font-size:clamp(18px,2vw,28px); letter-spacing:-0.01em; padding-top:8px;"
+            data-pol-en="The<br>Cell" data-pol-es="The<br>Cell">Security<br>Concierge</span>
+      <span class="agency-callout-title"
+            data-en="One Person. Permanent. Yours." data-es="Una Persona. Permanente. Tuya."
+            data-pol-en="One Unit. Permanent. Yours." data-pol-es="Una Unidad. Permanente. Suya.">One Person. Permanent. Yours.</span>
+      <span class="agency-callout-sub"
+            data-en="Not a queue. Not a rotation. Someone who knows your name." data-es="No una cola. No una rotación. Alguien que conoce tu nombre."
+            data-pol-en="Not a contact. A team that knows your every move." data-pol-es="No un contacto. Un equipo que conoce cada uno de sus movimientos.">Not a queue. Not a rotation. Someone who knows your name.</span>
+    </div>
+
+    <div class="agency-callout reveal" style="transition-delay:0.2s">
+      <span class="agency-callout-n" style="font-size:clamp(28px,3.5vw,52px);">Pro-<br>active</span>
+      <span class="agency-callout-title" data-en="We Don't Wait to Be Called" data-es="No Esperamos la Llamada">We Don't Wait to Be Called</span>
+      <span class="agency-callout-sub" data-en="We monitor, we investigate, we reach out first." data-es="Monitoreamos, investigamos, llegamos primero.">We monitor, we investigate, we reach out first.</span>
+    </div>
+
+  </div>
+
 </section>
 
 <!-- ══════════════════════════════════════════
@@ -3430,6 +4888,7 @@ body.lang-es .nos-cap-big {
   </div>
 
 </section>
+
 
 <!-- ══════════════════════════════════════════
      10 CLOSING
@@ -4058,6 +5517,1224 @@ body.lang-es .nos-cap-big {
 </section>
 <!-- ══════════════════════════════════════════════ END ANEXO ═══ -->
 
+<!-- ══════════════════════════════════════════
+     POLÍTICO — SECCIONES EXCLUSIVAS
+══════════════════════════════════════════ -->
+
+<!-- POL HERO -->
+<section id="pol-hero" class="pol-only">
+  <div id="pol-hero-photo">
+    <img src="ChatGPT Image Jul 16, 2026, 09_50_51 PM.png" alt="">
+  </div>
+  <span class="pol-hero-eyebrow" data-en="Obscural — Political Sector" data-es="Obscural — Sector Político">Obscural — Political Sector</span>
+  <h1 class="pol-hero-h1" data-en="Digital Protection&lt;br&gt;for Political Figures" data-es="Protección Digital&lt;br&gt;para Personas Políticas">Digital Protection<br>for Political Figures</h1>
+  <p class="pol-hero-sub" data-en="Your public exposure should not become private vulnerability." data-es="Tu exposición pública no debería convertirse en vulnerabilidad privada.">Your public exposure should not become private vulnerability.</p>
+</section>
+
+<!-- POL STATS -->
+<section id="pol-stats" class="pol-only">
+  <div class="pol-stats-header">
+    <span class="pol-stats-eyebrow" data-en="The Threat Landscape" data-es="El panorama de amenazas">The Threat Landscape</span>
+    <h2 class="pol-stats-title" data-en="Accelerated Growth in Attacks on Political Figures" data-es="Crecimiento Acelerado de Ataques a Políticos">Accelerated Growth in Attacks on Political Figures</h2>
+  </div>
+  <div class="pol-stats-body">
+  <div class="pol-stats-left">
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">68%</span>
+      <span class="pol-stat-label" data-en="of British Parliament members have had their official emails leaked on the dark web." data-es="de los miembros del Parlamento británico tienen sus emails oficiales filtrados en la dark web.">of British Parliament members have had their official emails leaked on the dark web.</span>
+      <span class="pol-stat-source"><a href="https://proton.me/blog/proton-security-annual-threat-report" target="_blank" rel="noopener">Proton, 2026</a></span>
+    </div>
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">9,000</span>
+      <span class="pol-stat-label" data-en="government officials across Europe and the U.S. with credentials exposed on active criminal forums." data-es="funcionarios de gobierno en Europa y EE.UU. con credenciales expuestas en foros criminales activos.">government officials across Europe and the U.S. with credentials exposed on active criminal forums.</span>
+      <span class="pol-stat-source"><a href="https://proton.me/blog/proton-security-annual-threat-report" target="_blank" rel="noopener">Proton, 2026</a></span>
+    </div>
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">91%</span>
+      <span class="pol-stat-label" data-en="of successful data breaches originated with a phishing attack targeted at a single individual." data-es="de las filtraciones de datos exitosas comenzaron con un ataque de phishing dirigido a una persona.">of successful data breaches originated with a phishing attack targeted at a single individual.</span>
+      <span class="pol-stat-source"><a href="https://www.proofpoint.com/us/resources/threat-reports/state-of-phish" target="_blank" rel="noopener">Proofpoint, State of the Phish</a></span>
+    </div>
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">+58%</span>
+      <span class="pol-stat-label" data-en="increase in global phishing attacks in 2025 compared to the previous year." data-es="de incremento en ataques de phishing globales en 2025 respecto al año anterior.">increase in global phishing attacks in 2025 compared to the previous year.</span>
+      <span class="pol-stat-source"><a href="https://www.zscaler.com/resources/security-terms-glossary/what-is-phishing" target="_blank" rel="noopener">Zscaler ThreatLabz, 2025</a></span>
+    </div>
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">137</span>
+      <span class="pol-stat-label" data-en="separate breaches in which a single European MP appeared, with 133 plaintext passwords exposed." data-es="brechas distintas en las que apareció un solo parlamentario europeo, con 133 contraseñas en texto plano.">separate breaches in which a single European MP appeared, with 133 plaintext passwords exposed.</span>
+      <span class="pol-stat-source"><a href="https://proton.me/blog/proton-security-annual-threat-report" target="_blank" rel="noopener">Proton, 2026</a></span>
+    </div>
+
+    <div class="pol-stat">
+      <span class="pol-stat-n">+80%</span>
+      <span class="pol-stat-label" data-en="increase in attacks on governments in Latin America — from 250 in 2024 to over 450 in 2025." data-es="de aumento en ataques a gobiernos en América Latina — de 250 en 2024 a más de 450 en 2025.">increase in attacks on governments in Latin America — from 250 in 2024 to over 450 in 2025.</span>
+      <span class="pol-stat-source"><a href="https://intel471.com/blog/2025-cyber-threat-report" target="_blank" rel="noopener">Intel 471, 2025</a></span>
+    </div>
+
+  </div>
+
+  <div class="pol-stats-right">
+    <span class="pol-chart-label" data-en="Government Attacks — Latin America" data-es="Ataques a gobiernos — América Latina">Government Attacks — Latin America</span>
+    <p class="pol-chart-title" data-en="The growth doesn't stop.<br>The most attacked region in the world." data-es="El crecimiento no se detiene.<br>La región más atacada del mundo.">The growth doesn't stop.<br>The most attacked region in the world.</p>
+    <svg id="pol-chart-svg" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      <line x1="40" y1="20" x2="40" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="40" y1="180" x2="300" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+      <line x1="40" y1="130" x2="300" y2="130" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="3,4"/>
+      <line x1="40" y1="80" x2="300" y2="80" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="3,4"/>
+      <line x1="40" y1="30" x2="300" y2="30" stroke="rgba(255,255,255,0.04)" stroke-width="1" stroke-dasharray="3,4"/>
+      <!-- Y axis labels -->
+      <text x="30" y="183" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">0</text>
+      <text x="30" y="133" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">150</text>
+      <text x="30" y="83" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">300</text>
+      <text x="30" y="33" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">450</text>
+      <!-- X axis labels -->
+      <text x="80"  y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2021</text>
+      <text x="140" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2022</text>
+      <text x="200" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2023</text>
+      <text x="260" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2024</text>
+      <text x="300" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2025</text>
+      <!-- Area fill (animated) -->
+      <defs>
+        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+        <clipPath id="chartClip">
+          <rect x="40" y="0" width="0" height="220">
+            <animate attributeName="width" from="0" to="260" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25,0.1,0.25,1"/>
+          </rect>
+        </clipPath>
+      </defs>
+      <polygon points="80,168 140,158 200,148 260,147 300,24 300,180 40,180" fill="url(#chartGrad)" clip-path="url(#chartClip)" opacity="0.7">
+        <animate attributeName="opacity" values="0.7;0.38;0.7" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45,0,0.55,1;0.45,0,0.55,1"/>
+      </polygon>
+      <!-- Line (animated) -->
+      <polyline points="80,168 140,158 200,148 260,147 300,24"
+        fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"
+        stroke-dasharray="320" stroke-dashoffset="320"
+        clip-path="url(#chartClip)">
+        <animate attributeName="stroke-dashoffset" from="320" to="0" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25,0.1,0.25,1"/>
+      </polyline>
+      <!-- Dots -->
+      <circle cx="80"  cy="168" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="0.6s" fill="freeze"/></circle>
+      <circle cx="140" cy="158" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="0.9s" fill="freeze"/></circle>
+      <circle cx="200" cy="148" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.2s" fill="freeze"/></circle>
+      <circle cx="260" cy="147" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.5s" fill="freeze"/></circle>
+      <circle cx="300" cy="24"  r="4" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.8s" fill="freeze"/></circle>
+      <!-- Last value label -->
+      <text x="300" y="16" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="inherit" opacity="0">
+        450+
+        <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.8s" fill="freeze"/>
+      </text>
+    </svg>
+    <span class="pol-stat-source" style="margin-top:8px;" data-en="Source: Intel 471 / Industrial Cyber, 2025" data-es="Fuente: Intel 471 / Industrial Cyber, 2025"><a href="https://intel471.com/blog/2025-cyber-threat-report" target="_blank" rel="noopener">Source: Intel 471 / Industrial Cyber, 2025</a></span>
+  </div>
+  </div><!-- /.pol-stats-body -->
+</section>
+
+<!-- POL RIESGOS -->
+<section id="pol-riesgos" class="pol-only">
+  <div class="pol-riesgos-top">
+    <div class="pol-riesgos-top-left">
+      <span class="pol-eco-eyebrow" data-en="The Threat Landscape" data-es="El panorama de amenazas">The Threat Landscape</span>
+      <h2 class="pol-eco-headline" style="margin-top:clamp(8px,1.2vh,14px);" data-en="The risks are real. And they are yours." data-es="Los riesgos son reales. Y son suyos.">The risks are real.<br>And they are yours.</h2>
+    </div>
+    <p class="pol-riesgos-top-right" data-en="Every vector listed below has been used against active political figures. None of this is theoretical." data-es="Cada vector listado ha sido usado contra figuras políticas activas. Nada de esto es teórico.">Every vector listed below has been used against active political figures. None of this is theoretical.</p>
+  </div>
+
+  <div class="pol-riesgo-table">
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">01</span>
+      <span class="pol-riesgo-cat" data-en="Material" data-es="Material">Material</span>
+      <span class="pol-riesgo-title" data-en="Inner Circle Communications" data-es="Comunicaciones del entorno">Inner Circle Communications</span>
+      <p class="pol-riesgo-body" data-en="Advisors, trusted staff, family. Every person with access is a potential vector — in office and on the trail." data-es="Asesores, equipo de confianza, familia. Cada persona con acceso es un vector potencial.">Advisors, trusted staff, family. Every person with access is a potential vector — in office and on the trail.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">02</span>
+      <span class="pol-riesgo-cat" data-en="Material" data-es="Material">Material</span>
+      <span class="pol-riesgo-title" data-en="Opposition Intelligence" data-es="Espionaje de opositores">Opposition Intelligence</span>
+      <p class="pol-riesgo-body" data-en="Political actors, lobbying groups, and states use digital intelligence to anticipate moves, leak strategies, and manufacture narratives." data-es="Actores políticos y estados usan inteligencia digital para anticipar movimientos, filtrar estrategias y fabricar narrativas.">Political actors, lobbying groups, and states use digital intelligence to anticipate moves, leak strategies, and manufacture narratives.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">03</span>
+      <span class="pol-riesgo-cat" data-en="Material" data-es="Material">Material</span>
+      <span class="pol-riesgo-title" data-en="Campaign Leaks" data-es="Filtraciones de campaña">Campaign Leaks</span>
+      <p class="pol-riesgo-body" data-en="Strategy, funding, internal messaging. On the campaign trail, a leak at the wrong moment can define an election." data-es="Estrategia, financiamiento, mensajes internos. Una filtración en el momento equivocado puede definir una elección.">Strategy, funding, internal messaging. On the campaign trail, a leak at the wrong moment can define an election.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">04</span>
+      <span class="pol-riesgo-cat" data-en="Material" data-es="Material">Material</span>
+      <span class="pol-riesgo-title" data-en="Family as a Target" data-es="La familia como blanco">Family as a Target</span>
+      <p class="pol-riesgo-body" data-en="Spouse, children, parents — unprotected and fully exposed. The fastest path to you is always through the people closest to you." data-es="Cónyuge, hijos, padres — sin protección y completamente expuestos. El camino más rápido hacia usted es siempre a través de ellos.">Spouse, children, parents — unprotected and fully exposed. The fastest path to you is always through the people closest to you.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">05</span>
+      <span class="pol-riesgo-cat" data-en="Material" data-es="Material">Material</span>
+      <span class="pol-riesgo-title" data-en="Your Digital Record" data-es="Su historial digital">Your Digital Record</span>
+      <p class="pol-riesgo-body" data-en="What you said ten years ago is still there. On the campaign trail, opponents search for it. In office, adversaries use it." data-es="Lo que dijo hace diez años sigue ahí. En campaña, los opositores lo buscan. En ejercicio, los adversarios lo usan.">What you said ten years ago is still there. On the campaign trail, opponents search for it. In office, adversaries use it.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">06</span>
+      <span class="pol-riesgo-cat" data-en="Technical" data-es="Técnico">Technical</span>
+      <span class="pol-riesgo-title" data-en="Device Spyware" data-es="Spyware en dispositivos">Device Spyware</span>
+      <p class="pol-riesgo-body" data-en="Pegasus and equivalents can compromise a phone with zero interaction. Phones, computers, tablets — the candidate and their entire team." data-es="Pegasus y equivalentes pueden comprometer un teléfono sin ninguna interacción. El candidato y todo su equipo.">Pegasus and equivalents can compromise a phone with zero interaction. Phones, computers, tablets — the candidate and their entire team.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">07</span>
+      <span class="pol-riesgo-cat" data-en="Technical" data-es="Técnico">Technical</span>
+      <span class="pol-riesgo-title" data-en="Covert Physical Surveillance" data-es="Vigilancia física encubierta">Covert Physical Surveillance</span>
+      <p class="pol-riesgo-body" data-en="Hidden cameras in hotels and meeting rooms. Microphones in workspaces. Physical trackers in vehicles." data-es="Cámaras ocultas en hoteles y salas de reunión. Micrófonos en espacios de trabajo. Rastreadores en vehículos.">Hidden cameras in hotels and meeting rooms. Microphones in workspaces. Physical trackers in vehicles.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">08</span>
+      <span class="pol-riesgo-cat" data-en="Technical" data-es="Técnico">Technical</span>
+      <span class="pol-riesgo-title" data-en="Credentials on the Dark Web" data-es="Credenciales en la dark web">Credentials on the Dark Web</span>
+      <p class="pol-riesgo-body" data-en="Official emails, passwords, and personal data on criminal forums. 68% of European parliamentarians are already exposed." data-es="Emails oficiales, contraseñas y datos personales en foros criminales. El 68% de parlamentarios europeos ya están expuestos.">Official emails, passwords, and personal data on criminal forums. 68% of European parliamentarians are already exposed.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">09</span>
+      <span class="pol-riesgo-cat" data-en="Technical" data-es="Técnico">Technical</span>
+      <span class="pol-riesgo-title" data-en="Social Media Threats" data-es="Amenazas en redes sociales">Social Media Threats</span>
+      <p class="pol-riesgo-body" data-en="Coordinated attacks planned in private groups and dark forums before going public. Manufactured trends. Weaponized narratives." data-es="Ataques coordinados planeados en grupos privados y foros oscuros. Tendencias manufacturadas. Narrativas armadas.">Coordinated attacks planned in private groups and dark forums before going public. Manufactured trends. Weaponized narratives.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">10</span>
+      <span class="pol-riesgo-cat" data-en="Technical" data-es="Técnico">Technical</span>
+      <span class="pol-riesgo-title" data-en="Compromised Networks" data-es="Redes comprometidas">Compromised Networks</span>
+      <p class="pol-riesgo-body" data-en="Hotel, event, and aircraft WiFi are active vectors. Campaign team networks rarely have adequate protection." data-es="WiFi de hoteles, eventos y aviones son vectores activos. Las redes del equipo de campaña rara vez tienen protección adecuada.">Hotel, event, and aircraft WiFi are active vectors. Campaign team networks rarely have adequate protection.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">11</span>
+      <span class="pol-riesgo-cat" data-en="Physical" data-es="Físico">Physical</span>
+      <span class="pol-riesgo-title" data-en="Digital Trails, Physical Exposure" data-es="Rastros digitales, exposición física">Digital Trails, Physical Exposure</span>
+      <p class="pol-riesgo-body" data-en="Your movement, routines, and locations are embedded in your digital activity. Photos, metadata, check-ins, and calendar data create a map adversaries can follow in the real world." data-es="Sus movimientos, rutinas y ubicaciones están integrados en su actividad digital. Fotos, metadatos y datos de calendario crean un mapa que los adversarios pueden seguir en el mundo físico.">Your movement, routines, and locations are embedded in your digital activity. Photos, metadata, check-ins, and calendar data create a map adversaries can follow in the real world.</p>
+    </div>
+
+    <div class="pol-riesgo-row">
+      <span class="pol-riesgo-num">12</span>
+      <span class="pol-riesgo-cat" data-en="Physical" data-es="Físico">Physical</span>
+      <span class="pol-riesgo-title" data-en="Leaked Data as Physical Intelligence" data-es="Datos filtrados como inteligencia física">Leaked Data as Physical Intelligence</span>
+      <p class="pol-riesgo-body" data-en="Filtered credentials, communications, and schedules give attackers the operational detail to approach, intercept, or act in the physical world. The digital breach becomes the physical threat." data-es="Credenciales filtradas, comunicaciones y agendas dan a los atacantes el detalle operacional para acercarse, interceptar o actuar en el mundo físico. La brecha digital se convierte en amenaza física.">Filtered credentials, communications, and schedules give attackers the operational detail to approach, intercept, or act in the physical world. The digital breach becomes the physical threat.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- POL PW — STATE-LEVEL MANDATE -->
+<section id="pol-pw-nosotros" class="pol-only pw pw-agency">
+  <p class="pol-pw-mandate">
+    <span class="pol-pw-ghost">Developed for government-grade operations.</span><br>
+    <span class="pol-pw-italic">Adapted for the private sector.</span>
+  </p>
+</section>
+
+<!-- POL ECOSISTEMA -->
+<section id="pol-ecosistema" class="pol-only">
+  <div id="pol-eco-photo">
+    <img src="ChatGPT Image Jul 18, 2026, 04_15_09 PM.png" alt="" style="object-position: center 35%;">
+  </div>
+
+  <div class="pol-eco-what">WHAT</div>
+
+  <div class="pol-eco-content">
+    <div class="pol-eco-text-block">
+      <span class="pol-eco-eyebrow" data-en="What Is at Risk" data-es="Lo que está en riesgo">What Is at Risk</span>
+      <h2 class="pol-eco-headline" data-en="Your complete ecosystem." data-es="Su ecosistema completo.">Your complete ecosystem.</h2>
+      <p class="pol-eco-sub" data-en="In office or on the campaign trail, the exposure isn't only yours. Every person in your orbit is a potential attack vector." data-es="En ejercicio o en campaña, la exposición no es solo suya. Cada persona en su entorno es un vector de ataque potencial.">In office or on the campaign trail, the exposure isn't only yours. Every person in your orbit is a potential attack vector.</p>
+    </div>
+
+    <div class="pol-eco-grid">
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">01</span>
+        <span class="pol-eco-name" data-en="The Sitting Official" data-es="El político en ejercicio">The Sitting Official</span>
+        <p class="pol-eco-body" data-en="Devices, identity, official communications, and physical exposure. The infrastructure of office as a permanent attack surface." data-es="Dispositivos, identidad, comunicaciones oficiales y exposición física.">Devices, identity, official communications, and physical exposure. The infrastructure of office as a permanent attack surface.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">02</span>
+        <span class="pol-eco-name" data-en="The Candidate" data-es="El político en campaña">The Candidate</span>
+        <p class="pol-eco-body" data-en="Maximum exposure, constant mobility, multiple devices. The most vulnerable moment in a public figure's life." data-es="Exposición máxima, movilidad constante, dispositivos múltiples.">Maximum exposure, constant mobility, multiple devices. The most vulnerable moment in a public figure's life.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">03</span>
+        <span class="pol-eco-name" data-en="Inner Circle &amp; Advisors" data-es="Equipo cercano y asesores">Inner Circle &amp; Advisors</span>
+        <p class="pol-eco-body" data-en="Every person with access to your agenda, decisions, or communications is a gateway. The most exploited link." data-es="Cada persona con acceso a su agenda es una puerta de entrada.">Every person with access to your agenda, decisions, or communications is a gateway. The most exploited link.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">04</span>
+        <span class="pol-eco-name" data-en="Campaign Team" data-es="Equipo de campaña">Campaign Team</span>
+        <p class="pol-eco-body" data-en="High turnover, unprotected devices, insecure networks. The most exposed and least protected environment in modern politics." data-es="Alta rotación, dispositivos sin protección, redes inseguras.">High turnover, unprotected devices, insecure networks. The most exposed and least protected environment in modern politics.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">05</span>
+        <span class="pol-eco-name" data-en="Private Office" data-es="Oficina privada">Private Office</span>
+        <p class="pol-eco-body" data-en="Sensitive documents, strategic meetings, permanent infrastructure. An independent target regardless of any electoral cycle." data-es="Documentos sensibles, reuniones estratégicas, infraestructura permanente.">Sensitive documents, strategic meetings, permanent infrastructure. An independent target regardless of any electoral cycle.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">06</span>
+        <span class="pol-eco-name" data-en="Campaign HQ" data-es="Sede de campaña">Campaign HQ</span>
+        <p class="pol-eco-body" data-en="Temporary headquarters, high traffic, chronically under-protected. The most exploited environment in contemporary politics." data-es="Sede temporal, alto tráfico, crónicamente sub-protegida.">Temporary headquarters, high traffic, chronically under-protected. The most exploited environment in contemporary politics.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">07</span>
+        <span class="pol-eco-name" data-en="Your Family" data-es="Su familia">Your Family</span>
+        <p class="pol-eco-body" data-en="Spouse, children, parents. The fastest path to you is always through the people you protect." data-es="Cónyuge, hijos, padres. El camino más rápido hacia usted.">Spouse, children, parents. The fastest path to you is always through the people you protect.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">08</span>
+        <span class="pol-eco-name" data-en="Your Digital Reputation" data-es="Su reputación digital">Your Digital Reputation</span>
+        <p class="pol-eco-body" data-en="Deepfakes, manufactured narratives, orchestrated leaks. What exists about you online may be your most fragile asset." data-es="Deepfakes, narrativas fabricadas, filtraciones orquestadas.">Deepfakes, manufactured narratives, orchestrated leaks. What exists about you online may be your most fragile asset.</p>
+      </div>
+
+      <div class="pol-eco-card">
+        <span class="pol-eco-n">09</span>
+        <span class="pol-eco-name" data-en="Physical Risks" data-es="Riesgos Físicos">Physical Risks</span>
+        <p class="pol-eco-body" data-en="RF bugs, compromised personnel, physical access to your devices or spaces. The oldest attack vector — still the most effective." data-es="Micrófonos ocultos, personal comprometido, acceso físico a dispositivos. El vector de ataque más antiguo, aún el más efectivo.">RF bugs, compromised personnel, physical access to your devices or spaces. The oldest attack vector — still the most effective.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- POL HOW -->
+<section id="pol-how" class="pol-only">
+  <div id="pol-how-photo">
+    <img src="ChatGPT Image Jul 18, 2026, 04_15_05 PM.png" alt="" style="object-position: center 30%;">
+  </div>
+  <div class="pol-how-content">
+    <div class="pol-how-word">HOW</div>
+    <div class="pol-how-label">Soluciones dedicadas</div>
+    <h2 class="pol-how-headline">Four dimensions.</h2>
+    <div class="pol-how-tag">Modular Approach</div>
+    <div class="pol-how-cats">
+      <span class="pol-how-cat">Protection</span>
+      <span class="pol-how-cat">Intelligence</span>
+      <span class="pol-how-cat">Drone Solutions</span>
+      <span class="pol-how-cat">Crisis &amp; Special Events</span>
+    </div>
+  </div>
+</section>
+
+<!-- POL SERVICIOS -->
+<section id="pol-servicios" class="pol-only">
+  <div class="pol-svc-sub-br">
+    <span class="pol-eco-eyebrow">Services</span>
+    <h2 class="pol-eco-headline">Built for this environment.</h2>
+    <p>Each service was designed to operate in the political context — in office or on the campaign trail. This is not an adaptation. It is a protection architecture specific to public figures with real exposure.</p>
+  </div>
+  <div class="pol-svc-grid">
+
+    <!-- ── ROW 1: PROTECTION ── -->
+    <div class="pol-svc-cat-label">Protection</div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Veil</span>
+      <span class="pol-svc-tag">Personal Devices</span>
+      <p class="pol-svc-body">Every device on your perimeter — hardened, monitored, incident-ready. Your phone, your team's laptops, your family's tablets.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Pulse</span>
+      <span class="pol-svc-tag">Digital Exposure</span>
+      <p class="pol-svc-body">We map your entire digital footprint and track what adversaries can build with it. You're alerted before they move.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Sanctum</span>
+      <span class="pol-svc-tag">Physical Environment</span>
+      <p class="pol-svc-body">Network-level protection for every space you operate in. Offices, residences, campaign headquarters — fortified from the inside.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Social Lock</span>
+      <span class="pol-svc-tag">Account Security</span>
+      <p class="pol-svc-body">Your official accounts, locked against hijacking, phishing, and takeover. Secure configuration and training for every administrator on your team.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">E-Sweep</span>
+      <span class="pol-svc-tag">TSCM</span>
+      <p class="pol-svc-body">Physical sweep of your most sensitive spaces. We find hidden microphones, covert cameras, RF transmitters, and GPS trackers before they find you.</p>
+    </div>
+
+    <!-- ── ROW 2: INTELLIGENCE ── -->
+    <div class="pol-svc-cat-label">Intelligence</div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">DeepLynx</span>
+      <span class="pol-svc-tag">Deep Network Intelligence</span>
+      <p class="pol-svc-body">We go where standard monitoring can't. Dark web, encrypted forums, private channels. We surface threats before they surface.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Panoptica</span>
+      <span class="pol-svc-tag">Real-Time Visibility</span>
+      <p class="pol-svc-body">One view. Every threat Obscural detects, consolidated in real time. Active alerts, exposure levels, trends. Your security command center.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Research</span>
+      <span class="pol-svc-tag">Human Intelligence</span>
+      <p class="pol-svc-body">Analysts embedded in the layers your opponents use — hacktivist forums, Telegram, dark markets. Human eyes where algorithms can't reach.</p>
+    </div>
+    <div class="pol-svc-empty" style="grid-column: span 2;"></div>
+
+    <!-- ── ROW 3: DRONES ── -->
+    <div class="pol-svc-cat-label">Drones</div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Argos</span>
+      <span class="pol-svc-tag">Aerial Surveillance</span>
+      <p class="pol-svc-body">Autonomous drone surveillance over your properties and campaign HQ. Motion detection, anomaly logging, real-time reporting. Eyes where you can't be.</p>
+    </div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Aegis</span>
+      <span class="pol-svc-tag">Drone Detection</span>
+      <p class="pol-svc-body">We monitor your airspace. Any unauthorized drone approaching your properties is detected, identified, and tracked before it gets close.</p>
+    </div>
+    <div class="pol-svc-empty" style="grid-column: span 3;"></div>
+
+    <!-- ── ROW 4: CRISIS ── -->
+    <div class="pol-svc-cat-label">Crisis &amp; Special Events</div>
+    <div class="pol-svc-card">
+      <span class="pol-svc-name">Phantom</span>
+      <span class="pol-svc-tag">Crisis · Counter-Surveillance</span>
+      <p class="pol-svc-body">When the threat is personal, directed, and urgent. Phantom is the highest-level response — counter-surveillance, crisis management, zero margin for error.</p>
+    </div>
+    <div class="pol-svc-empty" style="grid-column: span 4;"></div>
+
+  </div>
+</section>
+
+<!-- POL VEIL -->
+<section id="pol-veil" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-veil-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_15_17 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">01</span>
+          <span class="svc-hero-cat">Device Protection</span>
+        </div>
+        <h2>Veil</h2>
+        <span class="svc-project-tag">Personal Device Security</span>
+      </div>
+      <div class="svc-intro-right">
+        <p class="svc-intro-hard" data-en="We protect your personal digital space." data-es="Protegemos tu espacio digital personal.">We protect your personal digital space.</p>
+        <div class="svc-intro-chips">
+          <span class="svc-intro-chip" data-en="Phone" data-es="Teléfono">Phone</span>
+          <span class="svc-intro-chip" data-en="Laptop" data-es="Laptop">Laptop</span>
+          <span class="svc-intro-chip" data-en="Tablet" data-es="Tablet">Tablet</span>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p data-en="Your devices are not just tools. They are the most intimate record of your life — where you are, who you speak to, what you decide, what you know. Cybersecurity was built for corporations with IT departments and legal teams. You have neither. And those who target you know that." data-es="Tus dispositivos no son solo herramientas. Son el registro más íntimo de tu vida — dónde estás, con quién hablas, qué decides, qué sabes. La ciberseguridad fue construida para corporaciones con departamentos de TI y equipos legales. Tú no tienes ninguno de los dos. Y quienes te tienen como objetivo lo saben.">Your devices are not just tools. They are the most intimate record of your life — where you are, who you speak to, what you decide, what you know. Cybersecurity was built for corporations with IT departments and legal teams. You have neither. And those who target you know that.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p data-en="Continuous hardening, monitoring, and incident response for every device you use — phones, laptops, tablets. Configured for you, not for an organization." data-es="Hardening continuo, monitoreo y respuesta a incidentes para cada dispositivo que usas — teléfonos, laptops, tablets. Configurado para ti, no para una organización.">Continuous hardening, monitoring, and incident response for every device you use — phones, laptops, tablets. Configured for you, not for an organization.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p data-en="Someone accessing your phone remotely while you travel · Surveillance software installed without your knowledge · A compromised assistant's device used as a gateway into yours · Leaked credentials you were never notified about" data-es="Alguien accediendo a tu teléfono de forma remota mientras viajas · Software de vigilancia instalado sin tu conocimiento · El dispositivo comprometido de un asistente usado como puerta de entrada al tuyo · Credenciales filtradas de las que nunca te notificaron">Someone accessing your phone remotely while you travel · Surveillance software installed without your knowledge · A compromised assistant's device used as a gateway into yours · Leaked credentials you were never notified about</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Personal devices · Digital identity · Communications · Financial data · Professional activity · Credentials and access</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL PULSE -->
+<section id="pol-pulse" class="pol-only svc-micro">
+
+  <!-- PARTE 1: Intro 100vh -->
+  <div class="svc-intro" id="pol-pulse-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_15_19 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">02</span>
+          <span class="svc-hero-cat">Digital Intelligence</span>
+        </div>
+        <h2>Pulse</h2>
+        <span class="svc-project-tag">Deep Web Identity Protection</span>
+      </div>
+      <div class="svc-intro-right">
+
+        <p class="svc-intro-hard" data-en="The internet knows more about you than you think. We find it first." data-es="Internet sabe más de ti de lo que crees. Nosotros lo encontramos primero.">The internet knows more about you than you think. We find it first.</p>
+
+        <div class="svc-intro-boxes">
+          <div class="svc-intro-box svc-intro-box--cold">
+            <span class="svc-intro-box-label" data-en="What It Finds" data-es="Qué Encuentra">What It Finds</span>
+            <p data-en="Your identity.<br>Your passwords.<br>Your finances.<br>Your location.<br>Already circulating." data-es="Tu identidad.<br>Tus contraseñas.<br>Tus finanzas.<br>Tu ubicación.<br>Ya circulando.">Your identity.<br>Your passwords.<br>Your finances.<br>Your location.<br>Already circulating.</p>
+          </div>
+          <div class="svc-intro-box svc-intro-box--warm">
+            <span class="svc-intro-box-label" data-en="What It Prevents" data-es="Qué Previene">What It Prevents</span>
+            <p data-en="Every exposed data point is a step closer to you.<br><br>Reputational risk. Financial risk.<br>Sometimes physical." data-es="Cada dato expuesto es un paso más cerca de ti.<br><br>Riesgo reputacional. Riesgo financiero.<br>A veces físico.">Every exposed data point is a step closer to you.<br><br>Reputational risk. Financial risk.<br>Sometimes physical.</p>
+          </div>
+        </div>
+
+        <p class="svc-intro-closer" data-en="This isn't about only what leaked. It's about what someone can build with it." data-es="No se trata solo de lo que se filtró. Se trata de lo que alguien puede construir con ello.">This isn't about only what leaked. It's about what someone can build with it.</p>
+
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p data-en="You did not publish most of what exists about you online. Data brokers, leaked databases, public records, networks from a decade ago — all indexed and available to anyone who knows where to look. Your adversaries know. You probably don't." data-es="No publicaste la mayoría de lo que existe sobre ti en internet. Corredores de datos, bases de datos filtradas, registros públicos, redes de hace una década — todo indexado y disponible para quien sepa dónde buscar. Tus adversarios lo saben. Tú probablemente no.">You did not publish most of what exists about you online. Data brokers, leaked databases, public records, networks from a decade ago — all indexed and available to anyone who knows where to look. Your adversaries know. You probably don't.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p data-en="We map your digital footprint, monitor open sources and the dark web, and alert you before a threat materializes." data-es="Mapeamos tu huella digital, monitoreamos fuentes abiertas y la dark web, y te alertamos antes de que una amenaza se materialice.">We map your digital footprint, monitor open sources and the dark web, and alert you before a threat materializes.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p data-en="A counterpart investigating you before a negotiation and finding something you didn't know existed · Your email and password in a database being sold · Someone registering a domain under your name to impersonate you · A journalist with access to information about your family" data-es="Una contraparte investigándote antes de una negociación y encontrando algo que no sabías que existía · Tu email y contraseña en una base de datos siendo vendida · Alguien registrando un dominio con tu nombre para suplantarte · Un periodista con acceso a información sobre tu familia">A counterpart investigating you before a negotiation and finding something you didn't know existed · Your email and password in a database being sold · Someone registering a domain under your name to impersonate you · A journalist with access to information about your family</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Public exposure · Leaked credentials · Dark web · Identity impersonation · Digital reputation · Threat intelligence</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- POL SANCTUM -->
+<section id="pol-sanctum" class="pol-only svc-micro">
+
+  <!-- PARTE 1: Intro 100vh -->
+  <div class="svc-intro svc-intro--stacked" id="pol-sanctum-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_15_01 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay svc-intro-overlay--stacked">
+      <div class="svc-intro-stacked-top">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">03</span>
+          <span class="svc-hero-cat">Residence &amp; Infrastructure</span>
+        </div>
+        <h2>Sanctum</h2>
+        <span class="svc-project-tag">Digital Shielding of Physical Spaces</span>
+      </div>
+
+      <div class="svc-sanctum-boxes">
+        <div class="svc-sanctum-box1">
+          <span data-en="Your home now has more doors than you think. Every connected device is an entry point — and the number of services, devices and access points connected to your life is growing exponentially." data-es="Tu hogar ahora tiene más puertas de las que crees. Cada dispositivo conectado es un punto de entrada — y el número de servicios, dispositivos y puntos de acceso conectados a tu vida crece de forma exponencial.">Your home now has more doors than you think. Every connected device is an entry point — and the number of services, devices and access points connected to your life is growing exponentially.</span>
+        </div>
+        <div class="svc-sanctum-box2">
+          <span class="svc-sanctum-item" data-en="Architecture" data-es="Arquitectura">Architecture</span>
+          <span class="svc-sanctum-item" data-en="Network" data-es="Red">Network</span>
+          <span class="svc-sanctum-item">IoT</span>
+          <span class="svc-sanctum-item" data-en="Cameras" data-es="Cámaras">Cameras</span>
+          <span class="svc-sanctum-item" data-en="Access Controls" data-es="Controles de Acceso">Access Controls</span>
+          <span class="svc-sanctum-item" data-en="Smart Home" data-es="Hogar Inteligente">Smart Home</span>
+          <span class="svc-sanctum-item" data-en="Local Storage" data-es="Almacenamiento Local">Local Storage</span>
+        </div>
+        <!-- Location boxes: 4 spaces Sanctum covers -->
+        <div class="pol-sanctum-locs">
+          <div class="pol-loc-box"><span class="pol-loc-name">Office</span></div>
+          <div class="pol-loc-box"><span class="pol-loc-name">Residence</span></div>
+          <div class="pol-loc-box"><span class="pol-loc-name">Campaign HQ</span></div>
+          <div class="pol-loc-box"><span class="pol-loc-name">War Room</span></div>
+        </div>
+      </div>
+
+      <div class="svc-intro-stacked-bottom">
+        <div class="svc-intro-col">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p data-en="Every smart device in your home is a potential entry point. The television. The alarm system. The router your housekeeper's phone connects to. Your children's tablets. Your home may have a lock on every door and no protection on any of this." data-es="Cada dispositivo inteligente en tu hogar es un punto de entrada potencial. El televisor. El sistema de alarma. El router al que se conecta el teléfono del ama de llaves. Las tablets de tus hijos. Tu hogar puede tener cerradura en cada puerta y ninguna protección en nada de esto.">Every smart device in your home is a potential entry point. The television. The alarm system. The router your housekeeper's phone connects to. Your children's tablets. Your home may have a lock on every door and no protection on any of this.</p>
+        </div>
+        <div class="svc-intro-col">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p data-en="We design and secure the complete digital infrastructure of your residence — network, IoT, access controls, and everything connected to it." data-es="Diseñamos y aseguramos la infraestructura digital completa de tu residencia — red, IoT, controles de acceso, y todo lo conectado a ella.">We design and secure the complete digital infrastructure of your residence — network, IoT, access controls, and everything connected to it.</p>
+        </div>
+        <div class="svc-intro-col">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p data-en="Unauthorized remote access to your cameras · A contractor who was in your home and still has access · Your network used to monitor your devices · A voice assistant recording conversations it shouldn't" data-es="Acceso remoto no autorizado a tus cámaras · Un contratista que estuvo en tu hogar y aún tiene acceso · Tu red usada para monitorear tus dispositivos · Un asistente de voz grabando conversaciones que no debería">Unauthorized remote access to your cameras · A contractor who was in your home and still has access · Your network used to monitor your devices · A voice assistant recording conversations it shouldn't</p>
+        </div>
+        <div class="svc-intro-col">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Home network · IoT devices · Smart home · Staff and guest access · Cameras · Local storage · Cloud accounts</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- POL E-SWEEP -->
+<section id="pol-esweep" class="pol-only svc-micro">
+
+  <!-- PARTE 1: Intro 100vh -->
+  <div class="svc-intro" id="pol-esweep-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_06_10 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">04</span>
+          <span class="svc-hero-cat">Physical Security</span>
+        </div>
+        <h2>E-Sweep</h2>
+        <span class="svc-project-tag">Electronic Sweep for Secure Spaces</span>
+      </div>
+      <div class="svc-intro-right">
+
+        <p class="svc-intro-hard">The room you trust most may already be compromised.</p>
+
+        <div class="svc-intro-boxes">
+          <div class="svc-intro-box svc-intro-box--cold">
+            <span class="svc-intro-box-label">What It Finds</span>
+            <p>Hidden microphones.<br>Covert cameras.<br>RF transmitters.<br>GSM interceptors.<br>Already active.</p>
+          </div>
+          <div class="svc-intro-box svc-intro-box--warm">
+            <span class="svc-intro-box-label">What It Prevents</span>
+            <p>A single recording from a private meeting can redefine a campaign, end a negotiation, or hand a lever to the wrong person.<br><br>The threat is physical. The consequences are not.</p>
+          </div>
+        </div>
+
+        <p class="svc-intro-closer">A device doesn't have to be sophisticated to be devastating. It just has to be there.</p>
+
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>Surveillance devices are smaller, cheaper, and more accessible than ever. They can be left by a contractor, installed during a meeting, or concealed in furniture. Most are never found without a structured sweep — because no one looked.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>We conduct systematic RF, acoustic, and physical inspections of your spaces using professional-grade detection equipment — identifying covert transmitters, hidden cameras, and unauthorized recording devices.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>A planted device recording a strategy session · Someone monitoring your office through a hidden camera · An adversary intercepting calls via a GSM bug · Staff or contractors with unauthorized listening access</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>RF detection · Hidden cameras · Acoustic devices · GSM interceptors · Network taps · Physical inspection · Pre-meeting sweeps</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- POL DEEP LINK -->
+<section id="pol-deeplink" class="pol-only svc-micro">
+  <div class="svc-intro svc-intro--stacked" id="pol-deeplink-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 19, 2026, 09_11_09 AM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay svc-intro-overlay--stacked">
+
+      <!-- FRANJA 1: Título izq + descripción der -->
+      <div class="pol-deeplink-top">
+        <div class="pol-deeplink-top-left">
+          <div class="svc-intro-eyebrow">
+            <span class="svc-hero-n">06</span>
+            <span class="svc-hero-cat">Intelligence</span>
+          </div>
+          <h2>DeepLynx</h2>
+          <span class="svc-project-tag">Large-Scale Network Intelligence</span>
+        </div>
+        <div class="pol-deeplink-top-right">
+          <p><strong>This is not social listening.</strong> DeepLynx is a threat intelligence operation running on open networks — built to detect coordinated attack campaigns before they gain traction, identify incitement patterns before they escalate, and convert online signals into real-world risk assessments before they become physical incidents.</p>
+        </div>
+      </div>
+
+      <!-- FRANJA 3: Split principal -->
+      <div class="pol-deeplink-split">
+
+        <!-- MITAD IZQUIERDA: Discourse Analysis -->
+        <div class="pol-deeplink-half">
+          <p class="pol-deeplink-half-title">I — Discourse Analysis</p>
+          <p class="pol-deeplink-hard">Deep Social Media<br>Discourse Analysis</p>
+          <p class="pol-deeplink-body">We map the full conversation about you across open networks — identifying pejorative narratives, detecting black campaigns, and surfacing what your adversaries are building before it reaches the mainstream.</p>
+          <div class="pol-deeplink-chips">
+            <span class="pol-deeplink-chip">Narrative mapping</span>
+            <span class="pol-deeplink-chip">Black Campaigns</span>
+            <span class="pol-deeplink-chip">Coordinated campaigns</span>
+            <span class="pol-deeplink-chip">Bot networks</span>
+            <span class="pol-deeplink-chip">Sentiment tracking</span>
+            <span class="pol-deeplink-chip">Early-warning alerts</span>
+          </div>
+          <div class="pol-deeplink-whatwedo">
+            <span class="pol-deeplink-whatwedo-label">What we do</span>
+            <p>We run continuous monitoring across major platforms, forums, and fringe networks — combining automated signal detection with analyst review to separate noise from real threats.</p>
+          </div>
+          <div class="pol-deeplink-examples">
+            <div class="pol-deeplink-example">
+              <span class="pol-deeplink-ex-label">Example</span>
+              <p>Coordinated hashtag campaign detected 72 hours before it trended nationally.</p>
+            </div>
+            <div class="pol-deeplink-example">
+              <span class="pol-deeplink-ex-label">Example</span>
+              <p>Bot network amplifying a fabricated quote identified before reaching mainstream media.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- MITAD DERECHA: Physical Risk Prevention -->
+        <div class="pol-deeplink-half">
+          <p class="pol-deeplink-half-title">II — Physical Risk Prevention</p>
+          <p class="pol-deeplink-hard">Prevention of<br>Physical Risks</p>
+          <p class="pol-deeplink-body">Online discourse moves faster than physical planning. DeepLynx aggregates open network signals and detects patterns linked to physical risk — violent action signals, geographic threat clusters, and mobilization trends — converting what is said into an operational risk picture before an event takes place.</p>
+          <div class="pol-deeplink-chips">
+            <span class="pol-deeplink-chip">Violent action signals</span>
+            <span class="pol-deeplink-chip">Geographic risk clusters</span>
+            <span class="pol-deeplink-chip">Incitement detection</span>
+            <span class="pol-deeplink-chip">Pre-event analysis</span>
+            <span class="pol-deeplink-chip">Crowd mobilization</span>
+            <span class="pol-deeplink-chip">Security detail alerts</span>
+          </div>
+          <div class="pol-deeplink-whatwedo">
+            <span class="pol-deeplink-whatwedo-label">What we do</span>
+            <p>We cross-reference discourse patterns against known physical risk indicators, classify threat levels by geography and intent, and escalate directly to your security detail — before the situation becomes an incident.</p>
+          </div>
+          <div class="pol-deeplink-examples">
+            <div class="pol-deeplink-example">
+              <span class="pol-deeplink-ex-label">Example</span>
+              <p>Location leaked through crowd-tagged photos at a private event — flagged in real time.</p>
+            </div>
+            <div class="pol-deeplink-example">
+              <span class="pol-deeplink-ex-label">Example</span>
+              <p>Incitement post calling for physical confrontation at a public appearance — escalated to detail.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- TERCERA COLUMNA: Neural Signal Detection -->
+        <div class="pol-deeplink-half pol-deeplink-neural">
+          <div class="pol-deeplink-neural-head">
+            <p class="pol-deeplink-half-title">Mass Intelligence</p>
+          </div>
+          <div class="pol-deeplink-neural-wrap">
+            <canvas id="dlx-neural-canvas"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  var canvas = document.getElementById('dlx-neural-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var dpr = window.devicePixelRatio || 1;
+
+  var LABELS = [
+    'BOT NETWORK','INCITEMENT','GEO CLUSTER','PHYSICAL RISK',
+    'DANGER','COORDINATED','ALERT','INFILTRATION',
+    'TARGET FLAGGED','SIGNAL DETECTED','DARK FORUM','ESCALATED'
+  ];
+
+  var W = 0, H = 0, nodes = [], edges = [];
+  var NODE_COUNT = 32;
+  var nextActivation = Date.now() + 1200;
+  var rafId = null;
+
+  function init() {
+    var wrap = canvas.parentElement;
+    W = wrap.offsetWidth;
+    H = wrap.offsetHeight;
+    if (W < 1 || H < 1) return;
+    canvas.width  = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    nodes = [];
+    for (var i = 0; i < NODE_COUNT; i++) {
+      nodes.push({
+        x: 8 + Math.random() * (W - 16),
+        y: 8 + Math.random() * (H - 16),
+        vx: (Math.random() - 0.5) * 0.18,
+        vy: (Math.random() - 0.5) * 0.18,
+        r: 1.5 + Math.random() * 2,
+        baseOp: 0.12 + Math.random() * 0.1,
+        act: 0,
+        actDecay: 0.006,
+        label: null,
+        labelOp: 0,
+        labelX: 0,
+        labelY: 0,
+        pulse: 0,
+        pulseOp: 0
+      });
+    }
+    buildEdges();
+  }
+
+  function buildEdges() {
+    edges = [];
+    var threshold = Math.min(W, H) * 0.30;
+    for (var i = 0; i < nodes.length; i++) {
+      for (var j = i + 1; j < nodes.length; j++) {
+        var dx = nodes[i].x - nodes[j].x;
+        var dy = nodes[i].y - nodes[j].y;
+        var d = Math.sqrt(dx*dx + dy*dy);
+        if (d < threshold) edges.push({ a: i, b: j, op: 0 });
+      }
+    }
+  }
+
+  function activate() {
+    var idx = Math.floor(Math.random() * nodes.length);
+    var n = nodes[idx];
+    n.act = 1;
+    n.actDecay = 0.006 + Math.random() * 0.004;
+    n.label = LABELS[Math.floor(Math.random() * LABELS.length)];
+    n.labelOp = 0;
+    n.labelX = n.x + 10;
+    n.labelY = n.y - 14;
+    n.pulse = 0;
+    n.pulseOp = 0.7;
+
+    /* light up connected edges + cascade to neighbors */
+    edges.forEach(function(e) {
+      if (e.a === idx || e.b === idx) {
+        e.op = 0.45;
+        var ni = (e.a === idx) ? e.b : e.a;
+        setTimeout(function() {
+          if (!nodes[ni]) return;
+          nodes[ni].act = Math.max(nodes[ni].act, 0.55);
+          nodes[ni].actDecay = 0.009;
+        }, 180 + Math.random() * 380);
+      }
+    });
+
+    nextActivation = Date.now() + 1800 + Math.random() * 2200;
+  }
+
+  function draw() {
+    rafId = requestAnimationFrame(draw);
+    if (W < 1 || H < 1) return;
+    ctx.clearRect(0, 0, W, H);
+
+    if (Date.now() > nextActivation) activate();
+
+    /* update + draw edges */
+    edges.forEach(function(e) {
+      if (e.op > 0) e.op = Math.max(0, e.op - 0.007);
+      var na = nodes[e.a], nb = nodes[e.b];
+      var op = 0.055 + e.op;
+      ctx.beginPath();
+      ctx.moveTo(na.x, na.y);
+      ctx.lineTo(nb.x, nb.y);
+      ctx.strokeStyle = 'rgba(255,255,255,' + op + ')';
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+    });
+
+    /* update + draw nodes */
+    nodes.forEach(function(n) {
+      /* drift */
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 4 || n.x > W - 4) n.vx *= -1;
+      if (n.y < 4 || n.y > H - 4) n.vy *= -1;
+
+      /* activation decay */
+      if (n.act > 0) n.act = Math.max(0, n.act - n.actDecay);
+
+      /* label fade */
+      if (n.act > 0.4 && n.label) {
+        n.labelOp = Math.min(1, n.labelOp + 0.06);
+        n.labelY -= 0.25;
+      } else {
+        n.labelOp = Math.max(0, n.labelOp - 0.025);
+        if (n.labelOp <= 0) n.label = null;
+      }
+
+      /* pulse ring */
+      if (n.pulseOp > 0) {
+        n.pulse += 1.4;
+        n.pulseOp = Math.max(0, n.pulseOp - 0.011);
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.pulse, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + n.pulseOp + ')';
+        ctx.lineWidth = 0.8;
+        ctx.stroke();
+      }
+
+      /* glow halo on active nodes */
+      if (n.act > 0.2) {
+        var grd = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * 5);
+        grd.addColorStop(0, 'rgba(255,255,255,' + (n.act * 0.28) + ')');
+        grd.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, n.r * 5, 0, Math.PI * 2);
+        ctx.fillStyle = grd;
+        ctx.fill();
+      }
+
+      /* node dot */
+      var dotOp = Math.min(1, n.baseOp + n.act * 0.8);
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r + n.act * 1.5, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + dotOp + ')';
+      ctx.fill();
+
+      /* label */
+      if (n.labelOp > 0 && n.label) {
+        ctx.save();
+        ctx.globalAlpha = n.labelOp;
+        ctx.font = '600 8px Arial, sans-serif';
+        ctx.fillStyle = '#ffffff';
+        ctx.fillText(n.label, n.labelX, n.labelY);
+        /* connector line */
+        ctx.beginPath();
+        ctx.moveTo(n.x + n.r, n.y);
+        ctx.lineTo(n.labelX - 2, n.labelY + 1);
+        ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+    });
+  }
+
+  /* ResizeObserver to handle panel resize */
+  var ro = new ResizeObserver(function() {
+    if (rafId) cancelAnimationFrame(rafId);
+    init();
+    if (W > 0) draw();
+  });
+  ro.observe(canvas.parentElement);
+
+  init();
+  if (W > 0) draw();
+})();
+</script>
+
+<!-- POL SOCIAL LOCK -->
+<section id="pol-sociallock" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-sociallock-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_15_21 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">05</span>
+          <span class="svc-hero-cat">Account Security</span>
+        </div>
+        <h2>Social Lock</h2>
+        <span class="svc-project-tag">Social Media Account Protection</span>
+      </div>
+      <div class="svc-intro-right">
+        <p class="svc-intro-hard">Your accounts are the most public part of your identity. They are also the most targeted.</p>
+        <div class="svc-intro-chips">
+          <span class="svc-intro-chip">Official Pages</span>
+          <span class="svc-intro-chip">Campaign Accounts</span>
+          <span class="svc-intro-chip">Admin Access</span>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>A hijacked account during a critical news cycle is not a technical problem — it is a political crisis. Adversaries target the people who manage your accounts, not just you. One compromised administrator is enough to take everything down.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>Technical hardening of every official account, prevention of hijacking and phishing attacks, and secure configuration for every administrator with privileged access — including structured training for your team.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>Account takeover during a critical news cycle · A team member's credentials used to post unauthorized content · A phishing link sent from your verified account · Malware distributed through your official pages · Impersonation accounts designed to mislead your followers</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Official social accounts · Administrative access · Phishing prevention · Malware campaigns · Credential security · Team configuration · Incident response</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL PANOPTICA DASHBOARD -->
+<section id="pol-panoptica" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-panoptica-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 19, 2026, 09_12_08 AM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">07</span>
+          <span class="svc-hero-cat">Threat Intelligence</span>
+        </div>
+        <h2>Panoptica<br>Dashboard</h2>
+        <span class="svc-project-tag">Digital Security Intelligence Dashboard</span>
+      </div>
+      <div class="svc-intro-right">
+        <p class="svc-intro-hard">Every threat signal. Every source. One operational view.</p>
+        <div class="svc-intro-chips">
+          <span class="svc-intro-chip">Real-time alerts</span>
+          <span class="svc-intro-chip">Threat mapping</span>
+          <span class="svc-intro-chip">Risk scoring</span>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>Intelligence scattered across reports, channels, and analysts is intelligence that arrives too late. Decision-makers need a single consolidated view — live, prioritized, and actionable — not a summary delivered the next morning.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>Panoptica consolidates every active intelligence stream into one real-time threat dashboard — aggregating signals from digital monitoring, physical risk assessments, and open-source intelligence into a unified, continuously updated operational picture.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>Acting on incomplete information · Blind spots between intelligence sources · Delayed responses to escalating threats · Disconnected teams operating on different threat pictures</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Live threat feeds · Risk scoring · Alert prioritization · Cross-source correlation · Incident tracking · Reporting · Security team access</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL RESEARCH INTELLIGENCE -->
+<section id="pol-research" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-research-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_06_13 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">08</span>
+          <span class="svc-hero-cat">Intelligence</span>
+        </div>
+        <h2>Threat Intel</h2>
+        <span class="svc-project-tag">Dedicated Threat Intelligence</span>
+      </div>
+      <div class="svc-intro-right">
+
+        <p class="svc-intro-hard">Know your adversaries before they know their next move.</p>
+
+        <div class="svc-intro-boxes">
+          <div class="svc-intro-box svc-intro-box--cold">
+            <span class="svc-intro-box-label">What It Investigates</span>
+            <p>Opponents' financing.<br>Hidden networks.<br>Undisclosed alliances.<br>Conflicts of interest.<br>Past conduct.</p>
+          </div>
+          <div class="svc-intro-box svc-intro-box--warm">
+            <span class="svc-intro-box-label">What It Delivers</span>
+            <p>Actionable intelligence for negotiation, strategy, and decision-making.<br><br>Before your adversaries know you're looking.</p>
+          </div>
+        </div>
+
+        <p class="svc-intro-closer">This is not background research. It is operational intelligence.</p>
+
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>Strategic decisions made without intelligence are made blind. Knowing who you're dealing with — their history, alliances, vulnerabilities, and financing — changes every negotiation, every alliance, and every public move you make.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>We conduct deep research on individuals, organizations, and networks — surfacing what isn't publicly visible and building intelligence profiles that directly inform your strategy and decisions.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>Entering into alliances with compromised partners · Being blindsided by a hidden agenda · Negotiating without knowing the other side's leverage · A coalition partner who becomes a liability after it's too late</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Individual profiling · Corporate intelligence · Political networks · Financial ties · Hidden affiliations · Reputational exposure · Strategic briefings</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL ARGOS -->
+<section id="pol-argos" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-argos-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_41_44 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">09</span>
+          <span class="svc-hero-cat">Aerial Intelligence</span>
+        </div>
+        <h2>Argos</h2>
+        <span class="svc-project-tag">Drone Surveillance</span>
+      </div>
+      <div class="svc-intro-right">
+        <p class="svc-intro-hard">Eyes where no one expects them.</p>
+        <div class="svc-intro-chips">
+          <span class="svc-intro-chip">Drone Surveillance</span>
+          <span class="svc-intro-chip">Scheduled Routes</span>
+          <span class="svc-intro-chip">AI Detection</span>
+          <span class="svc-intro-chip">Dedicated Analyst</span>
+          <span class="svc-intro-chip">Real-Time Feed</span>
+          <span class="svc-intro-chip">Pre-Event Recon</span>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>Physical security has blind spots that cameras and personnel cannot fill. Terrain, crowd density, and building geometry create gaps that hostile actors know how to exploit. Aerial coverage closes them.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>Deployment of surveillance drones for event security, route reconnaissance, and perimeter monitoring — delivering a real-time aerial intelligence feed directly to your security detail before and during any operation.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>Undetected threats approaching a venue · Blind spots in ground-level security · Hostile reconnaissance of your route before movement · Crowd anomalies invisible from the ground</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Event perimeter · Route reconnaissance · Real-time aerial feed · Crowd intelligence · Pre-event sweep · Coordination with security detail</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL AEGIS -->
+<section id="pol-aegis" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-aegis-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_14_38 PM.png" alt="" style="object-position: center 50%;">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">10</span>
+          <span class="svc-hero-cat">Aerial Defense</span>
+        </div>
+        <h2>Aegis</h2>
+        <span class="svc-project-tag">Drone Detection System</span>
+      </div>
+      <div class="svc-intro-right">
+
+        <p class="svc-intro-hard">What flies toward you should not reach you.</p>
+
+        <div class="svc-intro-boxes" style="display:block;">
+          <div class="svc-intro-box svc-intro-box--cold" style="width:100%; box-sizing:border-box; padding: clamp(22px,3vh,40px) clamp(24px,2.6vw,40px);">
+            <div style="margin:0; font-size:clamp(18px,2vw,32px); font-weight:300; letter-spacing:-0.01em; color:rgba(255,255,255,0.92); line-height:1.2; text-align:center;">Drone Detection & Tracking System</div>
+          </div>
+        </div>
+
+        <p class="svc-intro-closer">Most security protocols have no answer for a drone. Aegis is the answer.</p>
+
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+          <p>Commercial drones cost less than a hotel room and can carry cameras, recording equipment, or payloads into airspace that no ground security team can defend. Public figures are a primary target — and most protection operations have no counter-drone layer.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>02</b> — What it does</span>
+          <p>Detection and tracking of unauthorized drone activity in protected airspace — covering surveillance UAVs, hostile approach vectors, and unauthorized overflight during events and movements.</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+          <p>Aerial surveillance of private meetings or locations · A drone capturing restricted footage during a campaign event · Unauthorized UAV approaching during movement · Drone-based disruption at public appearances</p>
+        </div>
+        <div class="svc-intro-block">
+          <span class="svc-intro-label"><b>04</b> — What it covers</span>
+          <p><strong>Drone detection · Protected airspace · Event coverage · Route protection · Integration with security detail</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL PHANTOM -->
+<section id="pol-phantom" class="pol-only svc-micro">
+  <div class="svc-intro" id="pol-phantom-intro">
+    <div class="svc-hero-photo">
+      <img src="ChatGPT Image Jul 18, 2026, 04_15_29 PM.png" alt="" style="object-position: center 45%; filter: saturate(0.15) contrast(1.1);">
+    </div>
+    <div class="svc-intro-overlay">
+      <div class="svc-intro-left">
+        <div class="svc-intro-eyebrow">
+          <span class="svc-hero-n">11</span>
+          <span class="svc-hero-cat">Counter-Surveillance &amp; Crisis</span>
+        </div>
+        <h2>Phantom</h2>
+        <span class="svc-project-tag">Special Events & Crisis Management</span>
+      </div>
+      <div class="svc-intro-right">
+        <p class="phantom-trio">Crisis management.</p>
+        <p class="phantom-trio">Counter-surveillance.</p>
+        <p class="phantom-trio">Specific, directed threats.</p>
+        <p class="phantom-body">This is not a standard engagement. It is a response — built around your situation, deployed when it matters most.</p>
+        <div class="phantom-blocks">
+          <div class="svc-intro-block">
+            <span class="svc-intro-label"><b>01</b> — Why it matters</span>
+            <p>Some threats do not fit a standard service. A targeted attack, a credible threat, an active surveillance operation, a crisis already in motion — these require a different level of response.</p>
+          </div>
+          <div class="svc-intro-block">
+            <span class="svc-intro-label"><b>02</b> — What it does</span>
+            <p>A bespoke engagement combining counter-surveillance, crisis response, and directed threat management — assembled around your situation. No fixed protocol. Every element is purpose-built.</p>
+          </div>
+          <div class="svc-intro-block">
+            <span class="svc-intro-label"><b>03</b> — What it protects you from</span>
+            <p>Active surveillance · Credible physical threats · Crisis already unfolding · Directed attacks on identity, infrastructure, or security</p>
+          </div>
+          <div class="svc-intro-block">
+            <span class="svc-intro-label"><b>04</b> — What it covers</span>
+            <p><strong>Counter-surveillance · Crisis response · Threat management · Emergency deployment · Reputational crisis · Active incident response</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POL PW — THE AGENCY & THE DETAIL -->
+<section id="pol-pw-agency" class="pol-only pw pw-agency">
+  <p class="pw-agency-text"
+     data-en="The Agency<br>&amp; The <em>Cell</em>"
+     data-es="The Agency<br>&amp; The <em>Cell</em>">The Agency<br>&amp; The <em>Cell</em></p>
+</section>
+
+<!-- POL REMATE -->
+<section id="pol-remate" class="pol-only">
+  <div class="pol-rm-left">
+    <span class="pol-rm-eyebrow" data-en="What We Protect" data-es="Lo que protegemos">What We Protect</span>
+    <div class="pol-rm-list" id="pol-rm-list">
+      <div class="pol-rm-item" data-prm="1" data-en="The Political Figure" data-es="El político">The Political Figure</div>
+      <div class="pol-rm-item" data-prm="2" data-en="Their Family" data-es="Su familia">Their Family</div>
+      <div class="pol-rm-item" data-prm="3" data-en="Their Team" data-es="Su equipo">Their Team</div>
+      <div class="pol-rm-item" data-prm="4" data-en="Their Campaign Team" data-es="Su equipo de campaña">Their Campaign Team</div>
+      <div class="pol-rm-item" data-prm="5" data-en="Their Physical Space" data-es="Su espacio físico">Their Physical Space<span class="pol-rm-tag" data-en="Their office · Home · Campaign HQ · War Room" data-es="Su oficina · Casa · HQ de campaña · War Room">Their office · Home · Campaign HQ · War Room</span></div>
+      <div class="pol-rm-item pol-rm-item--heavy" data-prm="6" data-en="Their Complete Digital Life" data-es="Su vida digital completa">Their Complete Digital Life</div>
+      <div class="pol-rm-item pol-rm-item--heavy" data-prm="7" data-en="Prevention materialized&lt;br&gt;as physical risk" data-es="Prevención materializada&lt;br&gt;en riesgo físico">Prevention materialized<br>as physical risk</div>
+    </div>
+    <div class="pol-rm-nav">
+      <button class="pol-rm-btn" id="pol-rm-prev">←</button>
+      <button class="pol-rm-btn" id="pol-rm-next">→</button>
+    </div>
+  </div>
+  <div class="pol-rm-right">
+    <canvas id="pol-rm-canvas"></canvas>
+  </div>
+</section>
+
+
 
 <!-- FOOTER -->
 <footer>
@@ -4289,6 +6966,8 @@ if (tableroWrap) {
 
 /* ── SECTION NAVIGATION ── */
 (function() {
+  if (document.body.classList.contains('mode-pol')) return; // pol mode has its own nav
+
   const SECTIONS = ['hero','mundo','pw-question','nosotros','protegemos','quienes','como','servicios','svc-veil','svc-pulse','svc-sanctum','svc-phantom','pw-pero','sfe','pw-agency','the-agency','paq-confianza','infosec','cta'];
   const els = SECTIONS.map(id => document.getElementById(id));
   let current = 0;
@@ -4296,17 +6975,24 @@ if (tableroWrap) {
   function setActive(idx) {
     current = idx;
     document.querySelectorAll('.s-dot').forEach((el, i) => el.classList.toggle('active', i === idx));
-    document.querySelectorAll('.s-tab').forEach((el, i) => el.classList.toggle('active', i === idx));
+    document.querySelectorAll('#section-tabs .s-tab').forEach((el, i) => el.classList.toggle('active', i === idx));
   }
+
+  let _scrolling = false, _scrollTimer = null;
 
   function goTo(idx) {
     if (idx < 0 || idx >= SECTIONS.length) return;
+    _scrolling = true;
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(() => { _scrolling = false; }, 1200);
     els[idx].scrollIntoView({ behavior: 'smooth', block: 'start' });
     setActive(idx);
   }
 
   // Sync with scroll via IntersectionObserver
+  // (paused during programmatic scrolls to avoid fighting)
   const io = new IntersectionObserver(entries => {
+    if (_scrolling) return;
     entries.forEach(e => {
       if (e.isIntersecting) {
         const idx = SECTIONS.indexOf(e.target.id);
@@ -4317,7 +7003,13 @@ if (tableroWrap) {
   els.forEach(el => { if (el) io.observe(el); });
 
   // Click: dots + tabs
-  document.querySelectorAll('.s-dot, .s-tab').forEach(btn => {
+  document.querySelectorAll('.s-dot').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = SECTIONS.indexOf(btn.dataset.target);
+      if (idx !== -1) goTo(idx);
+    });
+  });
+  document.querySelectorAll('#section-tabs .s-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = SECTIONS.indexOf(btn.dataset.target);
       if (idx !== -1) goTo(idx);
@@ -4690,6 +7382,258 @@ if (tableroWrap) {
 })();
 
 
+/* ── POL-REMATE CANVAS ── */
+(function() {
+  const canvas = document.getElementById('pol-rm-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  const TOTAL = 7;
+  let step = 0, T = 0, animId = null;
+  let CX = 0, CY = 0, SC = 0;
+  let scanAngle = 0;
+
+  const V = {
+    r1:   { r:0, tr:0, o:0, to:0 },
+    r2:   { r:0, tr:0, o:0, to:0 },
+    scan: { r:0, tr:0, o:0, to:0 },
+    sh:   { r:0, tr:0, o:0, to:0 },
+    nodes: [],
+  };
+
+  function mkNode(deg, baseRFrac, type, req, angVel) {
+    const rad = (deg - 90) * Math.PI / 180;
+    return { cx:0, cy:0, x:0, y:0, tx:0, ty:0, angle:rad, baseRFrac, baseR:0, angVel, o:0, to:0, type, req };
+  }
+
+  function buildNodes() {
+    V.nodes = [
+      ...[0,90,180,270].map(a => mkNode(a, 0.135, 'camp',  4, -0.0022)),
+      ...[30,150,270].map(a   => mkNode(a, 0.240, 'space', 5, +0.0013)),
+    ];
+    positionNodes();
+  }
+
+  function positionNodes() {
+    V.nodes.forEach(n => {
+      n.cx = CX; n.cy = CY;
+      n.baseR = SC * n.baseRFrac;
+      n.tx = CX + Math.cos(n.angle) * n.baseR;
+      n.ty = CY + Math.sin(n.angle) * n.baseR;
+      if (n.o > 0.5) { n.x = n.tx; n.y = n.ty; } else { n.x = CX; n.y = CY; }
+    });
+  }
+
+  function updateTargets(snap) {
+    V.r1.tr   = step >= 2 ? SC*0.100 : 0;  V.r1.to   = step >= 2 ? 1 : 0;
+    V.r2.tr   = step >= 3 ? SC*0.165 : 0;  V.r2.to   = step >= 3 ? 1 : 0;
+    V.scan.tr = step >= 6 ? SC*0.320 : 0;  V.scan.to = step >= 6 ? 1 : 0;
+    V.sh.tr   = step >= 7 ? SC*0.410 : 0;  V.sh.to   = step >= 7 ? 1 : 0;
+    V.nodes.forEach(n => { n.to = step >= n.req ? 1 : 0; });
+    if (snap) {
+      ['r1','r2','scan','sh'].forEach(k => { V[k].r = V[k].tr; V[k].o = V[k].to; });
+      V.nodes.forEach(n => {
+        n.o = n.to;
+        n.x = n.to > 0 ? n.tx : n.cx;
+        n.y = n.to > 0 ? n.ty : n.cy;
+      });
+    }
+  }
+
+  function applyStep(s) {
+    step = Math.max(0, Math.min(TOTAL, s));
+    updateTargets(false);
+    document.querySelectorAll('#pol-rm-list .pol-rm-item').forEach(el => {
+      el.classList.toggle('visible', step >= parseInt(el.dataset.prm));
+    });
+  }
+
+  function resize() {
+    const wrap = canvas.parentElement;
+    const W = wrap.clientWidth, H = wrap.clientHeight;
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = W*dpr; canvas.height = H*dpr;
+    canvas.style.width = W+'px'; canvas.style.height = H+'px';
+    CX = W/2; CY = H/2; SC = Math.min(W,H);
+    buildNodes();
+    updateTargets(true);
+  }
+
+  const lp = (a,b,f) => a+(b-a)*f;
+
+  function draw() {
+    T += 0.016;
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width/dpr, H = canvas.height/dpr;
+    const spd = 0.09;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+
+    V.nodes.forEach(n => {
+      if (n.o > 0.01 || n.to > 0) {
+        n.angle += n.angVel;
+        n.tx = n.cx + Math.cos(n.angle) * n.baseR;
+        n.ty = n.cy + Math.sin(n.angle) * n.baseR;
+      }
+    });
+
+    ['r1','r2','scan'].forEach(k => { V[k].r = lp(V[k].r,V[k].tr,spd); V[k].o = lp(V[k].o,V[k].to,spd); });
+    V.sh.r = lp(V.sh.r, V.sh.tr, spd*0.45);
+    V.sh.o = lp(V.sh.o, V.sh.to, spd*0.45);
+
+    V.nodes.forEach(n => {
+      const show = n.to > 0.5;
+      n.x = lp(n.x, show ? n.tx : n.cx, spd*0.65);
+      n.y = lp(n.y, show ? n.ty : n.cy, spd*0.65);
+      if (show) {
+        n.o = lp(n.o, 1, spd*0.75);
+      } else {
+        const dist = Math.hypot(n.x-n.cx, n.y-n.cy);
+        const maxD = Math.hypot(n.tx-n.cx, n.ty-n.cy);
+        n.o = Math.min(n.o, maxD > 1 ? dist/maxD : 0);
+      }
+    });
+
+    if (V.scan.o > 0.01) scanAngle += 0.022;
+
+    /* connection lines */
+    V.nodes.forEach(n => {
+      if (n.o < 0.02) return;
+      const ang = Math.atan2(n.y-CY, n.x-CX);
+      const edgeR = V.r2.r > 10 ? V.r2.r : 0;
+      ctx.beginPath();
+      ctx.moveTo(n.x, n.y);
+      ctx.lineTo(CX + Math.cos(ang)*edgeR, CY + Math.sin(ang)*edgeR);
+      ctx.strokeStyle = `rgba(255,255,255,${n.o*0.09})`; ctx.lineWidth = 0.5; ctx.stroke();
+    });
+
+    /* Ring 2 — equipo + glow */
+    if (V.r2.o > 0.01) {
+      ctx.save();
+      ctx.shadowBlur = 18; ctx.shadowColor = `rgba(255,255,255,${V.r2.o*0.45})`;
+      ctx.beginPath(); ctx.arc(CX,CY, V.r2.r, 0, Math.PI*2);
+      ctx.fillStyle   = `rgba(255,255,255,${V.r2.o*0.025})`; ctx.fill();
+      ctx.strokeStyle = `rgba(255,255,255,${V.r2.o*0.22})`; ctx.lineWidth = 0.75; ctx.stroke();
+      ctx.restore();
+    }
+
+    /* Ring 1 — familia + glow */
+    if (V.r1.o > 0.01) {
+      ctx.save();
+      ctx.shadowBlur = 14; ctx.shadowColor = `rgba(255,255,255,${V.r1.o*0.55})`;
+      ctx.beginPath(); ctx.arc(CX,CY, V.r1.r, 0, Math.PI*2);
+      ctx.fillStyle   = `rgba(255,255,255,${V.r1.o*0.05})`; ctx.fill();
+      ctx.strokeStyle = `rgba(255,255,255,${V.r1.o*0.32})`; ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+    }
+
+    /* Nodes */
+    V.nodes.forEach(n => {
+      if (n.o < 0.02) return;
+      const isSpace = n.type === 'space';
+      const r = isSpace ? 3.5 : 2.5;
+      const g = ctx.createRadialGradient(n.x,n.y,0, n.x,n.y, r*7);
+      g.addColorStop(0, `rgba(255,255,255,${n.o*0.18})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y, r*7, 0, Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath();
+      if (isSpace) { ctx.rect(n.x-r, n.y-r, r*2, r*2); }
+      else         { ctx.arc(n.x, n.y, r, 0, Math.PI*2); }
+      ctx.fillStyle = `rgba(255,255,255,${n.o*0.82})`; ctx.fill();
+    });
+
+    /* Scan ring + radar dot */
+    if (V.scan.o > 0.01) {
+      ctx.beginPath(); ctx.arc(CX,CY, V.scan.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,255,255,${V.scan.o*0.10})`; ctx.lineWidth = 0.5; ctx.stroke();
+      const sweepLen = Math.PI * 0.65;
+      for (let i=0; i<20; i++) {
+        const f = i/20;
+        ctx.beginPath();
+        ctx.arc(CX,CY, V.scan.r, scanAngle-sweepLen+f*sweepLen, scanAngle-sweepLen+(f+1/20)*sweepLen);
+        ctx.strokeStyle = `rgba(255,255,255,${V.scan.o*f*0.13})`; ctx.lineWidth=1.5; ctx.stroke();
+      }
+      const sx = CX + Math.cos(scanAngle)*V.scan.r;
+      const sy = CY + Math.sin(scanAngle)*V.scan.r;
+      const sg = ctx.createRadialGradient(sx,sy,0, sx,sy,18);
+      sg.addColorStop(0, `rgba(255,255,255,${V.scan.o*0.28})`);
+      sg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sx,sy,18,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+      ctx.beginPath(); ctx.arc(sx,sy,2.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${V.scan.o*0.88})`; ctx.fill();
+    }
+
+    /* Center dot + glow */
+    const alone  = step <= 1;
+    const glowOp = step === 1 ? 0.30 : (alone ? 0.22 : 0.14);
+    const pulse  = 1 + (alone ? 0.38 : 0.22) * Math.sin(T * (alone ? 1.2 : 1.7));
+    const dotR   = alone ? 6 : 5;
+    const glowMx = alone ? 16 : 9;
+    const pg = ctx.createRadialGradient(CX,CY,0, CX,CY, dotR*glowMx*pulse);
+    pg.addColorStop(0, `rgba(255,255,255,${glowOp})`); pg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(CX,CY, dotR*glowMx*pulse, 0, Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    ctx.beginPath(); ctx.arc(CX,CY, dotR, 0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+
+    /* Shield echo */
+    if (V.sh.o > 0.01) {
+      ctx.save(); ctx.setLineDash([5,11]); ctx.lineDashOffset = -T*22;
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r, 0, Math.PI*2);
+      ctx.strokeStyle=`rgba(255,255,255,${V.sh.o*0.28})`; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
+
+      ctx.save(); ctx.setLineDash([3,16]); ctx.lineDashOffset = T*16;
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r*0.88, 0, Math.PI*2);
+      ctx.strokeStyle=`rgba(255,255,255,${V.sh.o*0.16})`; ctx.lineWidth=0.75; ctx.stroke(); ctx.restore();
+
+      const shg = ctx.createRadialGradient(CX,CY, V.sh.r*0.84, CX,CY, V.sh.r+24);
+      shg.addColorStop(0,'rgba(255,255,255,0)');
+      shg.addColorStop(0.5,`rgba(255,255,255,${V.sh.o*0.04})`);
+      shg.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r, 0, Math.PI*2);
+      ctx.strokeStyle=shg; ctx.lineWidth=60; ctx.stroke();
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  /* Navigation — buttons + keyboard only (no scroll interception) */
+  document.getElementById('pol-rm-prev')?.addEventListener('click', () => applyStep(step-1));
+  document.getElementById('pol-rm-next')?.addEventListener('click', () => applyStep(step+1));
+
+  /* Click on canvas advances */
+  canvas.style.cursor = 'pointer';
+  canvas.addEventListener('click', () => applyStep(step+1));
+
+  // Expose state so the pol-nav unified keyboard handler can control steps
+  function resizeTo(w, h) {
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = w*dpr; canvas.height = h*dpr;
+    canvas.style.width = w+'px'; canvas.style.height = h+'px';
+    CX = w/2; CY = h/2; SC = Math.min(w,h);
+    buildNodes(); updateTargets(true);
+  }
+  window.__polRm = { get step() { return step; }, go: applyStep, resize: resize, resizeTo: resizeTo, draw: draw };
+
+  let started = false;
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        if (!started) { resize(); started=true; }
+        cancelAnimationFrame(animId); draw();
+      } else { cancelAnimationFrame(animId); }
+    });
+  }, { threshold:0.05 });
+
+  const polSect = document.getElementById('pol-remate');
+  if (polSect) io.observe(polSect);
+
+  window.addEventListener('resize', () => {
+    if (!started) return;
+    cancelAnimationFrame(animId); resize(); draw();
+  }, { passive:true });
+
+})();
+
+
 /* ── VD-SEC in-view accent ── */
 (function vdInView() {
   const obs = new IntersectionObserver(entries => {
@@ -4851,6 +7795,51 @@ if (tableroWrap) {
 
   io.observe(section);
   window.addEventListener('resize', () => { if (running) resize(); }, { passive: true });
+
+  // Expose for pre-print snapshot (same pattern as pol-remate)
+  window.__ctaAnim = {
+    start: function() {
+      if (!triggered) {
+        triggered = true; running = true;
+        resize(); section.classList.add('cta-live');
+        openingWave(16); frame();
+      }
+    },
+    // Draw a deterministic print state — doesn't rely on rAF timing
+    drawForPrint: function() {
+      resize();
+      var minDim = Math.min(W, H);
+      ctx.clearRect(0, 0, W, H);
+      // Central honor glow
+      var honorR = 35;
+      var hGrd = ctx.createRadialGradient(cx, cy, 0, cx, cy, honorR * 3);
+      hGrd.addColorStop(0,    'rgba(255,255,255,0.38)');
+      hGrd.addColorStop(0.35, 'rgba(255,255,255,0.16)');
+      hGrd.addColorStop(1,    'rgba(255,255,255,0)');
+      ctx.fillStyle = hGrd;
+      ctx.beginPath(); ctx.arc(cx, cy, honorR * 3, 0, Math.PI * 2); ctx.fill();
+      // Ambient halo
+      var glowR = minDim * 0.28;
+      var gGrd = ctx.createRadialGradient(cx, cy, honorR, cx, cy, glowR);
+      gGrd.addColorStop(0, 'rgba(255,255,255,0.028)');
+      gGrd.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = gGrd;
+      ctx.beginPath(); ctx.arc(cx, cy, glowR, 0, Math.PI * 2); ctx.fill();
+      // Static expanding rings
+      [
+        { r: minDim * 0.13, a: 0.22, w: 0.55 },
+        { r: minDim * 0.24, a: 0.15, w: 0.40 },
+        { r: minDim * 0.37, a: 0.10, w: 0.35 },
+        { r: minDim * 0.51, a: 0.065, w: 0.30 },
+      ].forEach(function(rd) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, rd.r, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + rd.a + ')';
+        ctx.lineWidth = rd.w;
+        ctx.stroke();
+      });
+    }
+  };
 })();
 
 </script>
@@ -4890,6 +7879,352 @@ if (tableroWrap) {
 // ── Language Toggle ──────────────────────────────
 let currentLang = 'en';
 
+/* ── POLITICIAN MODE ── */
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('p') === 'pol') {
+    document.body.classList.add('mode-pol');
+    const btn = document.getElementById('btn-pol');
+    if (btn) { btn.style.color = '#fff'; btn.style.borderColor = 'rgba(255,255,255,0.4)'; }
+  }
+})();
+
+function updateRecipient(name) {
+  // Format today's date as "18 JUL 2026"
+  const months = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  const d = new Date();
+  const dateStr = String(d.getDate()).padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+
+  const text = name.trim()
+    ? name.trim().toUpperCase() + '  ·  ' + dateStr
+    : '';
+
+  // All pol sections (static + cloned)
+  const selectors = [
+    '.pol-only', '#pol-shared-nosotros', '#pol-shared-the-agency',
+    '#pol-shared-infosec', '#cta'
+  ];
+  document.querySelectorAll(selectors.join(',')).forEach(section => {
+    let wm = section.querySelector('.doc-recipient');
+    if (!text) { if (wm) wm.remove(); return; }
+    if (!wm) {
+      wm = document.createElement('span');
+      wm.className = 'doc-recipient';
+      section.appendChild(wm);
+    }
+    wm.textContent = text;
+  });
+}
+
+// ── PRINT ────────────────────────────────────────────────────────────────────
+// Match @page size to current browser viewport so all vw/vh units are identical in browser and print
+function polSyncPageHeight() {
+  var wMM = (window.innerWidth  * 25.4 / 96).toFixed(1);
+  var hMM = (window.innerHeight * 25.4 / 96).toFixed(1);
+  var st = document.getElementById('pol-page-size');
+  if (st) st.textContent = '@page { size: ' + wMM + 'mm ' + hMM + 'mm; margin: 0; }';
+}
+
+function obscuralPrint() {
+  // Advance SVG chart to final state (frozen at start in print)
+  var clipRect = document.querySelector('#chartClip rect');
+  if (clipRect) clipRect.setAttribute('width', '260');
+  document.querySelectorAll('#pol-chart-svg polyline').forEach(function(l) { l.style.strokeDashoffset = '0'; });
+  document.querySelectorAll('#pol-chart-svg circle').forEach(function(c) { c.style.opacity = '1'; });
+
+  // Force all scroll-reveal elements visible — IntersectionObserver doesn't run in print
+  var REVEAL_SEL = '.reveal, .reveal-fade, .reveal-left, .reveal-right, .reveal-scale, .nos-pillar, .prot-card, .profile-col, .como-ghost, .t-row, .cta-logo-wrap';
+  var revealEls = document.querySelectorAll(REVEAL_SEL);
+  revealEls.forEach(function(el) {
+    el._hadIn = el.classList.contains('in');
+    el.classList.add('in');
+  });
+
+  // Sync @page height to viewport so vh units match browser exactly
+  polSyncPageHeight();
+
+  // Prepare pol-rm canvas: advance to full state so aros render in print
+  if (window.__polRm) window.__polRm.go(7);
+  // Prepare cta canvas: draw deterministic static state for snapshot
+  if (window.__ctaAnim) window.__ctaAnim.drawForPrint();
+
+  var prev = document.title;
+  document.title = 'Obscural_Politicians';
+  setTimeout(function() {
+    // pol-rm canvas: resize + draw, then snapshot → <img>
+    if (window.__polRm && window.__polRm.resize) {
+      window.__polRm.resizeTo(window.innerWidth, window.innerHeight);
+      window.__polRm.draw();
+      var _rmC = document.getElementById('pol-rm-canvas');
+      if (_rmC && _rmC.width > 0 && !document.getElementById('pol-rm-print-snap')) {
+        var _snap = document.createElement('img');
+        _snap.id = 'pol-rm-print-snap';
+        _snap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+        try { _snap.src = _rmC.toDataURL('image/png'); } catch(e) {}
+        _rmC.parentElement.appendChild(_snap);
+        _rmC.style.visibility = 'hidden';
+      }
+    }
+    // cta canvas: snapshot whatever rAF has drawn (rings should be visible after 350ms)
+    var _ctaC = document.getElementById('cta-canvas');
+    if (_ctaC && _ctaC.width > 0 && !document.getElementById('cta-print-snap')) {
+      var _ctaSnap = document.createElement('img');
+      _ctaSnap.id = 'cta-print-snap';
+      _ctaSnap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+      try { _ctaSnap.src = _ctaC.toDataURL('image/png'); } catch(e) {}
+      _ctaC.parentElement.appendChild(_ctaSnap);
+      _ctaC.style.visibility = 'hidden';
+    }
+    window.print();
+    document.title = prev;
+    if (clipRect) clipRect.setAttribute('width', '0');
+    document.querySelectorAll('#pol-chart-svg polyline').forEach(function(l) { l.style.strokeDashoffset = '320'; });
+    document.querySelectorAll('#pol-chart-svg circle').forEach(function(c) { c.style.opacity = ''; });
+    // Revert: remove .in from elements that weren't originally revealed
+    revealEls.forEach(function(el) {
+      if (!el._hadIn) el.classList.remove('in');
+      delete el._hadIn;
+    });
+    // Remove canvas snapshots (afterprint handles Cmd+P; this handles PRINT button)
+    var _snap2 = document.getElementById('pol-rm-print-snap');
+    if (_snap2) _snap2.remove();
+    var _rmC2 = document.getElementById('pol-rm-canvas');
+    if (_rmC2) _rmC2.style.visibility = '';
+    var _ctaSnap2 = document.getElementById('cta-print-snap');
+    if (_ctaSnap2) _ctaSnap2.remove();
+    var _ctaC2 = document.getElementById('cta-canvas');
+    if (_ctaC2) _ctaC2.style.visibility = '';
+  }, 80);
+}
+
+// ── PRINT REVEAL FIX ─────────────────────────────────────────────────────────
+// beforeprint fires before Chrome renders the print view (Cmd+P or window.print)
+// el.style.setProperty with 'important' applies inline !important, which beats
+// any stylesheet rule including .reveal { opacity: 0 !important }
+(function() {
+  var PRINT_SEL = '.reveal, .reveal-fade, .reveal-left, .reveal-right, .reveal-scale, ' +
+                  '.nos-pillar, .prot-card, .profile-col, .como-ghost, .t-row, .cta-logo-wrap';
+  var _forcedEls = [];
+
+  window.addEventListener('beforeprint', function() {
+    // Sync @page height to current viewport (handles Cmd+P path)
+    polSyncPageHeight();
+    _forcedEls = [];
+    document.querySelectorAll(PRINT_SEL).forEach(function(el) {
+      _forcedEls.push({ el: el, op: el.style.opacity, tr: el.style.transform, an: el.style.animation, tn: el.style.transition });
+      el.style.setProperty('opacity',    '1',    'important');
+      el.style.setProperty('transform',  'none', 'important');
+      el.style.setProperty('animation',  'none', 'important');
+      el.style.setProperty('transition', 'none', 'important');
+    });
+    // Force pol-rm canvas to full state (aros) — handles Cmd+P path
+    if (window.__polRm) {
+      window.__polRm.go(7);
+      if (window.__polRm.resize) window.__polRm.resize();
+      if (window.__polRm.draw) window.__polRm.draw();
+      var _rmC = document.getElementById('pol-rm-canvas');
+      if (_rmC && _rmC.width > 0 && !document.getElementById('pol-rm-print-snap')) {
+        var _snap = document.createElement('img');
+        _snap.id = 'pol-rm-print-snap';
+        _snap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+        try { _snap.src = _rmC.toDataURL('image/png'); } catch(e) {}
+        _rmC.parentElement.appendChild(_snap);
+        _rmC.style.visibility = 'hidden';
+      }
+    }
+    // Force cta canvas: draw deterministic static state then snapshot
+    if (window.__ctaAnim) window.__ctaAnim.drawForPrint();
+    var _ctaC = document.getElementById('cta-canvas');
+    if (_ctaC && _ctaC.width > 0 && !document.getElementById('cta-print-snap')) {
+      var _ctaSnap = document.createElement('img');
+      _ctaSnap.id = 'cta-print-snap';
+      _ctaSnap.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block;';
+      try { _ctaSnap.src = _ctaC.toDataURL('image/png'); } catch(e) {}
+      _ctaC.parentElement.appendChild(_ctaSnap);
+      _ctaC.style.visibility = 'hidden';
+    }
+  });
+
+  window.addEventListener('afterprint', function() {
+    _forcedEls.forEach(function(item) {
+      item.el.style.opacity    = item.op;
+      item.el.style.transform  = item.tr;
+      item.el.style.animation  = item.an;
+      item.el.style.transition = item.tn;
+    });
+    _forcedEls = [];
+    // Remove canvas snapshots
+    var _snap = document.getElementById('pol-rm-print-snap');
+    if (_snap) _snap.remove();
+    var _rmC = document.getElementById('pol-rm-canvas');
+    if (_rmC) _rmC.style.visibility = '';
+    var _ctaSnap = document.getElementById('cta-print-snap');
+    if (_ctaSnap) _ctaSnap.remove();
+    var _ctaC = document.getElementById('cta-canvas');
+    if (_ctaC) _ctaC.style.visibility = '';
+  });
+})();
+
+function togglePolMode() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.get('p') === 'pol') {
+    url.searchParams.delete('p');
+  } else {
+    url.searchParams.set('p', 'pol');
+  }
+  window.location.href = url.toString();
+}
+
+/* ── POL MODE NAVIGATION ── */
+(function() {
+  if (!document.body.classList.contains('mode-pol')) return;
+
+  // Clone a shared section into the pol sequence (after anchor element)
+  function cloneInto(sourceId, newId, afterId) {
+    var src    = document.getElementById(sourceId);
+    var anchor = document.getElementById(afterId);
+    if (!src || !anchor) return null;
+    var clone = src.cloneNode(true);
+    clone.id = newId;
+    clone.classList.add('pol-only');
+    // Remove child IDs to prevent duplicates
+    clone.querySelectorAll('[id]').forEach(function(el) { el.removeAttribute('id'); });
+    // Mark all reveal elements as already visible (IO won't fire on clones)
+    clone.querySelectorAll('.reveal,.reveal-fade,.reveal-slide,.reveal-left,.reveal-right')
+         .forEach(function(el) { el.classList.add('visible'); });
+    anchor.insertAdjacentElement('afterend', clone);
+    return clone;
+  }
+
+  // Apply pol-specific text overrides (data-pol-en / data-pol-es)
+  function applyPolOverrides(sectionId) {
+    var section = document.getElementById(sectionId);
+    if (!section) return;
+    var lang = document.documentElement.getAttribute('data-lang') || 'en';
+    section.querySelectorAll('[data-pol-en]').forEach(function(el) {
+      var txt = el.getAttribute('data-pol-' + lang) || el.getAttribute('data-pol-en');
+      if (txt) el.innerHTML = txt;
+    });
+  }
+
+  // Insert shared-section clones in narrative position
+  cloneInto('nosotros',   'pol-shared-nosotros',   'pol-riesgos');
+  cloneInto('the-agency', 'pol-shared-the-agency', 'pol-pw-agency');
+  applyPolOverrides('pol-shared-the-agency');
+  cloneInto('infosec',    'pol-shared-infosec',    'pol-remate');
+  // Move original #cta to correct narrative position (it lives at line ~4084 in static HTML,
+  // before pol-remate, so we physically move it after pol-shared-infosec so scroll order is correct)
+  (function() {
+    var inf = document.getElementById('pol-shared-infosec');
+    var cta = document.getElementById('cta');
+    if (inf && cta) {
+      inf.insertAdjacentElement('afterend', cta);
+      cta.classList.add('pol-cta-ready'); // reveal now that it's in correct position
+    }
+  })();
+
+  const POL_SECTIONS = [
+    'pol-hero','pol-stats','pol-riesgos',
+    'pol-shared-nosotros',
+    'pol-pw-nosotros',
+    'pol-ecosistema','pol-how','pol-servicios',
+    'pol-veil',
+    'pol-pulse',
+    'pol-sanctum',
+    'pol-esweep',
+    'pol-deeplink',
+    'pol-sociallock',
+    'pol-panoptica',
+    'pol-research',
+    'pol-argos',
+    'pol-aegis',
+    'pol-phantom',
+    'pol-pw-agency',
+    'pol-shared-the-agency',
+    'pol-remate',
+    'pol-shared-infosec',
+    'cta'
+  ];
+  const polEls = POL_SECTIONS.map(id => document.getElementById(id));
+  let polCurrent = 0;
+
+  function setPolActive(idx) {
+    polCurrent = Math.max(0, Math.min(POL_SECTIONS.length - 1, idx));
+    document.querySelectorAll('#pol-section-tabs .s-tab').forEach((el, i) => {
+      el.classList.toggle('active', i === polCurrent);
+    });
+  }
+
+  function goToPol(idx) {
+    if (idx < 0 || idx >= POL_SECTIONS.length) return;
+    const el = polEls[idx];
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setPolActive(idx);
+  }
+
+  // Tab clicks
+  document.querySelectorAll('#pol-section-tabs .s-tab').forEach((btn, i) => {
+    btn.addEventListener('click', () => goToPol(i));
+  });
+
+  // Keyboard — capture phase so we fire before anything else
+  window.addEventListener('keydown', e => {
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowRight' &&
+        e.key !== 'ArrowUp'   && e.key !== 'ArrowLeft') return;
+
+    // Delegate to pol-remate canvas when it's centered
+    const polRemate = document.getElementById('pol-remate');
+    if (polRemate && window.__polRm) {
+      const rb = polRemate.getBoundingClientRect();
+      const centered = rb.top <= window.innerHeight * 0.52 && rb.bottom >= window.innerHeight * 0.48;
+      if (centered) {
+        e.preventDefault(); e.stopImmediatePropagation();
+        if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+          if (window.__polRm.step < 7) { window.__polRm.go(window.__polRm.step + 1); }
+          else { goToPol(polCurrent + 1); }
+        } else {
+          if (window.__polRm.step > 0) { window.__polRm.go(window.__polRm.step - 1); }
+          else { goToPol(polCurrent - 1); }
+        }
+        return;
+      }
+    }
+
+    e.preventDefault(); e.stopImmediatePropagation();
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') goToPol(polCurrent + 1);
+    else goToPol(polCurrent - 1);
+  }, true);
+
+  // IntersectionObserver — keeps active tab in sync
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const idx = POL_SECTIONS.indexOf(e.target.id);
+        if (idx !== -1) setPolActive(idx);
+      }
+    });
+  }, { threshold: 0.4 });
+  polEls.forEach(el => { if (el) io.observe(el); });
+
+  // On load: jump straight to pol-hero
+  requestAnimationFrame(() => {
+    const polHero = document.getElementById('pol-hero');
+    if (polHero) polHero.scrollIntoView({ behavior: 'instant', block: 'start' });
+    setPolActive(0);
+  });
+
+  // Entrance animation observer
+  const entranceIO = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+        entranceIO.unobserve(e.target); // fire once
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.pol-only').forEach(el => entranceIO.observe(el));
+})();
+
 function setLang(lang) {
   if (lang === currentLang) return;
   currentLang = lang;
@@ -4911,6 +8246,17 @@ function setLang(lang) {
     const val = lang === 'es' ? el.dataset.es : el.dataset.en;
     if (val !== undefined) el.innerHTML = val;
   });
+
+  // Re-apply pol overrides (they override data-en/es with Cell language)
+  if (document.body.classList.contains('mode-pol')) {
+    const polAgency = document.getElementById('pol-shared-the-agency');
+    if (polAgency) {
+      polAgency.querySelectorAll('[data-pol-en]').forEach(el => {
+        const txt = lang === 'es' ? (el.dataset.polEs || el.dataset.polEn) : el.dataset.polEn;
+        if (txt) el.innerHTML = txt;
+      });
+    }
+  }
 
   // Swap nav dot tooltips
   document.querySelectorAll('[data-label-en]').forEach(el => {
