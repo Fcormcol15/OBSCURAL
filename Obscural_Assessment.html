@@ -1204,6 +1204,7 @@ async function submitForm() {
   } catch(e) { st.textContent='Error de conexión.'; btn.disabled=false; }
 }
 
+document.addEventListener('focusin', e => { if (e.target.classList.contains('dq')) e.target.select(); });
 showSection(0);
 </script>
 <div id="val-toast"></div>
