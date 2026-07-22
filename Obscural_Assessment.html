@@ -275,7 +275,13 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
 .send-client-row strong { color:rgba(255,255,255,0.65); font-weight:400; }
 .send-btn { font-family:'Outfit',sans-serif; font-size:8px; letter-spacing:0.38em; text-transform:uppercase; background:none; border:1px solid rgba(255,255,255,0.32); color:rgba(255,255,255,0.8); padding:14px 48px; cursor:pointer; transition:all .22s; }
 .send-btn:hover { border-color:#fff; color:#fff; }
-.send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.send-btn:disabled { opacity:0.45; cursor:wait; }
+@keyframes dotPulse {
+  0%,100%{opacity:0.2} 33%{opacity:1} 66%{opacity:0.5}
+}
+.sending-dots span { display:inline-block; animation:dotPulse 1.2s ease-in-out infinite; }
+.sending-dots span:nth-child(2) { animation-delay:.2s; }
+.sending-dots span:nth-child(3) { animation-delay:.4s; }
 .send-status { margin-top:20px; font-size:11px; font-weight:300; color:rgba(255,255,255,0.3); min-height:20px; }
 /* ══ THANK YOU ══ */
 .thankyou-wrap { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 50px); text-align:center; padding:60px 32px; }
@@ -1230,7 +1236,9 @@ function collectFormData() {
 
 async function submitForm() {
   const btn=document.getElementById('send-btn'), st=document.getElementById('send-status');
-  btn.disabled=true; st.textContent='Enviando…';
+  btn.disabled=true;
+  btn.innerHTML='ENVIANDO <span class="sending-dots"><span>.</span><span>.</span><span>.</span></span>';
+  st.textContent='';
   if (SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
     setTimeout(()=>{ showThankyou(); },700);
     return;
@@ -1244,8 +1252,8 @@ async function submitForm() {
     });
     const j = await res.json();
     if (j.status==='ok') showThankyou();
-    else { st.textContent='Error al enviar. Intenta de nuevo.'; btn.disabled=false; }
-  } catch(e) { st.textContent='Error de conexión.'; btn.disabled=false; }
+    else { btn.innerHTML='Enviar Assessment'; btn.disabled=false; st.textContent='Error al enviar. Intenta de nuevo.'; }
+  } catch(e) { btn.innerHTML='Enviar Assessment'; btn.disabled=false; st.textContent='Error de conexión.'; }
 }
 
 document.addEventListener('focusin', e => { if (e.target.classList.contains('dq')) e.target.select(); });
