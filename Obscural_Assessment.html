@@ -106,6 +106,11 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
 .tb-section { font-size:8px; letter-spacing:0.32em; text-transform:uppercase; color:rgba(255,255,255,0.3); flex:1; }
 .tb-back { font-family:'Outfit',sans-serif; font-size:8px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.5); background:none; border:1px solid rgba(255,255,255,0.25); padding:5px 14px; cursor:pointer; transition:all .2s; }
 .tb-back:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
+#val-toast { position:fixed; top:52px; left:190px; right:0; z-index:600; color:rgba(200,60,60,0.9); font-family:'Outfit',sans-serif; font-size:9px; letter-spacing:0.18em; text-transform:uppercase; padding:5px 24px; text-align:center; opacity:0; visibility:hidden; transition:opacity .25s, visibility .25s; pointer-events:none; }
+#val-toast.show { opacity:1; visibility:visible; }
+@media(max-width:680px){ #val-toast { left:0; } }
+.field-error { border-color:rgba(200,50,50,0.8) !important; box-shadow:0 0 0 1px rgba(200,50,50,0.3) !important; }
+@media(max-width:680px){ #val-toast { left:0; top:44px; } }
 
 /* ══ SECTION HEADER — sticky ══ */
 .section-sticky-head {
@@ -436,8 +441,8 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
         Este formulario es el punto de partida de su estrategia de protección con Obscural.
         Nos permite <strong>mapear su entorno digital completo</strong> — personas, dispositivos,
         residencias y activos conectados — para diseñar un plan de seguridad a su medida.<br><br>
-        Toda la información es <strong>estrictamente confidencial</strong> y protegida bajo los protocolos internos de Obscural.<br><br>
-        El formulario está dividido en <strong>3 secciones</strong>: <strong>Familia</strong>, <strong>Staff</strong> y <strong>Localidades</strong>. En cada una podrás agregar tantas personas o propiedades como sea necesario. En las tarjetas de cada persona y localidad encontrarás un campo para <strong>identificarlas por nombre o rol</strong> — es importante llenarlo para que el diagnóstico sea preciso.
+        Toda la información es <strong>estrictamente confidencial</strong> y protegida bajo los protocolos internos de Obscural. Para proteger su identidad desde el primer contacto, <strong>no le pedimos su nombre real</strong> — solo un código o palabra clave de su elección. Un asesor de Obscural se encargará de verificar y vincular su perfil de forma segura.<br><br>
+        El formulario está dividido en <strong>3 secciones</strong>: <strong>Familia</strong>, <strong>Staff</strong> y <strong>Localidades</strong>.
       </p>
       <div class="welcome-meta">
         <span class="welcome-meta-item">Tiempo estimado: 15–20 min</span>
@@ -445,8 +450,9 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
         <span class="welcome-meta-item">3 secciones</span>
       </div>
       <div class="client-field">
-        <label for="client-name">Nombre del cliente / empresa</label>
-        <input type="text" id="client-name" placeholder="ej. Familia Rodríguez · Grupo XYZ" autocomplete="off">
+        <label for="client-name">Código de identificación</label>
+        <input type="text" id="client-name" placeholder="ej. FALCON · AZUL-22 · cualquier palabra clave" autocomplete="off">
+        <p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:8px;font-weight:300;letter-spacing:0.04em;">Tu identidad será verificada de forma confidencial por un asesor de Obscural.</p>
       </div>
       <button class="start-btn" onclick="startForm()">Iniciar Assessment →</button>
     </div>
@@ -690,15 +696,76 @@ function showSection(n) {
   currentSection = n;
 }
 
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('val-toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function clearErrors(els) { els.forEach(e => e.classList.remove('field-error')); }
+
 function startForm() {
+  const inp = document.getElementById('client-name');
+  if (!inp.value.trim()) {
+    inp.classList.add('field-error');
+    inp.addEventListener('input', () => inp.classList.remove('field-error'), {once:true});
+    showToast('Ingresa un código de identificación para continuar');
+    inp.focus();
+    return;
+  }
   showSection(1);
   if (!document.getElementById('body-F01').children.length) {
     document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
   }
   updateCounters();
 }
+
 function nextSection() {
-  if (currentSection === 3) buildSendSummary();
+  // Validar sección actual antes de avanzar
+  if (currentSection === 1) {
+    const empties = [];
+    document.querySelectorAll('#screen-familia .p-name-input').forEach(i => {
+      if (!i.value.trim()) empties.push(i);
+    });
+    if (empties.length) {
+      empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
+      showToast('Identifica a cada familiar antes de continuar');
+      const first = empties[0];
+      const y = first.getBoundingClientRect().top + window.scrollY - 140;
+      document.documentElement.scrollTop = y; document.body.scrollTop = y;
+      return;
+    }
+  }
+  if (currentSection === 2) {
+    const empties = [];
+    document.querySelectorAll('#screen-staff .p-name-input').forEach(i => {
+      if (!i.value.trim()) empties.push(i);
+    });
+    if (empties.length) {
+      empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
+      showToast('Identifica a cada miembro del staff antes de continuar');
+      const first = empties[0];
+      const y = first.getBoundingClientRect().top + window.scrollY - 140;
+      document.documentElement.scrollTop = y; document.body.scrollTop = y;
+      return;
+    }
+  }
+  if (currentSection === 3) {
+    const empties = [];
+    document.querySelectorAll('#screen-localidades .loc-tipo-select').forEach(s => {
+      if (!s.value) empties.push(s);
+    });
+    if (empties.length) {
+      empties.forEach(s => { s.classList.add('field-error'); s.addEventListener('change',()=>s.classList.remove('field-error'),{once:true}); });
+      showToast('Selecciona el tipo de cada localidad antes de continuar');
+      const first = empties[0];
+      const y = first.getBoundingClientRect().top + window.scrollY - 140;
+      document.documentElement.scrollTop = y; document.body.scrollTop = y;
+      return;
+    }
+    buildSendSummary();
+  }
   if (currentSection < SCREENS.length-1) showSection(currentSection+1);
 }
 function prevSection() {
@@ -1133,5 +1200,6 @@ async function submitForm() {
 
 showSection(0);
 </script>
+<div id="val-toast"></div>
 </body>
 </html>
