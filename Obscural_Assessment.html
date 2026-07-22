@@ -635,6 +635,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
       <span class="ty-chip">Proceso confidencial</span>
       <span class="ty-chip">Obscural</span>
     </div>
+    <button class="next-btn" style="margin-top:36px;opacity:0.6;" onclick="location.reload()">+ Nuevo Assessment</button>
   </div>
 </div>
 
@@ -846,7 +847,7 @@ function addFamilia() {
   document.getElementById('familia-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  setTimeout(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo({top:y,behavior:'smooth'}); },80);
 }
 
 function addStaff() {
@@ -869,7 +870,7 @@ function addStaff() {
   document.getElementById('staff-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  setTimeout(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo({top:y,behavior:'smooth'}); },80);
 }
 
 function addLocalidad() {
@@ -899,7 +900,7 @@ function addLocalidad() {
   document.getElementById('localidades-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+  setTimeout(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo({top:y,behavior:'smooth'}); },80);
 }
 
 function removeCard(id) {
