@@ -238,11 +238,12 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
 .dq:focus { border-color:rgba(255,255,255,0.4); }
 .dq:disabled { opacity:0.2; cursor:not-allowed; }
 .dos { display:flex; gap:6px; flex-wrap:wrap; flex:1; }
-.cb  { display:flex; align-items:center; gap:3px; font-size:9px; font-weight:300; letter-spacing:0.06em; color:rgba(255,255,255,0.55); cursor:pointer; white-space:nowrap; }
-.cb input { accent-color:rgba(255,255,255,0.85); width:11px; height:11px; cursor:pointer; }
+.cb  { display:flex; align-items:center; gap:3px; font-size:9px; font-weight:300; letter-spacing:0.06em; color:rgba(255,255,255,0.55); cursor:pointer; white-space:nowrap; transition:color .15s; }
+.cb input { accent-color:#4cd080; width:11px; height:11px; cursor:pointer; }
+.cb:has(input:checked) { color:rgba(76,208,128,0.95); }
 .ns-btn { font-size:8px; letter-spacing:0.1em; text-transform:uppercase; font-family:'Outfit',sans-serif; padding:2px 9px; flex-shrink:0; border:1px solid rgba(255,255,255,0.2); background:none; color:rgba(255,255,255,0.52); cursor:pointer; transition:all .2s; }
-.ns-btn:hover  { border-color:rgba(255,255,255,0.48); color:rgba(255,255,255,0.88); }
-.ns-btn.active { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.48); color:rgba(255,255,255,0.88); }
+.ns-btn:hover  { border-color:rgba(220,180,40,0.5); color:rgba(240,205,60,0.8); }
+.ns-btn.active { background:rgba(200,165,30,0.14); border-color:rgba(220,185,40,0.7); color:rgba(240,210,60,0.98); }
 .sns { display:flex; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
 .sns button { padding:2px 11px; font-size:9px; font-weight:400; letter-spacing:0.06em; border:none; background:transparent; cursor:pointer; color:rgba(255,255,255,0.5); font-family:'Outfit',sans-serif; border-right:1px solid rgba(255,255,255,0.12); transition:all .15s; white-space:nowrap; }
 .sns button:last-child { border-right:none; }
@@ -778,6 +779,49 @@ function prevSection() {
   if (currentSection > 0) showSection(currentSection-1);
 }
 function jumpSection(n) {
+  // Solo validar si avanza
+  if (n > currentSection) {
+    // Siempre validar código de cliente al salir del welcome
+    if (n >= 1) {
+      const inp = document.getElementById('client-name');
+      if (!inp.value.trim()) {
+        inp.classList.add('field-error');
+        inp.addEventListener('input',()=>inp.classList.remove('field-error'),{once:true});
+        showToast('Ingresa un código de identificación para continuar');
+        showSection(0); return;
+      }
+    }
+    // Validar familia antes de ir a sección 2+
+    if (n >= 2) {
+      const empties = [];
+      document.querySelectorAll('#screen-familia .p-name-input').forEach(i => { if (!i.value.trim()) empties.push(i); });
+      if (empties.length) {
+        empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
+        showToast('Identifica a cada familiar antes de continuar');
+        showSection(1); return;
+      }
+    }
+    // Validar staff antes de ir a sección 3+
+    if (n >= 3) {
+      const empties = [];
+      document.querySelectorAll('#screen-staff .p-name-input').forEach(i => { if (!i.value.trim()) empties.push(i); });
+      if (empties.length) {
+        empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
+        showToast('Identifica a cada miembro del staff antes de continuar');
+        showSection(2); return;
+      }
+    }
+    // Validar localidades antes de enviar
+    if (n >= 4) {
+      const empties = [];
+      document.querySelectorAll('#screen-localidades .loc-tipo-select').forEach(s => { if (!s.value) empties.push(s); });
+      if (empties.length) {
+        empties.forEach(s => { s.classList.add('field-error'); s.addEventListener('change',()=>s.classList.remove('field-error'),{once:true}); });
+        showToast('Selecciona el tipo de cada localidad antes de continuar');
+        showSection(3); return;
+      }
+    }
+  }
   if (n===1 && !document.getElementById('body-F01').children.length)
     document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
   if (n===4) buildSendSummary();
