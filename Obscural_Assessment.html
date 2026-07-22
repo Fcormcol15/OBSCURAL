@@ -1,0 +1,1104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Obscural — Assessment de Seguridad Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══ RESET ══ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Outfit', sans-serif; background: #050505; color: #fff; font-size: 13px; min-height: 100vh; overflow-x: hidden; }
+input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
+
+/* ══ CARD ACCENT COLORS ══ */
+.acc-0{--acc:#4a8fd6}.acc-1{--acc:#3eb87a}.acc-2{--acc:#d4893c}.acc-3{--acc:#a466e8}
+.acc-4{--acc:#e85b63}.acc-5{--acc:#3ec4d4}.acc-6{--acc:#d4c23a}.acc-7{--acc:#e87c38}
+.lacc-0{--acc:#8a7a6e}.lacc-1{--acc:#6e8a7e}.lacc-2{--acc:#7e6e8a}
+.lacc-3{--acc:#8a826e}.lacc-4{--acc:#6e7e8a}.lacc-5{--acc:#8a6e78}
+
+/* ══ PROGRESS BAR ══ */
+#progress-bar { position:fixed; top:0; left:190px; right:0; height:1px; background:rgba(255,255,255,0.05); z-index:999; }
+#progress-fill { height:100%; width:0%; background:rgba(255,255,255,0.3); transition:width .6s cubic-bezier(.16,1,.3,1); }
+
+/* ══ SIDEBAR — always visible ══ */
+#sidebar {
+  position:fixed; left:0; top:0; bottom:0; width:190px;
+  background:#020202; border-right:1px solid rgba(255,255,255,0.05);
+  display:flex; flex-direction:column; z-index:800;
+}
+.sb-brand { padding:20px 20px 16px; border-bottom:1px solid rgba(255,255,255,0.05); }
+.sb-logo { width:110px; opacity:0.7; display:block; }
+.sb-sections { padding:18px 0; flex:1; }
+.sb-item {
+  display:flex; align-items:center; gap:10px; padding:10px 20px; width:100%;
+  background:none; border:none; cursor:pointer; text-align:left; position:relative;
+  transition:background .2s;
+}
+.sb-item::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:transparent; transition:background .2s; }
+.sb-item:hover { background:rgba(255,255,255,0.03); }
+.sb-item.active { background:rgba(255,255,255,0.04); }
+.sb-item.active::before { background:rgba(255,255,255,0.45); }
+.sb-num  { font-size:8px; font-weight:300; letter-spacing:0.2em; color:rgba(255,255,255,0.28); font-family:'Outfit',sans-serif; transition:color .2s; }
+.sb-name { font-size:11px; font-weight:300; color:rgba(255,255,255,0.42); font-family:'Outfit',sans-serif; flex:1; transition:color .2s; }
+.sb-item:hover .sb-name { color:rgba(255,255,255,0.7); }
+.sb-item.active .sb-num  { color:rgba(255,255,255,0.65); }
+.sb-item.active .sb-name { color:rgba(255,255,255,0.9); }
+.sb-dot { width:5px; height:5px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); flex-shrink:0; transition:all .3s; }
+.sb-dot.has-data { background:rgba(255,255,255,0.4); border-color:rgba(255,255,255,0.4); }
+.sb-totals { border-top:1px solid rgba(255,255,255,0.07); padding:16px 20px 20px; }
+.sb-total-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+.sb-total-n { font-size:28px; font-weight:200; letter-spacing:-0.04em; color:#fff; }
+.sb-total-l { font-size:8px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(255,255,255,0.45); }
+.sb-mini { border-top:1px solid rgba(255,255,255,0.07); margin-top:12px; padding-top:12px; display:flex; flex-direction:column; gap:6px; }
+.sb-mini-row { display:flex; justify-content:space-between; align-items:center; }
+.sb-mini-lbl { font-size:9px; font-weight:300; color:rgba(255,255,255,0.45); letter-spacing:0.04em; }
+.sb-mini-val { font-size:11px; font-weight:300; color:rgba(255,255,255,0.82); letter-spacing:-0.01em; }
+
+/* ══ MAIN — always offset ══ */
+#main { min-height:100vh; margin-left:190px; }
+
+/* ══ SCREENS ══ */
+.screen { display:none; }
+.screen.active { display:block; }
+.screen-send-center {
+  min-height:calc(100vh - 50px); display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:60px clamp(24px,6vw,80px); text-align:center;
+}
+
+/* ══ WELCOME ══ */
+.welcome-outer { min-height:100vh; display:flex; flex-direction:column; justify-content:center; position:relative; overflow:hidden; background:url('welcome-bg.png') center/cover no-repeat; }
+.welcome-noise { position:absolute; inset:0; z-index:0; pointer-events:none; background:linear-gradient(to right, rgba(5,5,5,0.96) 0%, rgba(5,5,5,0.88) 50%, rgba(5,5,5,0.45) 100%); }
+.welcome-logo { width:110px; opacity:0.82; display:block; margin-bottom:22px; }
+.welcome-content { position:relative; z-index:2; }
+.welcome-eyebrow { font-size:8px; letter-spacing:0.42em; text-transform:uppercase; color:rgba(255,255,255,0.2); display:block; margin-bottom:18px; }
+.welcome-outer .form-wrap { padding-top:0; padding-bottom:0; }
+.welcome-title { font-size:clamp(24px,3.2vw,48px); font-weight:700; letter-spacing:-0.048em; line-height:0.95; color:#fff; margin-bottom:14px; }
+.welcome-title span { color:rgba(255,255,255,0.14); font-style:italic; font-weight:200; }
+.welcome-body { font-size:clamp(11px,1vw,13px); font-weight:300; color:rgba(255,255,255,0.38); line-height:1.8; max-width:480px; margin-bottom:10px; }
+.welcome-body strong { color:rgba(255,255,255,0.7); font-weight:400; }
+.welcome-meta { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:28px; margin-top:6px; }
+.welcome-meta-item { font-size:7px; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.07); padding:4px 14px; }
+.client-field { max-width:480px; margin-bottom:28px; }
+.client-field label { display:flex; align-items:center; gap:8px; font-size:7px; letter-spacing:0.38em; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:10px; font-weight:500; }
+.client-field label::after { content:''; flex:1; height:0.5px; background:rgba(255,255,255,0.12); }
+.client-field input { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.22); border-left:3px solid rgba(255,255,255,0.6); color:#fff; font-family:'Outfit',sans-serif; font-size:20px; font-weight:200; padding:14px 18px; outline:none; transition:all .2s; letter-spacing:-0.01em; }
+.client-field input::placeholder { color:rgba(255,255,255,0.22); }
+.client-field input:focus { border-color:rgba(255,255,255,0.5); border-left-color:#fff; background:rgba(255,255,255,0.08); }
+.start-btn { font-family:'Outfit',sans-serif; font-size:8px; letter-spacing:0.38em; text-transform:uppercase; background:none; border:1px solid rgba(255,255,255,0.38); color:rgba(255,255,255,0.85); padding:14px 48px; cursor:pointer; transition:all .25s; }
+.start-btn:hover { border-color:#fff; color:#fff; background:rgba(255,255,255,0.04); }
+.welcome-deco { position:absolute; right:clamp(32px,6vw,80px); bottom:clamp(24px,4vh,50px); font-size:clamp(100px,14vw,200px); font-weight:700; letter-spacing:-0.06em; color:rgba(255,255,255,0.02); line-height:1; pointer-events:none; user-select:none; z-index:1; }
+
+/* ══ FORM WRAP ══ */
+.form-wrap { max-width:800px; margin:0 auto; padding:44px clamp(20px,4vw,48px) 100px; }
+
+/* ══ TOP BAR ══ */
+.form-topbar { position:sticky; top:0; z-index:500; display:flex; align-items:center; gap:16px; padding:12px clamp(20px,4vw,48px); background:rgba(5,5,5,0.95); border-bottom:1px solid rgba(255,255,255,0.04); backdrop-filter:blur(8px); }
+.tb-section { font-size:8px; letter-spacing:0.32em; text-transform:uppercase; color:rgba(255,255,255,0.3); flex:1; }
+.tb-back { font-family:'Outfit',sans-serif; font-size:8px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.5); background:none; border:1px solid rgba(255,255,255,0.25); padding:5px 14px; cursor:pointer; transition:all .2s; }
+.tb-back:hover { color:#fff; border-color:rgba(255,255,255,0.6); }
+
+/* ══ SECTION HEADER — sticky ══ */
+.section-sticky-head {
+  position:sticky; top:47px; z-index:400;
+  background:rgba(5,5,5,0.97); backdrop-filter:blur(10px);
+  padding:14px 0 10px; margin-bottom:10px;
+  border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.section-title { font-size:clamp(26px,3.8vw,50px); font-weight:700; letter-spacing:-0.044em; color:#fff; line-height:1; margin-bottom:6px; }
+.section-sub { font-size:12px; font-weight:300; color:rgba(255,255,255,0.38); line-height:1.8; margin-bottom:4px; }
+.sticky-micro { display:flex; align-items:center; gap:0; font-size:8px; letter-spacing:0.14em; text-transform:uppercase; font-weight:400; margin-top:6px; flex-wrap:wrap; }
+.sm-group { display:flex; align-items:center; gap:10px; }
+.sm-sep { width:1px; height:10px; background:rgba(255,255,255,0.15); margin:0 14px; flex-shrink:0; }
+.sm-lbl { color:rgba(255,255,255,0.28); }
+.sm-val { color:rgba(255,255,255,0.7); }
+.section-hint {
+  display:flex; align-items:flex-start; gap:10px;
+  background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.07);
+  border-left:2px solid rgba(255,255,255,0.18);
+  padding:12px 16px; margin-bottom:26px;
+  font-size:11px; font-weight:300; color:rgba(255,255,255,0.42); line-height:1.7;
+}
+.section-hint strong { color:rgba(255,255,255,0.8); font-weight:400; }
+.hint-icon { font-size:12px; color:rgba(255,255,255,0.22); flex-shrink:0; margin-top:1px; }
+
+/* ══ HERO COUNTER ══ */
+.hero-block {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:1px; background:rgba(255,255,255,0.07);
+  margin-bottom:26px;
+}
+.hero-panel { background:#020202; padding:20px 22px 16px; }
+.hp-label { font-size:7px; letter-spacing:0.4em; text-transform:uppercase; color:rgba(255,255,255,0.22); display:block; margin-bottom:12px; }
+.hp-total { display:flex; align-items:baseline; gap:10px; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid rgba(255,255,255,0.07); }
+.hp-big-n { font-size:50px; font-weight:200; letter-spacing:-0.055em; color:#fff; line-height:1; }
+.hp-big-l { font-size:12px; font-weight:300; color:rgba(255,255,255,0.35); }
+.hp-rows { display:flex; flex-direction:column; }
+.hp-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.hp-row:last-child { border-bottom:none; }
+.hp-row-sep { height:1px; background:rgba(255,255,255,0.07); margin:6px 0; }
+.hp-row-label { font-size:10px; font-weight:300; color:rgba(255,255,255,0.4); }
+.hp-row-val { font-size:16px; font-weight:200; letter-spacing:-0.03em; color:rgba(255,255,255,0.85); line-height:1; }
+.hp-fw { display:flex; gap:4px; flex-wrap:wrap; }
+.hp-pill { font-size:7px; letter-spacing:0.08em; padding:2px 8px; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.28); transition:all .25s; }
+.hp-pill.p-on  { border-color:rgba(255,255,255,0.38); color:rgba(255,255,255,0.82); }
+.hp-pill.p-bad { border-color:rgba(200,60,60,0.5); color:rgba(220,90,90,0.92); }
+
+/* ══ SECTION DIVIDER & TOTAL ══ */
+.sect-div { font-size:7px; letter-spacing:0.38em; text-transform:uppercase; color:rgba(255,255,255,0.5); display:flex; align-items:center; gap:12px; margin:22px 0 10px; font-weight:500; }
+.sect-div::before,.sect-div::after { content:''; flex:1; height:0.5px; background:rgba(255,255,255,0.18); }
+.sect-total { display:flex; justify-content:space-between; padding:8px 12px; margin-top:6px; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); font-size:8px; letter-spacing:0.14em; text-transform:uppercase; }
+.sect-total-label { color:rgba(255,255,255,0.22); }
+.sect-total-val   { color:rgba(255,255,255,0.55); }
+
+/* ══ BUTTONS ══ */
+.add-btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  font-family:'Outfit',sans-serif; font-size:8px; font-weight:600;
+  letter-spacing:0.36em; text-transform:uppercase;
+  color:rgba(255,255,255,0.8); background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.3); padding:11px 16px;
+  cursor:pointer; width:100%; transition:all .2s;
+}
+.add-btn:hover { border-color:rgba(255,255,255,0.7); color:#fff; background:rgba(255,255,255,0.07); }
+.next-btn { margin-top:48px; display:flex; align-items:center; justify-content:space-between; border:1px solid rgba(255,255,255,0.32); padding:18px 22px; cursor:pointer; background:rgba(255,255,255,0.06); font-family:'Outfit',sans-serif; width:100%; transition:all .2s; }
+.next-btn:hover { border-color:rgba(255,255,255,0.65); background:rgba(255,255,255,0.1); }
+.next-label { font-size:7px; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.38); display:block; margin-bottom:5px; }
+.next-section { font-size:15px; font-weight:200; color:rgba(255,255,255,0.88); }
+.next-arrow { font-size:18px; color:rgba(255,255,255,0.5); }
+
+/* ══ PERSON CARD ══ */
+.p-card { border:1px solid rgba(255,255,255,0.07); border-left:2px solid var(--acc,rgba(255,255,255,0.12)); background:#020202; margin-bottom:6px; }
+.p-card-head { position:sticky; top:47px; z-index:100; display:flex; align-items:center; gap:8px; padding:9px 14px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(3,3,3,0.96); backdrop-filter:blur(6px); cursor:pointer; user-select:none; }
+.p-badge { font-size:8px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--acc,rgba(255,255,255,0.45)); border:1px solid var(--acc,rgba(255,255,255,0.15)); padding:2px 9px; flex-shrink:0; }
+.p-field { display:flex; align-items:center; gap:8px; flex:1; min-width:0; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.14); border-left:2px solid rgba(255,255,255,0.28); padding:3px 10px 3px 8px; }
+.p-field-lbl { font-size:7px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.38); white-space:nowrap; flex-shrink:0; }
+.p-name-input { flex:1; min-width:0; background:transparent; border:none; color:rgba(255,255,255,0.85); font-family:'Outfit',sans-serif; font-size:12px; font-weight:300; outline:none; padding:2px 0; }
+.p-name-input::placeholder { color:rgba(255,255,255,0.3); font-style:italic; }
+.p-field:focus-within { border-color:rgba(255,255,255,0.38); border-left-color:rgba(255,255,255,0.6); }
+.p-name-static { font-size:12px; font-weight:300; color:rgba(255,255,255,0.65); flex:1; }
+.p-collapse-btn { font-size:9px; letter-spacing:0.08em; font-family:'Outfit',sans-serif; color:rgba(255,255,255,0.65); background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18); padding:2px 9px; cursor:pointer; flex-shrink:0; transition:all .2s; }
+.p-collapse-btn:hover { color:#fff; border-color:rgba(255,255,255,0.5); background:rgba(255,255,255,0.1); }
+.p-remove-btn { font-size:12px; color:rgba(255,255,255,0.3); background:none; border:none; cursor:pointer; flex-shrink:0; line-height:1; transition:color .2s; padding:2px 4px; }
+.p-remove-btn:hover { color:rgba(220,70,70,0.9); }
+.p-body { padding:12px 16px; }
+.p-body.collapsed { display:none; }
+
+/* ══ GROUP LABEL ══ */
+.grp-label { font-size:7px; letter-spacing:0.36em; text-transform:uppercase; color:rgba(255,255,255,0.48); display:flex; align-items:center; gap:10px; margin:18px 0 6px; font-weight:500; }
+.grp-label:first-child, .grp-label.first { margin-top:0; }
+.grp-label::after { content:''; flex:1; height:0.5px; background:rgba(255,255,255,0.16); }
+
+/* ══ COLUMN HEADERS ══ */
+.col-head { display:flex; align-items:center; gap:6px; padding:2px 7px 4px; margin-bottom:2px; }
+.ch-i   { width:14px; flex-shrink:0; }
+.ch-ref { min-width:46px; flex-shrink:0; }
+.ch-dl  { flex:0 0 152px; font-size:7px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(255,255,255,0.2); }
+.ch-qty { width:40px; flex-shrink:0; font-size:7px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(255,255,255,0.2); text-align:center; }
+.ch-sel { flex:1; font-size:7px; letter-spacing:0.26em; text-transform:uppercase; color:rgba(255,255,255,0.2); }
+
+/* ══ DEVICE ROW ══ */
+.drow { display:flex; align-items:center; gap:6px; padding:5px 7px; border:1px solid rgba(255,255,255,0.05); margin-bottom:3px; position:relative; transition:border-color .2s,background .2s; }
+.drow:hover { border-color:rgba(255,255,255,0.1); background:rgba(255,255,255,0.012); }
+
+.info-btn { width:14px; height:14px; border-radius:50%; border:1px solid rgba(255,255,255,0.14); background:transparent; font-size:8px; font-weight:600; font-family:'Outfit',sans-serif; color:rgba(255,255,255,0.25); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:1; padding:0; transition:all .2s; }
+.info-btn:hover  { border-color:rgba(255,255,255,0.5); color:rgba(255,255,255,0.75); }
+.info-btn.active { border-color:rgba(255,255,255,0.5); color:#fff; background:rgba(255,255,255,0.08); }
+
+.tooltip { display:none; position:absolute; top:50%; left:24px; transform:translateY(-50%); width:210px; background:#111; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.55); font-size:10px; font-weight:300; line-height:1.65; padding:9px 26px 9px 12px; z-index:300; font-family:'Outfit',sans-serif; }
+.tooltip::before { content:''; position:absolute; top:50%; right:100%; transform:translateY(-50%); border:5px solid transparent; border-right-color:rgba(255,255,255,0.1); }
+.tooltip.show { display:block; }
+.tooltip-close { position:absolute; top:5px; right:7px; border:none; background:transparent; color:rgba(255,255,255,0.22); cursor:pointer; font-size:11px; line-height:1; padding:0; transition:color .2s; }
+.tooltip-close:hover { color:rgba(255,255,255,0.75); }
+
+.row-ref { font-size:8px; font-weight:300; letter-spacing:0.1em; color:rgba(255,255,255,0.16); background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:1px 6px; flex-shrink:0; white-space:nowrap; min-width:46px; text-align:center; }
+.dl { font-size:11px; font-weight:300; color:rgba(255,255,255,0.7); flex:0 0 152px; }
+.dq { width:40px; flex-shrink:0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:#fff; font-family:'Outfit',sans-serif; font-size:13px; font-weight:300; text-align:center; padding:2px 0; outline:none; transition:border-color .2s; }
+.dq:focus { border-color:rgba(255,255,255,0.4); }
+.dq:disabled { opacity:0.2; cursor:not-allowed; }
+.dos { display:flex; gap:6px; flex-wrap:wrap; flex:1; }
+.cb  { display:flex; align-items:center; gap:3px; font-size:9px; font-weight:300; letter-spacing:0.06em; color:rgba(255,255,255,0.55); cursor:pointer; white-space:nowrap; }
+.cb input { accent-color:rgba(255,255,255,0.85); width:11px; height:11px; cursor:pointer; }
+.ns-btn { font-size:8px; letter-spacing:0.1em; text-transform:uppercase; font-family:'Outfit',sans-serif; padding:2px 9px; flex-shrink:0; border:1px solid rgba(255,255,255,0.2); background:none; color:rgba(255,255,255,0.52); cursor:pointer; transition:all .2s; }
+.ns-btn:hover  { border-color:rgba(255,255,255,0.48); color:rgba(255,255,255,0.88); }
+.ns-btn.active { background:rgba(255,255,255,0.08); border-color:rgba(255,255,255,0.48); color:rgba(255,255,255,0.88); }
+.sns { display:flex; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
+.sns button { padding:2px 11px; font-size:9px; font-weight:400; letter-spacing:0.06em; border:none; background:transparent; cursor:pointer; color:rgba(255,255,255,0.5); font-family:'Outfit',sans-serif; border-right:1px solid rgba(255,255,255,0.12); transition:all .15s; white-space:nowrap; }
+.sns button:last-child { border-right:none; }
+.sns button:hover { color:rgba(255,255,255,0.9); background:rgba(255,255,255,0.04); }
+.sns button.sel-si { background:rgba(30,160,80,0.18); color:rgba(70,210,120,0.98); }
+.sns button.sel-no { background:rgba(200,40,40,0.18); color:rgba(240,80,80,0.98); }
+.sns button.sel-ns { background:rgba(200,165,30,0.16); color:rgba(240,205,60,0.98); }
+
+/* ══ LOCATION CARD ══ */
+.loc-card { border:1px solid rgba(255,255,255,0.07); border-left:2px solid var(--acc,rgba(255,255,255,0.1)); background:#020202; margin-bottom:6px; }
+.loc-card-head { position:sticky; top:47px; z-index:100; display:flex; align-items:center; gap:8px; padding:9px 14px; border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(3,3,3,0.96); backdrop-filter:blur(6px); cursor:pointer; user-select:none; }
+.loc-badge { font-size:8px; font-weight:500; letter-spacing:0.18em; text-transform:uppercase; color:var(--acc,rgba(255,255,255,0.5)); border:1px solid var(--acc,rgba(255,255,255,0.2)); padding:2px 9px; flex-shrink:0; }
+.loc-field { display:flex; align-items:center; gap:8px; flex:1; min-width:0; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.14); border-left:2px solid rgba(255,255,255,0.28); padding:3px 10px 3px 8px; }
+.loc-field-lbl { font-size:7px; letter-spacing:0.28em; text-transform:uppercase; color:rgba(255,255,255,0.38); white-space:nowrap; flex-shrink:0; }
+.loc-tipo-select { flex:1; min-width:0; background:transparent; border:none; color:rgba(255,255,255,0.85); font-family:'Outfit',sans-serif; font-size:12px; font-weight:300; outline:none; cursor:pointer; -webkit-appearance:none; padding:2px 0; }
+.loc-field:focus-within { border-color:rgba(255,255,255,0.38); border-left-color:rgba(255,255,255,0.6); }
+.loc-tipo-select option { background:#111; color:#fff; }
+.fw-badge { font-size:7px; letter-spacing:0.12em; text-transform:uppercase; padding:2px 8px; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.28); flex-shrink:0; white-space:nowrap; transition:all .25s; }
+.fw-badge.con { border-color:rgba(255,255,255,0.38); color:rgba(255,255,255,0.82); }
+.fw-badge.sin { border-color:rgba(200,60,60,0.5); color:rgba(220,90,90,0.9); }
+.fw-badge.ns  { border-color:rgba(255,255,255,0.1); color:rgba(255,255,255,0.3); }
+
+/* ══ SEND ══ */
+.send-logo { width:100px; opacity:0.35; margin-bottom:32px; }
+.send-title { font-size:clamp(28px,4.5vw,52px); font-weight:700; letter-spacing:-0.044em; color:#fff; margin-bottom:10px; }
+.send-sub { font-size:12px; font-weight:300; color:rgba(255,255,255,0.32); line-height:1.85; max-width:400px; margin:0 auto 28px; }
+.send-dashboard { width:100%; max-width:600px; margin:0 auto 32px; text-align:left; }
+.send-client-row { font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:12px; text-align:center; }
+.send-client-row strong { color:rgba(255,255,255,0.65); font-weight:400; }
+.send-btn { font-family:'Outfit',sans-serif; font-size:8px; letter-spacing:0.38em; text-transform:uppercase; background:none; border:1px solid rgba(255,255,255,0.32); color:rgba(255,255,255,0.8); padding:14px 48px; cursor:pointer; transition:all .22s; }
+.send-btn:hover { border-color:#fff; color:#fff; }
+.send-btn:disabled { opacity:0.3; cursor:not-allowed; }
+.send-status { margin-top:20px; font-size:11px; font-weight:300; color:rgba(255,255,255,0.3); min-height:20px; }
+/* ══ THANK YOU ══ */
+.thankyou-wrap { display:none; flex-direction:column; align-items:center; justify-content:center; min-height:calc(100vh - 50px); text-align:center; padding:60px 32px; }
+.thankyou-wrap.show { display:flex; }
+.ty-glyph { font-size:48px; color:rgba(255,255,255,0.06); margin-bottom:32px; letter-spacing:0.05em; animation:tyFade .8s ease forwards; }
+.ty-title { font-size:clamp(36px,5vw,64px); font-weight:700; letter-spacing:-0.048em; color:#fff; line-height:1; margin-bottom:16px; animation:tyFade .8s .1s ease both; }
+.ty-sub { font-size:13px; font-weight:300; color:rgba(255,255,255,0.35); line-height:1.9; max-width:380px; margin-bottom:40px; animation:tyFade .8s .2s ease both; }
+.ty-meta { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; animation:tyFade .8s .3s ease both; }
+.ty-chip { font-size:7px; letter-spacing:0.3em; text-transform:uppercase; color:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.08); padding:5px 16px; }
+@keyframes tyFade { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
+
+/* ══ ANIMATIONS ══ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* Welcome — staggered */
+.welcome-eyebrow { animation:fadeUp .7s .04s cubic-bezier(.16,1,.3,1) both; }
+.welcome-title   { animation:fadeUp .8s .10s cubic-bezier(.16,1,.3,1) both; }
+.welcome-body    { animation:fadeUp .6s .22s cubic-bezier(.16,1,.3,1) both; }
+.welcome-meta    { animation:fadeUp .5s .34s cubic-bezier(.16,1,.3,1) both; }
+.client-field    { animation:fadeUp .5s .42s cubic-bezier(.16,1,.3,1) both; }
+.start-btn       { animation:fadeUp .5s .50s cubic-bezier(.16,1,.3,1) both; }
+.welcome-deco    { animation:fadeIn 1.4s .6s ease both; }
+
+/* Sidebar */
+#sidebar { animation:fadeIn .5s .1s ease both; }
+
+/* Sección — entra al activarse */
+.screen.active .form-wrap { animation:fadeUp .5s cubic-bezier(.16,1,.3,1) both; }
+.screen.active .form-topbar { animation:fadeIn .35s ease both; }
+
+/* Tarjeta nueva */
+.card-enter { animation:fadeUp .38s cubic-bezier(.16,1,.3,1) both; }
+
+/* Campo vacío — glow pulsante */
+@keyframes fieldPulse {
+  0%,100% { border-left-color:rgba(255,255,255,0.28); box-shadow:none; }
+  50%      { border-left-color:rgba(255,255,255,0.72); box-shadow:0 0 14px rgba(255,255,255,0.08), inset 0 0 8px rgba(255,255,255,0.03); }
+}
+.p-field:has(.p-name-input:placeholder-shown):not(:focus-within) { animation:fieldPulse 2.8s ease-in-out infinite; }
+.loc-field:has(select option[value=""]:checked):not(:focus-within) { animation:fieldPulse 2.8s ease-in-out infinite; }
+
+/* ══ RESPONSIVE ══ */
+@media(max-width:680px){
+  /* ── Layout ── */
+  #sidebar { display:none; }
+  #main { margin-left:0; }
+  #progress-bar { left:0; }
+
+  /* ── Welcome ── */
+  .welcome-deco { display:none; }
+  .welcome-outer { background-position: 70% center; }
+  .welcome-noise { background:linear-gradient(to bottom, rgba(5,5,5,0.97) 0%, rgba(5,5,5,0.88) 60%, rgba(5,5,5,0.75) 100%); }
+  .welcome-outer .form-wrap { padding:40px 20px 48px; }
+  .welcome-logo { width:88px; margin-bottom:16px; }
+  .welcome-title { font-size:clamp(28px,8vw,42px); margin-bottom:12px; }
+  .welcome-body { font-size:12px; margin-bottom:10px; }
+  .welcome-meta { gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+  .welcome-meta-item { font-size:6.5px; padding:3px 10px; }
+  .client-field { max-width:100%; margin-bottom:18px; }
+  .client-field input { font-size:17px; padding:12px 14px; }
+  .start-btn { width:100%; text-align:center; padding:14px 24px; }
+
+  /* ── Form sections ── */
+  .form-wrap { padding:24px 16px 80px; }
+  .form-topbar { padding:10px 16px; }
+
+  /* ── Sticky head ── */
+  .section-sticky-head { padding:10px 0 8px; }
+  .section-title { font-size:clamp(22px,7vw,34px); }
+  .sticky-micro { display:none; } /* demasiado denso en móvil */
+
+  /* ── Hero ── */
+  .hero-block { grid-template-columns:1fr; }
+
+  /* ── Rows ── */
+  .col-head { display:none; }
+  .drow { flex-wrap:wrap; padding:8px 7px; gap:5px; }
+  .row-ref { display:none; }
+  .dl { flex:1; min-width:0; font-size:11px; }
+  .dos { flex:0 0 100%; margin-left:19px; }
+
+  /* ── Tap targets ── */
+  .sns button { padding:7px 14px; font-size:10px; }
+  .ns-btn { padding:6px 12px; }
+  .dq { width:44px; padding:4px 0; font-size:14px; }
+
+  /* ── Card heads ── */
+  .p-card-head, .loc-card-head { flex-wrap:wrap; row-gap:6px; }
+  .p-field, .loc-field { order:3; flex:0 0 100%; }
+  .fw-badge { display:none; } /* badge redundante en móvil */
+  .p-collapse-btn { font-size:8px; }
+
+  /* ── Tooltip ── */
+  .tooltip { left:0; top:calc(100% + 6px); transform:none; width:calc(100vw - 40px); }
+  .tooltip::before { display:none; }
+
+  /* ── Buttons ── */
+  .add-btn { padding:13px 16px; }
+  .next-btn { margin-top:24px; }
+
+  /* ── Send ── */
+  .screen-send-center { padding:40px 16px; }
+  .send-dashboard { max-width:100%; }
+  .send-logo { width:72px; margin-bottom:20px; }
+  .send-title { font-size:clamp(24px,7vw,36px); }
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<!-- ══ SIDEBAR — always on ══ -->
+<aside id="sidebar">
+  <div class="sb-brand">
+    <svg class="sb-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 273.62 47.37"><style>.ol{fill:#fff}</style><path class="ol" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/><path class="ol" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/><path class="ol" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/><path class="ol" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/><path class="ol" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/><rect class="ol" x="263.62" width="10" height="46.54"/><path class="ol" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/><path class="ol" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/></svg>
+  </div>
+  <nav class="sb-sections">
+    <button class="sb-item" data-s="0" onclick="jumpSection(0)">
+      <span class="sb-num">—</span><span class="sb-name">Inicio</span>
+      <span class="sb-dot" id="dot-0"></span>
+    </button>
+    <button class="sb-item" data-s="1" onclick="jumpSection(1)">
+      <span class="sb-num">01</span><span class="sb-name">Familia</span>
+      <span class="sb-dot" id="dot-1"></span>
+    </button>
+    <button class="sb-item" data-s="2" onclick="jumpSection(2)">
+      <span class="sb-num">02</span><span class="sb-name">Staff</span>
+      <span class="sb-dot" id="dot-2"></span>
+    </button>
+    <button class="sb-item" data-s="3" onclick="jumpSection(3)">
+      <span class="sb-num">03</span><span class="sb-name">Localidades</span>
+      <span class="sb-dot" id="dot-3"></span>
+    </button>
+    <button class="sb-item" data-s="4" onclick="jumpSection(4)">
+      <span class="sb-num">04</span><span class="sb-name">Enviar</span>
+      <span class="sb-dot" id="dot-4"></span>
+    </button>
+  </nav>
+  <div class="sb-totals">
+    <div class="sb-total-row"><span class="sb-total-n cnt-total-p">0</span><span class="sb-total-l">personas</span></div>
+    <div class="sb-total-row"><span class="sb-total-n cnt-total-l">0</span><span class="sb-total-l">localidades</span></div>
+    <div class="sb-mini">
+      <div class="sb-mini-row"><span class="sb-mini-lbl">Equipos</span><span class="sb-mini-val cnt-equipos">0</span></div>
+      <div class="sb-mini-row"><span class="sb-mini-lbl">Entorno digital</span><span class="sb-mini-val cnt-digital">0</span></div>
+      <div class="sb-mini-row"><span class="sb-mini-lbl">IoT</span><span class="sb-mini-val cnt-iot">0</span></div>
+      <div class="sb-mini-row"><span class="sb-mini-lbl">FW central.</span><span class="sb-mini-val cnt-pill-con-sb">—</span></div>
+    </div>
+  </div>
+</aside>
+
+<div id="main">
+
+<!-- ══ SCREEN 0: BIENVENIDA ══ -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome-outer">
+    <div class="welcome-noise"></div>
+    <div class="form-wrap welcome-content">
+      <svg class="welcome-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 273.62 47.37"><style>.wl{fill:#fff}</style><path class="wl" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/><path class="wl" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/><path class="wl" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/><path class="wl" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/><path class="wl" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/><rect class="wl" x="263.62" width="10" height="46.54"/><path class="wl" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/><path class="wl" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/></svg>
+      <span class="welcome-eyebrow">Assessment de Seguridad Digital · Confidencial</span>
+      <h1 class="welcome-title">Bienvenido al<br><span>proceso de</span><br>diagnóstico</h1>
+      <p class="welcome-body">
+        Este formulario es el punto de partida de su estrategia de protección con Obscural.
+        Nos permite <strong>mapear su entorno digital completo</strong> — personas, dispositivos,
+        residencias y activos conectados — para diseñar un plan de seguridad a su medida.<br><br>
+        Toda la información es <strong>estrictamente confidencial</strong> y protegida bajo los protocolos internos de Obscural.<br><br>
+        El formulario está dividido en <strong>3 secciones</strong>: <strong>Familia</strong>, <strong>Staff</strong> y <strong>Localidades</strong>. En cada una podrás agregar tantas personas o propiedades como sea necesario. En las tarjetas de cada persona y localidad encontrarás un campo para <strong>identificarlas por nombre o rol</strong> — es importante llenarlo para que el diagnóstico sea preciso.
+      </p>
+      <div class="welcome-meta">
+        <span class="welcome-meta-item">Tiempo estimado: 15–20 min</span>
+        <span class="welcome-meta-item">Confidencial</span>
+        <span class="welcome-meta-item">3 secciones</span>
+      </div>
+      <div class="client-field">
+        <label for="client-name">Nombre del cliente / empresa</label>
+        <input type="text" id="client-name" placeholder="ej. Familia Rodríguez · Grupo XYZ" autocomplete="off">
+      </div>
+      <button class="start-btn" onclick="startForm()">Iniciar Assessment →</button>
+    </div>
+    <div class="welcome-deco">◈</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN 1: FAMILIA ══ -->
+<div id="screen-familia" class="screen">
+  <div class="form-topbar">
+    <span class="tb-section">01 · Familia</span>
+    <button class="tb-back" onclick="jumpSection(0)">← inicio</button>
+  </div>
+  <div class="form-wrap">
+    <div class="section-sticky-head">
+      <h2 class="section-title">Familia</h2>
+      <p class="section-sub">Titular y núcleo familiar.</p>
+      <div class="sticky-micro">
+        <div class="sm-group">
+          <span class="sm-lbl">Personas</span><span class="sm-val cnt-total-p">1</span>
+          <span class="sm-lbl">Fam</span><span class="sm-val cnt-familia">1</span>
+          <span class="sm-lbl">Staff</span><span class="sm-val cnt-staff">0</span>
+          <span class="sm-lbl">Eq</span><span class="sm-val cnt-equipos">0</span>
+          <span class="sm-lbl">Dig</span><span class="sm-val cnt-digital">0</span>
+        </div>
+        <div class="sm-sep"></div>
+        <div class="sm-group">
+          <span class="sm-lbl">Localidades</span><span class="sm-val cnt-total-l">0</span>
+          <span class="sm-lbl">IoT</span><span class="sm-val cnt-iot">0</span>
+          <span class="sm-lbl">Dom</span><span class="sm-val cnt-domo">0</span>
+          <span class="sm-lbl">ISP</span><span class="sm-val cnt-isp">0</span>
+          <span class="sm-lbl">FW</span><span class="sm-val cnt-pill-con-sb">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="section-hint">
+      <span class="hint-icon">↓</span>
+      <span><strong>F01 Titular</strong> está fijo. Usa el botón al final para agregar cada familiar adicional — cónyuge, hijos, padres, hermanos. <strong>Sin límite:</strong> registra a todos los que deban incluirse en la estrategia.</span>
+    </div>
+
+    <div class="sect-div">Familia</div>
+    <div class="p-card acc-0" id="card-F01" data-type="F" data-num="01">
+      <div class="p-card-head" onclick="toggleCard(this)">
+        <span class="p-badge">F01</span>
+        <span class="p-name-static">Titular / VIP</span>
+        <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
+      </div>
+      <div class="p-body" id="body-F01"></div>
+    </div>
+    <div id="familia-cards"></div>
+    <div class="sect-total"><span class="sect-total-label">Total familia</span><span class="sect-total-val" id="st-familia">1 persona · 0 equipos</span></div>
+    <button class="add-btn" onclick="addFamilia()">+ Agregar familiar</button>
+
+    <button class="next-btn" onclick="nextSection()">
+      <div><span class="next-label">Siguiente sección</span><span class="next-section">02 — Staff</span></div>
+      <span class="next-arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 2: STAFF ══ -->
+<div id="screen-staff" class="screen">
+  <div class="form-topbar">
+    <span class="tb-section">02 · Staff</span>
+    <button class="tb-back" onclick="prevSection()">← volver</button>
+  </div>
+  <div class="form-wrap">
+    <div class="section-sticky-head">
+      <h2 class="section-title">Staff</h2>
+      <p class="section-sub">Equipo de confianza con acceso al entorno del cliente.</p>
+      <div class="sticky-micro">
+        <div class="sm-group">
+          <span class="sm-lbl">Personas</span><span class="sm-val cnt-total-p">1</span>
+          <span class="sm-lbl">Fam</span><span class="sm-val cnt-familia">1</span>
+          <span class="sm-lbl">Staff</span><span class="sm-val cnt-staff">0</span>
+          <span class="sm-lbl">Eq</span><span class="sm-val cnt-equipos">0</span>
+          <span class="sm-lbl">Dig</span><span class="sm-val cnt-digital">0</span>
+        </div>
+        <div class="sm-sep"></div>
+        <div class="sm-group">
+          <span class="sm-lbl">Localidades</span><span class="sm-val cnt-total-l">0</span>
+          <span class="sm-lbl">IoT</span><span class="sm-val cnt-iot">0</span>
+          <span class="sm-lbl">Dom</span><span class="sm-val cnt-domo">0</span>
+          <span class="sm-lbl">ISP</span><span class="sm-val cnt-isp">0</span>
+          <span class="sm-lbl">FW</span><span class="sm-val cnt-pill-con-sb">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="section-hint">
+      <span class="hint-icon">↓</span>
+      <span>Incluye <strong>asistentes, conductores, chef, personal doméstico, seguridad privada</strong> y cualquier persona con acceso habitual a espacios, dispositivos o información del cliente. Agrega tantos como sea necesario.</span>
+    </div>
+
+    <div class="sect-div">Staff</div>
+    <div id="staff-cards"></div>
+    <div class="sect-total"><span class="sect-total-label">Total staff</span><span class="sect-total-val" id="st-staff">0 personas · 0 equipos</span></div>
+    <button class="add-btn" onclick="addStaff()">+ Agregar miembro de staff</button>
+
+    <button class="next-btn" onclick="nextSection()">
+      <div><span class="next-label">Siguiente sección</span><span class="next-section">03 — Localidades</span></div>
+      <span class="next-arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 3: LOCALIDADES ══ -->
+<div id="screen-localidades" class="screen">
+  <div class="form-topbar">
+    <span class="tb-section">03 · Localidades</span>
+    <button class="tb-back" onclick="prevSection()">← volver</button>
+  </div>
+  <div class="form-wrap">
+    <div class="section-sticky-head">
+      <h2 class="section-title">Localidades</h2>
+      <p class="section-sub">Cada espacio físico donde el cliente opera, vive o se desplaza.</p>
+      <div class="sticky-micro">
+        <div class="sm-group">
+          <span class="sm-lbl">Personas</span><span class="sm-val cnt-total-p">1</span>
+          <span class="sm-lbl">Fam</span><span class="sm-val cnt-familia">1</span>
+          <span class="sm-lbl">Staff</span><span class="sm-val cnt-staff">0</span>
+          <span class="sm-lbl">Eq</span><span class="sm-val cnt-equipos">0</span>
+          <span class="sm-lbl">Dig</span><span class="sm-val cnt-digital">0</span>
+        </div>
+        <div class="sm-sep"></div>
+        <div class="sm-group">
+          <span class="sm-lbl">Localidades</span><span class="sm-val cnt-total-l">0</span>
+          <span class="sm-lbl">IoT</span><span class="sm-val cnt-iot">0</span>
+          <span class="sm-lbl">Dom</span><span class="sm-val cnt-domo">0</span>
+          <span class="sm-lbl">ISP</span><span class="sm-val cnt-isp">0</span>
+          <span class="sm-lbl">FW</span><span class="sm-val cnt-pill-con-sb">—</span>
+        </div>
+      </div>
+    </div>
+    <div class="section-hint">
+      <span class="hint-icon">↓</span>
+      <span>Incluye <strong>casas, departamentos, oficinas, ranchos, yates, jets, vehículos</strong> — cualquier lugar con conectividad o infraestructura digital a proteger. Por cada localidad se documentan conectividad, IoT e infraestructura.</span>
+    </div>
+
+    <div class="sect-div">Propiedades y vehículos</div>
+    <div id="localidades-cards"></div>
+    <div class="sect-total"><span class="sect-total-label">Total localidades</span><span class="sect-total-val" id="st-local">0 localidades · 0 IoT</span></div>
+    <button class="add-btn" onclick="addLocalidad()">+ Agregar localidad</button>
+
+    <button class="next-btn" onclick="nextSection()">
+      <div><span class="next-label">Siguiente paso</span><span class="next-section">Revisar y enviar</span></div>
+      <span class="next-arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ SCREEN 4: ENVÍO ══ -->
+<div id="screen-send" class="screen">
+  <div class="form-topbar">
+    <span class="tb-section">Revisión y envío</span>
+    <button class="tb-back" onclick="prevSection()">← volver</button>
+  </div>
+  <!-- Pre-send -->
+  <div class="screen-send-center" id="send-form">
+    <svg class="send-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 273.62 47.37"><style>.sl{fill:#fff}</style><path class="sl" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/><path class="sl" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/><path class="sl" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/><path class="sl" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/><path class="sl" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/><rect class="sl" x="263.62" width="10" height="46.54"/><path class="sl" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/><path class="sl" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/></svg>
+    <h2 class="send-title">Assessment listo</h2>
+    <p class="send-sub">Revise el resumen antes de enviar. Los datos quedarán registrados de forma segura para comenzar el diseño de su estrategia de protección.</p>
+    <div class="send-dashboard">
+      <div class="send-client-row">Cliente: <strong id="send-client-name">—</strong></div>
+      <div class="hero-block">
+        <div class="hero-panel">
+          <span class="hp-label">Personas</span>
+          <div class="hp-total"><span class="hp-big-n cnt-total-p">0</span><span class="hp-big-l">personas</span></div>
+          <div class="hp-rows">
+            <div class="hp-row"><span class="hp-row-label">Familiares</span><span class="hp-row-val cnt-familia">0</span></div>
+            <div class="hp-row"><span class="hp-row-label">Staff</span><span class="hp-row-val cnt-staff">0</span></div>
+            <div class="hp-row-sep"></div>
+            <div class="hp-row"><span class="hp-row-label">Equipos totales</span><span class="hp-row-val cnt-equipos">0</span></div>
+            <div class="hp-row"><span class="hp-row-label">Entorno digital</span><span class="hp-row-val cnt-digital">0</span></div>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <span class="hp-label">Localidades</span>
+          <div class="hp-total"><span class="hp-big-n cnt-total-l">0</span><span class="hp-big-l">localidades</span></div>
+          <div class="hp-rows">
+            <div class="hp-row"><span class="hp-row-label">Firewall</span><div class="hp-fw"><span class="hp-pill cnt-pill-con">0 con</span><span class="hp-pill cnt-pill-sin">0 sin</span><span class="hp-pill cnt-pill-ns">0 ns</span></div></div>
+            <div class="hp-row-sep"></div>
+            <div class="hp-row"><span class="hp-row-label">IoT</span><span class="hp-row-val cnt-iot">0</span></div>
+            <div class="hp-row"><span class="hp-row-label">Con domótica</span><span class="hp-row-val cnt-domo">0</span></div>
+            <div class="hp-row"><span class="hp-row-label">Proveedores internet</span><span class="hp-row-val cnt-isp">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="send-btn" id="send-btn" onclick="submitForm()">Enviar Assessment</button>
+    <p class="send-status" id="send-status"></p>
+  </div>
+  <!-- Thank you -->
+  <div class="thankyou-wrap" id="thankyou">
+    <div class="ty-glyph">◈</div>
+    <h2 class="ty-title">Gracias.</h2>
+    <p class="ty-sub">Su assessment ha sido recibido. El equipo de Obscural revisará la información y estará en contacto para presentarle su estrategia de protección personalizada.</p>
+    <div class="ty-meta">
+      <span class="ty-chip">Información recibida</span>
+      <span class="ty-chip">Proceso confidencial</span>
+      <span class="ty-chip">Obscural</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- /#main -->
+
+<script>
+// ══ CONFIG ══
+const SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+const P_COLORS   = ['acc-0','acc-1','acc-2','acc-3','acc-4','acc-5','acc-6','acc-7'];
+const L_COLORS   = ['lacc-0','lacc-1','lacc-2','lacc-3','lacc-4','lacc-5'];
+const SCREENS    = ['screen-welcome','screen-familia','screen-staff','screen-localidades','screen-send'];
+const PROGRESS   = [0, 25, 50, 75, 100];
+
+let currentSection = 0;
+let familiaIdx = 1, staffIdx = 0, localIdx = 0;
+
+// ══ NAVIGATION ══
+function showSection(n) {
+  SCREENS.forEach((id,i) => document.getElementById(id).classList.toggle('active', i === n));
+  document.getElementById('progress-fill').style.width = PROGRESS[n]+'%';
+  document.querySelectorAll('.sb-item').forEach(b => b.classList.toggle('active', parseInt(b.dataset.s) === n));
+  window.scrollTo(0,0);
+  currentSection = n;
+}
+
+function startForm() {
+  showSection(1);
+  if (!document.getElementById('body-F01').children.length) {
+    document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
+  }
+  updateCounters();
+}
+function nextSection() {
+  if (currentSection === 3) buildSendSummary();
+  if (currentSection < SCREENS.length-1) showSection(currentSection+1);
+}
+function prevSection() {
+  if (currentSection > 0) showSection(currentSection-1);
+}
+function jumpSection(n) {
+  if (n===1 && !document.getElementById('body-F01').children.length)
+    document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
+  if (n===4) buildSendSummary();
+  showSection(n);
+  updateCounters();
+}
+
+// ══ TOOLTIP ══
+let _aTip=null, _aBtn=null;
+function toggleTip(btn) {
+  const tip = btn.nextElementSibling;
+  const open = tip.classList.contains('show');
+  _closeTip();
+  if (!open) { tip.classList.add('show'); btn.classList.add('active'); _aTip=tip; _aBtn=btn; }
+}
+function closeTip(x) {
+  const tip = x.closest('.tooltip');
+  tip.classList.remove('show');
+  const ib = tip.previousElementSibling;
+  if (ib && ib.classList.contains('info-btn')) ib.classList.remove('active');
+  _aTip=null; _aBtn=null;
+}
+function _closeTip() {
+  if (_aTip) { _aTip.classList.remove('show'); if(_aBtn)_aBtn.classList.remove('active'); _aTip=null; _aBtn=null; }
+}
+document.addEventListener('click', e => { if (!e.target.closest('.drow')) _closeTip(); });
+
+// ══ TOGGLES ══
+function setSNS(btn, val) {
+  const g = btn.closest('.sns');
+  g.querySelectorAll('button').forEach(b => b.className='');
+  btn.className = val==='si'?'sel-si':val==='no'?'sel-no':'sel-ns';
+  g.dataset.value = val;
+  if (g.dataset.fw) { const lc=g.closest('.loc-card'); if(lc) updateFWBadge(lc); }
+  updateCounters();
+}
+function toggleNS(btn, uid) {
+  const inp = document.getElementById(uid);
+  const was = btn.classList.contains('active');
+  btn.classList.toggle('active');
+  if (!was) { inp.dataset.prev=inp.value; inp.value=''; inp.disabled=true; }
+  else { inp.disabled=false; inp.value=inp.dataset.prev||'0'; }
+  updateCounters();
+}
+function toggleCard(head) {
+  const body=head.nextElementSibling, btn=head.querySelector('.p-collapse-btn');
+  if (!body) return;
+  body.classList.toggle('collapsed');
+  if (btn) btn.textContent=body.classList.contains('collapsed')?'▼ expandir':'▲ colapsar';
+}
+
+// ══ FW BADGE ══
+function updateFWBadge(card) {
+  const sns=card.querySelector('[data-fw]'), badge=card.querySelector('.fw-badge');
+  if (!sns||!badge) return;
+  const v=sns.dataset.value;
+  badge.className='fw-badge';
+  if (v==='si') { badge.classList.add('con'); badge.textContent='🔒 Con FW'; }
+  else if (v==='no') { badge.classList.add('sin'); badge.textContent='⚠ Sin FW'; }
+  else { badge.classList.add('ns'); badge.textContent='FW ?'; }
+}
+
+// ══ ROW BUILDERS ══
+function _t(text) { return `<div class="tooltip"><button class="tooltip-close" onclick="closeTip(this)">✕</button>${text}</div>`; }
+
+function _row(pre,q,label,type,info,extra,grp) {
+  const ref=`${pre}·${String(q).padStart(2,'0')}`, uid=`${pre}_q${q}`;
+  const dg = grp ? ` data-group="${grp}"` : '';
+  let c='';
+  if (type==='qty') {
+    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">`;
+  } else if (type==='qty-os2') {
+    const[a,b]=extra;
+    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">
+    <div class="dos"><label class="cb"><input type="checkbox"> ${a}</label><label class="cb"><input type="checkbox"> ${b}</label></div>`;
+  } else if (type==='qty-os3') {
+    const[a,b,c2]=extra;
+    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">
+    <div class="dos"><label class="cb"><input type="checkbox"> ${a}</label><label class="cb"><input type="checkbox"> ${b}</label><label class="cb"><input type="checkbox"> ${c2}</label></div>`;
+  } else if (type==='qty-ns') {
+    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()"><button class="ns-btn" onclick="toggleNS(this,'${uid}')">No sé</button>`;
+  } else if (type==='sns') {
+    c=`<div class="sns" data-value=""><button onclick="setSNS(this,'si')">Sí</button><button onclick="setSNS(this,'no')">No</button><button onclick="setSNS(this,'ns')">No sé</button></div>`;
+  } else if (type==='sns-fw') {
+    c=`<div class="sns" data-value="ns" data-fw="1"><button onclick="setSNS(this,'si')">Sí</button><button onclick="setSNS(this,'no')">No</button><button onclick="setSNS(this,'ns')" class="sel-ns">No sé</button></div>`;
+  }
+  return `<div class="drow"${dg}><button class="info-btn" onclick="toggleTip(this)">i</button>${_t(info)}<span class="row-ref">${ref}</span><span class="dl">${label}</span>${c}</div>`;
+}
+function _ch(a,b) { return `<div class="col-head"><div class="ch-i"></div><div class="ch-ref"></div><div class="ch-dl">${a}</div><div class="ch-qty">Cant.</div><div class="ch-sel">${b||''}</div></div>`; }
+
+// ══ PERSON BODY ══
+function buildPersonBody(type,num) {
+  const pre=`${type}${num}`; let q=1,h='';
+  h+=`<div class="grp-label">Dispositivos</div>`;
+  h+=_ch('Dispositivo','Sistema operativo');
+  h+=_row(pre,q++,'Teléfonos',          'qty-os2','Celulares personales y de trabajo.',['iOS','Android'],'device');
+  h+=_row(pre,q++,'Tabletas',           'qty-os2','iPad, tablets u otros dispositivos de pantalla grande.',['iOS','Android'],'device');
+  h+=_row(pre,q++,'Comput. escritorio', 'qty-os3','Equipos de escritorio fijos. No incluyas laptops aquí.',['Mac','Win','Linux'],'device');
+  h+=_row(pre,q++,'Laptops',            'qty-os3','Laptops, MacBooks o ultrabooks portátiles.',['Mac','Win','Linux'],'device');
+
+  h+=`<div class="grp-label">Entorno digital</div>`;
+  h+=_ch('Campo','');
+  h+=_row(pre,q++,'Redes sociales',        'qty',   'Total de perfiles activos: Instagram, TikTok, X, LinkedIn, YouTube… personales y profesionales.',null,'digital');
+  h+=_row(pre,q++,'Números de teléfono',   'qty',   'Todos los SIM activos: personales, de trabajo y de respaldo.',null,'digital');
+  h+=_row(pre,q++,'Dominios web',          'qty',   'Sitios web o dominios registrados a nombre de esta persona.',null,'digital');
+  h+=_row(pre,q++,'Correos electrónicos',  'qty',   'Cuentas de correo activas: Gmail, Outlook, corporativo, etc.',null,'digital');
+  h+=_row(pre,q++,'Cuentas bancarias dig.','qty-ns','Apps bancarias o billeteras digitales (Mercado Pago, PayPal, etc.).',null,'digital');
+  return h;
+}
+
+// ══ LOCATION BODY ══
+function buildLocBody(id) {
+  const pre=id; let q=1,h='';
+  h+=`<div class="grp-label first">Conectividad</div>`;
+  h+=_ch('Servicio','');
+  h+=_row(pre,q++,'Proveedores de internet',  'qty',   'Compañías que proveen internet (Telmex, Totalplay, Izzi, Starlink…).',null,'isp');
+  h+=_row(pre,q++,'Proveedores audio/video',  'qty',   'TV por cable o satélite (Sky, Dish, Megacable…).');
+  h+=_row(pre,q++,'Otros servicios digitales','qty-ns','Líneas dedicadas, MPLS, VoIP u otros.');
+
+  h+=`<div class="grp-label">IoT</div>`;
+  h+=_ch('Dispositivo','');
+  h+=_row(pre,q++,'Cámaras de seguridad',      'qty-ns','Cámaras IP, CCTV o de vigilancia conectadas a la red.',null,'iot');
+  h+=_row(pre,q++,'Videoporteros',              'qty-ns','Timbre o portero con video (Ring, Nest Doorbell…).',null,'iot');
+  h+=_row(pre,q++,'Smart TVs',                 'qty-ns','Televisores con internet y aplicaciones.',null,'iot');
+  h+=_row(pre,q++,'Refrigeradores inteligentes','qty-ns','Refrigeradores con conectividad o pantalla táctil.',null,'iot');
+  h+=_row(pre,q++,'Cerraduras inteligentes',   'qty-ns','Cerraduras electrónicas o con acceso por app.',null,'iot');
+  h+=_row(pre,q++,'Sensores',                  'qty-ns','Sensores de movimiento, temperatura, gas, humo…',null,'iot');
+  h+=_row(pre,q++,'Alarmas',                   'qty-ns','Sistemas de alarma conectados a internet o app.',null,'iot');
+  h+=_row(pre,q++,'Bocinas / Sonido',          'qty-ns','Sonos, Alexa, Google Nest Audio…',null,'iot');
+  h+=_row(pre,q++,'Consolas de videojuegos',   'qty-ns','PlayStation, Xbox, Nintendo Switch…',null,'iot');
+  h+=_row(pre,q++,'Asistentes de voz',         'qty-ns','Alexa, Google Home, HomePod…',null,'iot');
+  h+=_row(pre,q++,'Control central / Hub',     'qty-ns','Panel de domótica centralizado (Control4, Crestron, KNX…).',null,'iot');
+  h+=_row(pre,q++,'Domótica / Automatización', 'sns',   '¿Esta localidad tiene sistema de automatización o casa inteligente?',null,'domo');
+
+  h+=`<div class="grp-label">Infraestructura de red</div>`;
+  h+=_ch('Equipo','');
+  h+=_row(pre,q++,'Módems',               'qty-ns','Módems instalados en esta localidad.');
+  h+=_row(pre,q++,'Routers',              'qty-ns','Routers o equipos de distribución de red.');
+  h+=_row(pre,q++,'Access Points',        'qty-ns','Puntos de acceso WiFi adicionales (Ubiquiti, Eero, TP-Link…).');
+  h+=_row(pre,q++,'NAS / Almacenamiento', 'qty-ns','Dispositivos de almacenamiento en red (Synology, QNAP…).');
+  h+=_row(pre,q++,'Servidores virtuales', 'qty-ns','Servidores en la nube asociados a esta localidad.');
+  h+=_row(pre,q++,'Servidores físicos',   'qty-ns','Servidores físicos instalados en esta localidad.');
+
+  h+=`<div class="grp-label">Seguridad perimetral</div>`;
+  h+=_ch('Elemento','');
+  h+=_row(pre,q++,'Firewalls',             'qty-ns','Cantidad de firewalls perimetrales instalados en esta localidad (Fortinet, Cisco, pfSense, Sophos…).',null,'fw-qty');
+  h+=_row(pre,q++,'Firewall centralizado', 'sns-fw','¿Existe un firewall centralizado que controla el tráfico de toda esta localidad?');
+  return h;
+}
+
+// ══ ADD CARDS ══
+function addFamilia() {
+  familiaIdx++;
+  const num=String(familiaIdx).padStart(2,'0'), id=`F${num}`;
+  const el=Object.assign(document.createElement('div'),{
+    className:`p-card ${P_COLORS[familiaIdx%P_COLORS.length]}`, id:`card-${id}`
+  });
+  el.innerHTML=`
+    <div class="p-card-head" onclick="toggleCard(this)">
+      <span class="p-badge">${id}</span>
+      <div class="p-field">
+        <span class="p-field-lbl">parentesco →</span>
+        <input class="p-name-input" type="text" placeholder="ej. cónyuge, hijo/a, madre…" onclick="event.stopPropagation()">
+      </div>
+      <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
+      <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
+    </div>
+    <div class="p-body" id="body-${id}">${buildPersonBody('F',num)}</div>`;
+  document.getElementById('familia-cards').appendChild(el);
+  el.classList.add('card-enter');
+  updateCounters();
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function addStaff() {
+  staffIdx++;
+  const num=String(staffIdx).padStart(2,'0'), id=`S${num}`;
+  const el=Object.assign(document.createElement('div'),{
+    className:`p-card ${P_COLORS[(staffIdx+3)%P_COLORS.length]}`, id:`card-${id}`
+  });
+  el.innerHTML=`
+    <div class="p-card-head" onclick="toggleCard(this)">
+      <span class="p-badge">${id}</span>
+      <div class="p-field">
+        <span class="p-field-lbl">rol →</span>
+        <input class="p-name-input" type="text" placeholder="ej. asistente, conductor, chef, guardia…" onclick="event.stopPropagation()">
+      </div>
+      <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
+      <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
+    </div>
+    <div class="p-body" id="body-${id}">${buildPersonBody('S',num)}</div>`;
+  document.getElementById('staff-cards').appendChild(el);
+  el.classList.add('card-enter');
+  updateCounters();
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function addLocalidad() {
+  localIdx++;
+  const num=String(localIdx).padStart(2,'0'), id=`L${num}`;
+  const el=Object.assign(document.createElement('div'),{
+    className:`loc-card ${L_COLORS[(localIdx-1)%L_COLORS.length]}`, id:`card-${id}`
+  });
+  el.innerHTML=`
+    <div class="loc-card-head" onclick="toggleCard(this)">
+      <span class="loc-badge">${id}</span>
+      <div class="loc-field">
+        <span class="loc-field-lbl">tipo →</span>
+        <select class="loc-tipo-select" onclick="event.stopPropagation()">
+          <option value="">selecciona tipo de localidad…</option>
+          <option>Casa principal</option><option>Casa de campo</option>
+          <option>Departamento</option><option>Oficina</option>
+          <option>Rancho / Hacienda</option><option>Barco / Yate</option>
+          <option>Auto / Van</option><option>Avión / Jet</option>
+        </select>
+      </div>
+      <span class="fw-badge ns">FW ?</span>
+      <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
+      <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
+    </div>
+    <div class="p-body" id="body-${id}">${buildLocBody(id)}</div>`;
+  document.getElementById('localidades-cards').appendChild(el);
+  el.classList.add('card-enter');
+  updateCounters();
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+function removeCard(id) {
+  const c=document.getElementById(`card-${id}`); if(c){c.remove();updateCounters();}
+}
+
+// ══ COUNTERS — updates ALL instances by class ══
+function sumQty(root,grp) {
+  if (!root) return 0;
+  let n=0;
+  const sel=grp?`[data-group="${grp}"] .dq:not(:disabled)`:'.dq:not(:disabled)';
+  root.querySelectorAll(sel).forEach(i=>n+=parseInt(i.value)||0);
+  return n;
+}
+function sumSNS(root,grp,val) {
+  if (!root) return 0; let n=0;
+  root.querySelectorAll(`[data-group="${grp}"] .sns`).forEach(s=>{if(s.dataset.value===val)n++;});
+  return n;
+}
+function _sa(cls,val) { document.querySelectorAll('.'+cls).forEach(e=>e.textContent=val); }
+function _s(id,val)   { const e=document.getElementById(id); if(e) e.textContent=val; }
+
+function updateCounters() {
+  const f01    = document.getElementById('card-F01');
+  const fCards = document.getElementById('familia-cards');
+  const sCards = document.getElementById('staff-cards');
+
+  const fCount = document.querySelectorAll('#familia-cards .p-card').length + 1;
+  const sCount = document.querySelectorAll('#staff-cards .p-card').length;
+
+  let equipos=0, digital=0;
+  [f01,fCards,sCards].forEach(r=>{ equipos+=sumQty(r,'device'); digital+=sumQty(r,'digital'); });
+
+  const lCount = document.querySelectorAll('#localidades-cards .loc-card').length;
+  let iot=0, isp=0, domo=0;
+  document.querySelectorAll('#localidades-cards .loc-card').forEach(c=>{
+    iot  += sumQty(c,'iot');
+    isp  += sumQty(c,'isp');
+    domo += sumSNS(c,'domo','si');
+  });
+
+  let fwCon=0,fwSin=0,fwNs=0;
+  document.querySelectorAll('[data-fw]').forEach(s=>{
+    const v=s.dataset.value;
+    if(v==='si')fwCon++;else if(v==='no')fwSin++;else fwNs++;
+  });
+
+  _sa('cnt-total-p', fCount+sCount);
+  _sa('cnt-familia',  fCount);
+  _sa('cnt-staff',    sCount);
+  _sa('cnt-equipos',  equipos);
+  _sa('cnt-digital',  digital);
+  _sa('cnt-total-l',  lCount);
+  _sa('cnt-iot',      iot);
+  _sa('cnt-domo',     domo);
+  _sa('cnt-isp',      isp);
+  _sa('cnt-pill-con-sb', fwCon+fwSin+fwNs > 0 ? `${fwCon}✓ ${fwSin}✗` : '—');
+
+  // FW pills
+  document.querySelectorAll('.cnt-pill-con').forEach(e=>{
+    e.textContent=`${fwCon} con`; e.className='hp-pill cnt-pill-con'+(fwCon>0?' p-on':'');
+  });
+  document.querySelectorAll('.cnt-pill-sin').forEach(e=>{
+    e.textContent=`${fwSin} sin`; e.className='hp-pill cnt-pill-sin'+(fwSin>0?' p-bad':'');
+  });
+  document.querySelectorAll('.cnt-pill-ns').forEach(e=>{
+    e.textContent=`${fwNs} ns`;
+  });
+
+  // Section totals
+  _s('st-familia', `${fCount} persona${fCount!==1?'s':''} · ${sumQty(f01,'device')+sumQty(fCards,'device')} equipos`);
+  _s('st-staff',   `${sCount} persona${sCount!==1?'s':''} · ${sumQty(sCards,'device')} equipos`);
+  _s('st-local',   `${lCount} localidad${lCount!==1?'es':''} · ${iot} IoT`);
+
+  // Sidebar dots
+  const d1=document.getElementById('dot-1');
+  const d2=document.getElementById('dot-2');
+  const d3=document.getElementById('dot-3');
+  if(d1) d1.classList.toggle('has-data', equipos>0||digital>0);
+  if(d2) d2.classList.toggle('has-data', sCount>0);
+  if(d3) d3.classList.toggle('has-data', lCount>0);
+}
+
+// ══ SEND ══
+function buildSendSummary() {
+  const client=document.getElementById('client-name').value||'—';
+  const el=document.getElementById('send-client-name');
+  if(el) el.textContent=client;
+  updateCounters();
+}
+
+function showThankyou() {
+  document.getElementById('send-form').style.display='none';
+  document.getElementById('thankyou').classList.add('show');
+  document.querySelector('[data-s="4"] .sb-dot')?.classList.add('has-data');
+}
+
+// ══ DATA COLLECTOR ══
+function collectFormData() {
+  const client = document.getElementById('client-name').value.trim() || '—';
+
+  const getQty = uid => {
+    const el = document.getElementById(uid);
+    if (!el) return 0;
+    return el.disabled ? 'NS' : (parseInt(el.value) || 0);
+  };
+  const getOS = uid => {
+    const el = document.getElementById(uid);
+    if (!el) return '';
+    return Array.from(el.closest('.drow').querySelectorAll('.cb input'))
+      .filter(c => c.checked).map(c => c.closest('.cb').textContent.trim()).join(', ');
+  };
+  const getSNS = (cardId, nth) => {
+    const card = document.getElementById(`card-${cardId}`);
+    if (!card) return '';
+    return card.querySelectorAll('.sns')[nth]?.dataset.value || '';
+  };
+  const getName = cardId => {
+    if (cardId === 'F01') return 'Titular / VIP';
+    return document.getElementById(`card-${cardId}`)?.querySelector('.p-name-input')?.value.trim() || '';
+  };
+
+  const personRow = (pre, tipo, id) => ({
+    tipo, id, nombre: getName(id),
+    telefonos: getQty(`${pre}_q1`), telefonos_os: getOS(`${pre}_q1`),
+    tabletas:  getQty(`${pre}_q2`), tabletas_os:  getOS(`${pre}_q2`),
+    escritorio:getQty(`${pre}_q3`), escritorio_os:getOS(`${pre}_q3`),
+    laptops:   getQty(`${pre}_q4`), laptops_os:   getOS(`${pre}_q4`),
+    redes_sociales:  getQty(`${pre}_q5`),
+    numeros_tel:     getQty(`${pre}_q6`),
+    dominios:        getQty(`${pre}_q7`),
+    correos:         getQty(`${pre}_q8`),
+    cuentas_banco:   getQty(`${pre}_q9`),
+  });
+
+  const personas = [];
+  personas.push(personRow('F01', 'Familia', 'F01'));
+  document.querySelectorAll('#familia-cards .p-card').forEach(c => {
+    const id = c.id.replace('card-',''); personas.push(personRow(id,'Familia',id));
+  });
+  document.querySelectorAll('#staff-cards .p-card').forEach(c => {
+    const id = c.id.replace('card-',''); personas.push(personRow(id,'Staff',id));
+  });
+
+  const localidades = [];
+  document.querySelectorAll('#localidades-cards .loc-card').forEach(c => {
+    const id = c.id.replace('card-',''), pre = id;
+    localidades.push({
+      id, tipo: c.querySelector('.loc-tipo-select')?.value || '',
+      isp:            getQty(`${pre}_q1`),
+      audio_video:    getQty(`${pre}_q2`),
+      otros_servicios:getQty(`${pre}_q3`),
+      camaras:        getQty(`${pre}_q4`),
+      videoporteros:  getQty(`${pre}_q5`),
+      smart_tvs:      getQty(`${pre}_q6`),
+      refrigeradores: getQty(`${pre}_q7`),
+      cerraduras:     getQty(`${pre}_q8`),
+      sensores:       getQty(`${pre}_q9`),
+      alarmas:        getQty(`${pre}_q10`),
+      bocinas:        getQty(`${pre}_q11`),
+      consolas:       getQty(`${pre}_q12`),
+      asistentes_voz: getQty(`${pre}_q13`),
+      hub_control:    getQty(`${pre}_q14`),
+      domotica:       getSNS(id, 0),
+      modems:         getQty(`${pre}_q16`),
+      routers:        getQty(`${pre}_q17`),
+      access_points:  getQty(`${pre}_q18`),
+      nas:            getQty(`${pre}_q19`),
+      serv_virtuales: getQty(`${pre}_q20`),
+      serv_fisicos:   getQty(`${pre}_q21`),
+      firewalls:      getQty(`${pre}_q22`),
+      fw_centralizado:getSNS(id, 1),
+    });
+  });
+
+  return { client, timestamp: new Date().toISOString(), personas, localidades };
+}
+
+async function submitForm() {
+  const btn=document.getElementById('send-btn'), st=document.getElementById('send-status');
+  btn.disabled=true; st.textContent='Enviando…';
+  if (SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
+    setTimeout(()=>{ showThankyou(); },700);
+    return;
+  }
+  try {
+    const payload = collectFormData();
+    const res = await fetch(SCRIPT_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const j = await res.json();
+    if (j.status==='ok') showThankyou();
+    else { st.textContent='Error al enviar. Intenta de nuevo.'; btn.disabled=false; }
+  } catch(e) { st.textContent='Error de conexión.'; btn.disabled=false; }
+}
+
+showSection(0);
+</script>
+</body>
+</html>
