@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Obscural — Assessment de Seguridad Digital</title>
+<meta property="og:title" content="Obscural — Assessment de Seguridad Digital">
+<meta property="og:description" content="Diagnóstico de seguridad digital confidencial. Complete el formulario para iniciar su estrategia de protección con Obscural.">
+<meta property="og:image" content="https://fcormcol15.github.io/OBSCURAL/og-preview.png">
+<meta property="og:url" content="https://fcormcol15.github.io/OBSCURAL/Obscural_Assessment.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -867,10 +873,11 @@ function addFamilia() {
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
     </div>
     <div class="p-body" id="body-${id}">${buildPersonBody('F',num)}</div>`;
+  if(document.activeElement) document.activeElement.blur();
   document.getElementById('familia-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>{ if(document.activeElement) document.activeElement.blur(); const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo(0,y); },120);
+  requestAnimationFrame(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-200; document.documentElement.scrollTop=y; document.body.scrollTop=y; });
 }
 
 function addStaff() {
@@ -890,10 +897,11 @@ function addStaff() {
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
     </div>
     <div class="p-body" id="body-${id}">${buildPersonBody('S',num)}</div>`;
+  if(document.activeElement) document.activeElement.blur();
   document.getElementById('staff-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>{ if(document.activeElement) document.activeElement.blur(); const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo(0,y); },120);
+  requestAnimationFrame(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-200; document.documentElement.scrollTop=y; document.body.scrollTop=y; });
 }
 
 function addLocalidad() {
@@ -920,10 +928,11 @@ function addLocalidad() {
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
     </div>
     <div class="p-body" id="body-${id}">${buildLocBody(id)}</div>`;
+  if(document.activeElement) document.activeElement.blur();
   document.getElementById('localidades-cards').appendChild(el);
   el.classList.add('card-enter');
   updateCounters();
-  setTimeout(()=>{ if(document.activeElement) document.activeElement.blur(); const y=el.getBoundingClientRect().top+window.scrollY-64; window.scrollTo(0,y); },120);
+  requestAnimationFrame(()=>{ const y=el.getBoundingClientRect().top+window.scrollY-200; document.documentElement.scrollTop=y; document.body.scrollTop=y; });
 }
 
 function removeCard(id) {
