@@ -6,8 +6,7 @@
 <title>Obscural — Private Document</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600;700&display=block">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
@@ -3134,7 +3133,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 #pol-hero-photo::after {
   content: '';
-  position: absolute; inset: 0;
+  position: absolute; inset: -1px 0 0 0;
   background: linear-gradient(
     to bottom,
     rgba(0,0,0,0.35) 0%,
@@ -3287,7 +3286,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 #pol-how-photo::after, .pol-how-photo::after {
   content: '';
-  position: absolute; inset: 0;
+  position: absolute; inset: -1px 0 0 0;
   background: linear-gradient(
     to bottom,
     rgba(0,0,0,0.10) 0%,
@@ -3540,8 +3539,8 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 #pol-vecindario::before {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.80) 100%);
+  position: absolute; inset: -1px 0 0 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.72) 10%, rgba(0,0,0,0.50) 50%, rgba(0,0,0,0.72) 90%, rgba(0,0,0,0.97) 100%);
   z-index: 0;
 }
 #pol-vecindario > * { position: relative; z-index: 1; }
@@ -3570,14 +3569,14 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 .pvec-stat {
   background: #030303;
-  padding: clamp(12px,1.8vh,18px) clamp(14px,1.8vw,22px);
-  display: grid; grid-template-columns: clamp(72px,7.5vw,112px) 1fr;
-  gap: clamp(12px,1.5vw,20px); align-items: start;
+  padding: clamp(16px,2.2vh,26px) clamp(14px,1.8vw,22px);
+  display: grid; grid-template-columns: clamp(120px,14vw,180px) 1fr;
+  gap: clamp(16px,2vw,28px); align-items: start;
 }
 .pvec-stat-n {
   font-size: clamp(26px,3vw,44px); font-weight: 700;
   letter-spacing: -0.05em; color: #fff;
-  flex-shrink: 0; line-height: 1;
+  white-space: nowrap; flex-shrink: 0; line-height: 1;
 }
 .pvec-stat-label { font-size: clamp(9px,0.78vw,11px); font-weight: 300; color: rgba(255,255,255,0.35); line-height: 1.5; }
 .pvec-stat-label strong { display: block; font-weight: 500; color: rgba(255,255,255,0.68); margin-bottom: 2px; font-size: clamp(10px,0.88vw,12px); }
@@ -3677,6 +3676,64 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
   color: rgba(255,255,255,0.58); line-height: 1.5;
 }
 .pvec-row-val strong { color: rgba(255,255,255,0.85); font-weight: 500; }
+/* Panama incident blocks */
+.pvec-intro-text {
+  background: #030303;
+  padding: clamp(12px,1.6vh,18px) clamp(14px,1.8vw,22px);
+  font-size: clamp(9px,0.78vw,11px); font-weight: 300;
+  color: rgba(255,255,255,0.45); line-height: 1.6;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.pvec-kpis {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  background: rgba(255,255,255,0.04);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pvec-kpi {
+  padding: clamp(10px,1.4vh,16px) clamp(10px,1.2vw,16px);
+  display: flex; flex-direction: column; gap: 3px;
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+.pvec-kpi:last-child { border-right: none; }
+.pvec-kpi-n {
+  font-size: clamp(18px,2vw,28px); font-weight: 700;
+  letter-spacing: -0.05em; color: #fff; line-height: 1;
+}
+.pvec-kpi-l {
+  font-size: clamp(7px,0.58vw,9px); font-weight: 400; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25); line-height: 1.3;
+}
+.pvec-incident {
+  background: #030303;
+  padding: clamp(10px,1.4vh,16px) clamp(14px,1.8vw,22px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; flex-direction: column; gap: 5px;
+}
+.pvec-inc-head {
+  display: flex; align-items: baseline; gap: 8px;
+}
+.pvec-inc-title {
+  font-size: clamp(10px,0.85vw,12px); font-weight: 500;
+  color: rgba(255,255,255,0.78); line-height: 1.2;
+}
+.pvec-inc-date {
+  font-size: clamp(7px,0.55vw,8px); font-weight: 400; letter-spacing: 0.16em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25); white-space: nowrap; flex-shrink: 0;
+}
+.pvec-inc-desc {
+  font-size: clamp(8px,0.68vw,10px); font-weight: 300;
+  color: rgba(255,255,255,0.38); line-height: 1.55;
+}
+.pvec-inc-sources {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px;
+}
+.pvec-inc-src {
+  font-size: clamp(7px,0.55vw,8px); font-weight: 400; letter-spacing: 0.10em;
+  color: rgba(255,255,255,0.22); text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.10);
+  transition: color 0.2s, border-color 0.2s;
+}
+.pvec-inc-src:hover { color: rgba(255,255,255,0.55); border-color: rgba(255,255,255,0.35); }
 .pvec-empty {
   min-height: 200px; display: flex; align-items: center; justify-content: center;
   color: rgba(255,255,255,0.1); font-size: clamp(9px,0.8vw,11px);
@@ -3691,16 +3748,17 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
   position: relative;
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
+  grid-template-rows: 1fr auto;
   padding: clamp(48px,7vh,88px) clamp(32px,6vw,96px) clamp(48px,7vh,88px);
   box-sizing: border-box;
   border-top: 1px solid rgba(255,255,255,0.04);
-  gap: 0 clamp(32px,5vw,72px);
+  gap: clamp(24px,3vh,40px) clamp(32px,5vw,72px);
   overflow: hidden;
-  align-items: center;
+  align-content: center;
 }
 #pol-credenciales::before {
   content: '';
-  position: absolute; inset: 0;
+  position: absolute; inset: -1px 0 0 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.82) 50%, rgba(0,0,0,0.95) 100%);
   z-index: 0;
 }
@@ -3710,12 +3768,17 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
   bottom: -0.18em; left: -0.04em;
   font-size: clamp(140px,19vw,320px);
   font-weight: 800; letter-spacing: -0.05em; line-height: 1;
-  color: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.10);
   white-space: nowrap;
   user-select: none; pointer-events: none;
   z-index: 0;
 }
-.pcred-list { display: flex; flex-direction: column; justify-content: center; gap: 0; }
+.pcred-list {
+  display: flex; flex-direction: column; justify-content: center; gap: 0;
+  border: 1px solid rgba(255,255,255,0.07);
+  padding: clamp(20px,2.5vh,32px) clamp(18px,2vw,28px);
+  background: rgba(0,0,0,0.28);
+}
 .pcred-intro {
   font-size: clamp(9px,0.72vw,11px); font-weight: 300; line-height: 1.6;
   color: rgba(255,255,255,0.32); max-width: 52ch;
@@ -3732,6 +3795,32 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
   border-top: 1px solid rgba(255,255,255,0.07);
 }
 .pcred-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.07); }
+.pcred-notes {
+  grid-column: 1 / -1;
+  display: flex; gap: clamp(32px,5vw,72px);
+  border-top: 1px solid rgba(255,255,255,0.10);
+  padding-top: clamp(20px,2.5vh,30px);
+}
+.pcred-highlight {
+  display: flex; flex-direction: column; gap: 4px;
+}
+.pcred-hl-num {
+  font-size: clamp(36px,4vw,60px); font-weight: 700;
+  letter-spacing: -0.05em; color: #fff; line-height: 1;
+}
+.pcred-hl-num sup {
+  font-size: 0.45em; vertical-align: super; letter-spacing: 0; font-weight: 400;
+  color: rgba(255,255,255,0.55);
+}
+.pcred-hl-label {
+  font-size: clamp(8px,0.6vw,10px); font-weight: 500; letter-spacing: 0.28em;
+  text-transform: uppercase; color: rgba(255,255,255,0.28);
+  margin-bottom: 4px;
+}
+.pcred-hl-text {
+  font-size: clamp(10px,0.78vw,12px); font-weight: 300;
+  color: rgba(255,255,255,0.38); line-height: 1.55; max-width: 30ch;
+}
 .pcred-num {
   font-size: clamp(8px,0.6vw,9px); font-weight: 400;
   color: rgba(255,255,255,0.22); letter-spacing: 0.14em;
@@ -3750,8 +3839,9 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 .pcred-aside {
   display: flex; flex-direction: column; justify-content: center;
-  height: 100%;
-  padding-left: clamp(24px,3vw,48px);
+  padding: clamp(20px,2.5vh,32px) clamp(18px,2vw,28px);
+  border: 1px solid rgba(255,255,255,0.07);
+  background: rgba(0,0,0,0.28);
 }
 .pcred-body {
   font-size: clamp(12px,0.95vw,15px); font-weight: 300;
@@ -3779,7 +3869,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 #pol-agrupacion::before {
   content: '';
-  position: absolute; inset: 0;
+  position: absolute; inset: -1px 0 0 0;
   background: linear-gradient(to bottom, rgba(0,0,0,0.90) 0%, rgba(0,0,0,0.80) 50%, rgba(0,0,0,0.90) 100%);
   z-index: 0;
 }
@@ -3894,7 +3984,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 }
 #pol-eco-photo::after {
   content: '';
-  position: absolute; inset: 0;
+  position: absolute; inset: -1px 0 0 0;
   background: linear-gradient(
     to right,
     rgba(0,0,0,0.88) 0%,
@@ -6084,15 +6174,15 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
     </div>
 
     <div class="pol-stat">
-      <span class="pol-stat-n">91%</span>
-      <span class="pol-stat-label" data-en="of successful data breaches originated with a phishing attack targeted at a single individual." data-es="de las filtraciones de datos exitosas comenzaron con un ataque de phishing dirigido a una persona.">of successful data breaches originated with a phishing attack targeted at a single individual.</span>
+      <span class="pol-stat-n">71%</span>
+      <span class="pol-stat-label" data-en="of organizations experienced at least one successful phishing attack in the past year." data-es="de las organizaciones sufrió al menos un ataque de phishing exitoso en el último año.">of organizations experienced at least one successful phishing attack in the past year.</span>
       <span class="pol-stat-source"><a href="https://www.proofpoint.com/us/resources/threat-reports/state-of-phish" target="_blank" rel="noopener">Proofpoint, State of the Phish</a></span>
     </div>
 
     <div class="pol-stat">
       <span class="pol-stat-n">+58%</span>
-      <span class="pol-stat-label" data-en="increase in global phishing attacks in 2025 compared to the previous year." data-es="de incremento en ataques de phishing globales en 2025 respecto al año anterior.">increase in global phishing attacks in 2025 compared to the previous year.</span>
-      <span class="pol-stat-source"><a href="https://www.zscaler.com/blogs/security-research/beyond-inbox-threatlabz-2025-phishing-report-reveals-how-phishing-evolving" target="_blank" rel="noopener">Zscaler ThreatLabz, 2025</a></span>
+      <span class="pol-stat-label" data-en="increase in global phishing attacks in 2023 compared to the previous year." data-es="de incremento en ataques de phishing globales en 2023 respecto al año anterior.">increase in global phishing attacks in 2023 compared to the previous year.</span>
+      <span class="pol-stat-source"><a href="https://www.zscaler.com/blogs/security-research/phishing-attacks-rise-58-year-ai-threatlabz-2024-phishing-report" target="_blank" rel="noopener">Zscaler ThreatLabz, 2024</a></span>
     </div>
 
     <div class="pol-stat">
@@ -6102,16 +6192,16 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
     </div>
 
     <div class="pol-stat">
-      <span class="pol-stat-n">+80%</span>
-      <span class="pol-stat-label" data-en="increase in attacks on governments in Latin America — from 250 in 2024 to over 450 in 2025." data-es="de aumento en ataques a gobiernos en América Latina — de 250 en 2024 a más de 450 en 2025.">increase in attacks on governments in Latin America — from 250 in 2024 to over 450 in 2025.</span>
+      <span class="pol-stat-n">+78%</span>
+      <span class="pol-stat-label" data-en="increase in ransomware attacks across Latin America — from 250 in 2024 to over 450 in 2025." data-es="de aumento en ataques de ransomware en América Latina — de 250 en 2024 a más de 450 en 2025.">increase in ransomware attacks across Latin America — from 250 in 2024 to over 450 in 2025.</span>
       <span class="pol-stat-source"><a href="https://www.intel471.com/resources/whitepapers/region-report-latin-america-2025" target="_blank" rel="noopener">Intel 471 — Latin America Region Report, 2025</a></span>
     </div>
 
   </div>
 
   <div class="pol-stats-right">
-    <span class="pol-chart-label" data-en="Government Attacks — Latin America" data-es="Ataques a gobiernos — América Latina">Government Attacks — Latin America</span>
-    <p class="pol-chart-title" data-en="The growth doesn't stop.<br>The most attacked region in the world." data-es="El crecimiento no se detiene.<br>La región más atacada del mundo.">The growth doesn't stop.<br>The most attacked region in the world.</p>
+    <span class="pol-chart-label" data-en="Ransomware Attacks — Latin America" data-es="Ataques de ransomware — América Latina">Ransomware Attacks — Latin America</span>
+    <p class="pol-chart-title" data-en="The growth doesn't stop." data-es="El crecimiento no se detiene.">The growth doesn't stop.</p>
     <svg id="pol-chart-svg" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
       <!-- Grid lines -->
       <line x1="40" y1="20" x2="40" y2="180" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
@@ -6125,11 +6215,8 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
       <text x="30" y="83" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">300</text>
       <text x="30" y="33" text-anchor="end" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">450</text>
       <!-- X axis labels -->
-      <text x="80"  y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2021</text>
-      <text x="140" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2022</text>
-      <text x="200" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2023</text>
-      <text x="260" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2024</text>
-      <text x="300" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2025</text>
+      <text x="160" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2024</text>
+      <text x="280" y="196" text-anchor="middle" fill="rgba(255,255,255,0.22)" font-size="8" font-family="inherit">2025</text>
       <!-- Area fill (animated) -->
       <defs>
         <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
@@ -6142,24 +6229,24 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
           </rect>
         </clipPath>
       </defs>
-      <polygon points="80,168 140,158 200,148 260,147 300,24 300,180 40,180" fill="url(#chartGrad)" clip-path="url(#chartClip)" opacity="0.7">
+      <polygon points="160,180 160,100 280,24 280,180" fill="url(#chartGrad)" clip-path="url(#chartClip)" opacity="0.7">
         <animate attributeName="opacity" values="0.7;0.38;0.7" dur="7s" repeatCount="indefinite" calcMode="spline" keySplines="0.45,0,0.55,1;0.45,0,0.55,1"/>
       </polygon>
       <!-- Line (animated) -->
-      <polyline points="80,168 140,158 200,148 260,147 300,24"
+      <polyline points="160,100 280,24"
         fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"
-        stroke-dasharray="320" stroke-dashoffset="320"
+        stroke-dasharray="220" stroke-dashoffset="220"
         clip-path="url(#chartClip)">
-        <animate attributeName="stroke-dashoffset" from="320" to="0" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25,0.1,0.25,1"/>
+        <animate attributeName="stroke-dashoffset" from="220" to="0" dur="1.8s" begin="0.3s" fill="freeze" calcMode="spline" keySplines="0.25,0.1,0.25,1"/>
       </polyline>
       <!-- Dots -->
-      <circle cx="80"  cy="168" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="0.6s" fill="freeze"/></circle>
-      <circle cx="140" cy="158" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="0.9s" fill="freeze"/></circle>
-      <circle cx="200" cy="148" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.2s" fill="freeze"/></circle>
-      <circle cx="260" cy="147" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.5s" fill="freeze"/></circle>
-      <circle cx="300" cy="24"  r="4" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.8s" fill="freeze"/></circle>
-      <!-- Last value label -->
-      <text x="300" y="16" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="inherit" opacity="0">
+      <circle cx="160" cy="100" r="3" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.2s" fill="freeze"/></circle>
+      <circle cx="280" cy="24"  r="4" fill="#fff" opacity="0"><animate attributeName="opacity" from="0" to="1" dur="0.2s" begin="1.8s" fill="freeze"/></circle>
+      <!-- Value labels -->
+      <text x="160" y="92" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-size="8" font-family="inherit" opacity="0">250+
+        <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.2s" fill="freeze"/>
+      </text>
+      <text x="280" y="16" text-anchor="middle" fill="#fff" font-size="9" font-weight="700" font-family="inherit" opacity="0">
         450+
         <animate attributeName="opacity" from="0" to="1" dur="0.3s" begin="1.8s" fill="freeze"/>
       </text>
@@ -6361,20 +6448,20 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
     <p class="pvec-sub" data-en="LATAM has become the most active theater for politically motivated cyberattacks in the Western Hemisphere. The figures below reflect documented incidents against active political figures." data-es="LATAM se ha convertido en el teatro más activo de ciberataques políticamente motivados en el hemisferio occidental. Las cifras son incidentes documentados contra figuras políticas activas.">LATAM has become the most active theater for politically motivated cyberattacks in the Western Hemisphere. The figures below reflect documented incidents against active political figures.</p>
     <div class="pvec-stats">
       <div class="pvec-stat">
-        <span class="pvec-stat-n">73%</span>
-        <span class="pvec-stat-label"><strong data-en="More attacks on political figures" data-es="Más ataques a figuras políticas">More attacks on political figures</strong><span data-en="Increase in cyberattacks targeting elected officials and candidates across LATAM vs. 2021" data-es="Aumento en ciberataques contra funcionarios y candidatos en LATAM vs. 2021">Increase in cyberattacks targeting elected officials and candidates across LATAM vs. 2021</span><a class="pvec-stat-source" href="https://www.welivesecurity.com/en/eset-research/eset-threat-report-h2-2023/" target="_blank" rel="noopener">ESET Threat Report H2 2023 ↗</a></span>
+        <span class="pvec-stat-n">12</span>
+        <span class="pvec-stat-label"><strong data-en="LATAM governments targeted by Chinese APT" data-es="Gobiernos LATAM objetivo de APT chino">LATAM governments targeted by Chinese APT</strong><span data-en="Latin American countries where China-linked groups (Earth Krahang, Vixen Panda, FamousSparrow) targeted government agencies in 2024–2025" data-es="Países latinoamericanos donde grupos vinculados a China atacaron agencias gubernamentales en 2024–2025">Latin American countries where China-linked groups (Earth Krahang, Vixen Panda, FamousSparrow) targeted government agencies in 2024–2025</span><a class="pvec-stat-source" href="https://www.welivesecurity.com/en/eset-research/eset-apt-activity-report-q2-2024-q3-2024/" target="_blank" rel="noopener">ESET APT Activity Report Q2–Q3 2024 ↗</a></span>
       </div>
       <div class="pvec-stat">
-        <span class="pvec-stat-n">1 in 3</span>
-        <span class="pvec-stat-label"><strong data-en="Campaigns report digital espionage" data-es="Campañas reportan espionaje digital">Campaigns report digital espionage</strong><span data-en="Candidates in the region confirmed digital infiltration attempts during their last campaign cycle" data-es="Candidatos de la región confirmaron intentos de infiltración digital en su último ciclo de campaña">Candidates in the region confirmed digital infiltration attempts during their last campaign cycle</span><a class="pvec-stat-source" href="https://www.eff.org/deeplinks/2023/12/recent-surveillance-revelations-enduring-latin-american-issues-2023-year-review" target="_blank" rel="noopener">EFF — LATAM Surveillance Year Review 2023 ↗</a></span>
+        <span class="pvec-stat-n">10,000</span>
+        <span class="pvec-stat-label"><strong data-en="Politicians &amp; journalists surveilled annually" data-es="Políticos y periodistas vigilados anualmente">Politicians &amp; journalists surveilled annually</strong><span data-en="Cell phones monitored per year without authorization by Brazil's intelligence agency — including politicians, judges, and journalists" data-es="Teléfonos vigilados por año sin autorización por la agencia de inteligencia de Brasil — incluyendo políticos, jueces y periodistas">Cell phones monitored per year without authorization by Brazil's intelligence agency — including politicians, judges, and journalists</span><a class="pvec-stat-source" href="https://www.eff.org/deeplinks/2023/12/recent-surveillance-revelations-enduring-latin-american-issues-2023-year-review" target="_blank" rel="noopener">EFF — LATAM Surveillance Year Review 2023 ↗</a></span>
       </div>
       <div class="pvec-stat">
-        <span class="pvec-stat-n">8</span>
-        <span class="pvec-stat-label"><strong data-en="Countries with commercial spyware deployed" data-es="Países con spyware comercial desplegado">Countries with commercial spyware deployed</strong><span data-en="Nations where Pegasus-class surveillance tools were confirmed on political devices" data-es="Naciones donde herramientas de vigilancia tipo Pegasus fueron confirmadas en dispositivos políticos">Nations where Pegasus-class surveillance tools were confirmed on political devices</span><a class="pvec-stat-source" href="https://citizenlab.ca/spyware-litigation-tracker-legal-challenges-and-formal-complaints-related-to-mercenary-spyware/" target="_blank" rel="noopener">Citizen Lab — Spyware Tracker ↗</a></span>
+        <span class="pvec-stat-n">35</span>
+        <span class="pvec-stat-label"><strong data-en="Journalists &amp; officials hacked with Pegasus" data-es="Periodistas y funcionarios hackeados con Pegasus">Journalists &amp; officials hacked with Pegasus</strong><span data-en="Members of El Salvador's media and civil society confirmed infected with NSO Group's Pegasus spyware — including journalists, editors, and opposition figures" data-es="Miembros de medios y sociedad civil de El Salvador confirmados infectados con Pegasus de NSO Group — periodistas, editores y figuras de oposición">Members of El Salvador's media and civil society confirmed infected with NSO Group's Pegasus spyware — including journalists, editors, and opposition figures</span><a class="pvec-stat-source" href="https://citizenlab.ca/research/project-torogoz-extensive-hacking-media-civil-society-el-salvador-pegasus-spyware/" target="_blank" rel="noopener">Citizen Lab — Project Torogoz ↗</a></span>
       </div>
       <div class="pvec-stat">
-        <span class="pvec-stat-n">6</span>
-        <span class="pvec-stat-label"><strong data-en="Documented state-sponsored ops" data-es="Operaciones estatales documentadas">Documented state-sponsored ops</strong><span data-en="Confirmed state-actor interference operations targeting political infrastructure across the region (2022–2024)" data-es="Operaciones de interferencia estatal confirmadas contra infraestructura política en la región (2022–2024)">Confirmed state-actor interference operations targeting political infrastructure across the region (2022–2024)</span><a class="pvec-stat-source" href="https://www.microsoft.com/en-us/security/blog/2021/12/06/nickel-targeting-government-organizations-across-latin-america-and-europe/" target="_blank" rel="noopener">Microsoft MSTIC — NICKEL Latin America ↗</a></span>
+        <span class="pvec-stat-n">16</span>
+        <span class="pvec-stat-label"><strong data-en="LATAM governments targeted by state actor" data-es="Gobiernos LATAM objetivo de actor estatal">LATAM governments targeted by state actor</strong><span data-en="Latin American and Caribbean governments confirmed as targets of China's NICKEL cyber-espionage group (APT15)" data-es="Gobiernos latinoamericanos y caribeños confirmados como objetivos del grupo de ciberespionaje chino NICKEL (APT15)">Latin American and Caribbean governments confirmed as targets of China's NICKEL cyber-espionage group (APT15)</span><a class="pvec-stat-source" href="https://www.microsoft.com/en-us/security/blog/2021/12/06/nickel-targeting-government-organizations-across-latin-america-and-europe/" target="_blank" rel="noopener">Microsoft MSTIC — NICKEL Latin America ↗</a></span>
       </div>
     </div>
   </div>
@@ -6387,21 +6474,64 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
         <span class="pvec-panel-name">Panamá</span>
       </div>
 
-      <div class="pvec-section-hdr" data-en="General Context" data-es="Contexto General">General Context</div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Profile" data-es="Perfil">Profile</span><span class="pvec-row-val" data-en="Regional financial hub with significant exposure to foreign intelligence actors. Political figures frequently targeted due to proximity to offshore capital flows and cross-border regulatory leverage." data-es="Hub financiero regional con alta exposición a actores de inteligencia extranjeros. Figuras políticas frecuentemente atacadas por su proximidad a flujos de capital offshore y apalancamiento regulatorio transfronterizo.">Regional financial hub with significant exposure to foreign intelligence actors. Political figures frequently targeted due to proximity to offshore capital flows and cross-border regulatory leverage.</span></div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Exposure" data-es="Exposición">Exposure</span><span class="pvec-row-val"><strong data-en="High" data-es="Alta">High</strong><span style="color:rgba(255,255,255,0.40);font-weight:300"> — multiple documented infiltrations in recent electoral cycles</span></span></div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Primary vector" data-es="Vector principal">Primary vector</span><span class="pvec-row-val" data-en="Offshore financial data exposure · Foreign intelligence asset recruitment in political circles" data-es="Exposición de datos financieros offshore · Reclutamiento de activos de inteligencia extranjera en círculos políticos">Offshore financial data exposure · Foreign intelligence asset recruitment in political circles</span></div>
+      <div class="pvec-intro-text">Panama's state infrastructure has sustained at least five confirmed high-impact cyberattacks since 2025 — targeting financial regulators, social security systems, and fiscal authorities. No sector has been spared.</div>
 
-      <div class="pvec-section-hdr" data-en="Identified Threats" data-es="Amenazas Identificadas">Identified Threats</div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Digital ops" data-es="Ops digitales">Digital ops</span><span class="pvec-row-val" data-en="Coordinated phishing campaigns targeting campaign staff and inner-circle advisors; credential theft preceding negotiation cycles" data-es="Campañas de phishing coordinadas contra personal de campaña y asesores del círculo interno; robo de credenciales previo a ciclos de negociación">Coordinated phishing campaigns targeting campaign staff and inner-circle advisors; credential theft preceding negotiation cycles</span></div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Surveillance" data-es="Vigilancia">Surveillance</span><span class="pvec-row-val" data-en="Cross-border intelligence sharing on political figures with hostile foreign actors; documented use of commercial spyware on at least 3 active officeholders (2023–2024)" data-es="Intercambio transfronterizo de inteligencia con actores extranjeros hostiles; uso documentado de spyware comercial en al menos 3 funcionarios activos (2023–2024)">Cross-border intelligence sharing on political figures with hostile foreign actors; documented use of commercial spyware on at least 3 active officeholders (2023–2024)</span></div>
-      <div class="pvec-row"><span class="pvec-row-key" data-en="Active" data-es="Activo">Active</span><span class="pvec-row-val" data-en="Targeted operations against figures connected to financial regulation, anti-corruption enforcement, and U.S. extradition proceedings" data-es="Operaciones dirigidas contra figuras vinculadas a regulación financiera, aplicación anticorrupción y procesos de extradición hacia EE.UU.">Targeted operations against figures connected to financial regulation, anti-corruption enforcement, and U.S. extradition proceedings</span></div>
-
-      <div class="pvec-intel-footer">
-        <span class="pvec-intel-icon">◈</span>
-        <span class="pvec-intel-label" data-en="Obscural Intelligence" data-es="Inteligencia Obscural">Obscural Intelligence</span>
-        <span class="pvec-intel-sub" data-en="Proprietary threat data · Not for distribution" data-es="Datos de amenaza propios · No para distribución">Proprietary threat data · Not for distribution</span>
+      <div class="pvec-kpis">
+        <div class="pvec-kpi">
+          <span class="pvec-kpi-n">6+</span>
+          <span class="pvec-kpi-l">State entities<br>breached in 2026</span>
+        </div>
+        <div class="pvec-kpi">
+          <span class="pvec-kpi-n">87K</span>
+          <span class="pvec-kpi-l">Records exposed<br>UAF breach</span>
+        </div>
+        <div class="pvec-kpi">
+          <span class="pvec-kpi-n">1.5TB</span>
+          <span class="pvec-kpi-l">Data exfiltrated<br>MEF ransomware</span>
+        </div>
       </div>
+
+      <div class="pvec-section-hdr">Documented Incidents</div>
+
+      <div class="pvec-incident">
+        <div class="pvec-inc-head">
+          <span class="pvec-inc-title">Mass State Infrastructure Breach — CSS, MITRADEL, MICI, MINSA, Contraloría</span>
+          <span class="pvec-inc-date">2026</span>
+        </div>
+        <p class="pvec-inc-desc">Simultaneous attacks against at least six government institutions confirmed by the AIG. The CSS breach exposed names, signatures, and full medical histories of policyholders. Panamá Emprende was directly disrupted. The Comptroller General and MINSA required complete perimeter infrastructure reviews.</p>
+        <div class="pvec-inc-sources">
+          <a class="pvec-inc-src" href="https://www.prensa.com/judiciales/hackeos-a-plataformas-gubernamentales-van-en-escala-y-perforan-la-seguridad-del-estado/" target="_blank" rel="noopener">La Prensa ↗</a>
+          <a class="pvec-inc-src" href="https://www.laestrella.com.pa/panama/nacional/hackeo-masivo-en-la-css-expone-nombres-firmas-e-historial-medico-de-asegurados-PC21679565" target="_blank" rel="noopener">La Estrella ↗</a>
+          <a class="pvec-inc-src" href="https://www.prensa.com/politica/ante-hackeos-el-gobierno-crea-su-primer-centro-de-monitoreo-cibernetico/" target="_blank" rel="noopener">Centro de Monitoreo AIG ↗</a>
+        </div>
+      </div>
+
+      <div class="pvec-incident">
+        <div class="pvec-inc-head">
+          <span class="pvec-inc-title">UAF — Financial Intelligence Unit Platform Shutdown</span>
+          <span class="pvec-inc-date">Jun 2026</span>
+        </div>
+        <p class="pvec-inc-desc">A threat actor published 87,592 records from the UAF's systems on clandestine forums — including scanned national ID documents and internal financial reports. The UAF suspended all platforms immediately. The breach hit Panama's primary anti-money-laundering watchdog.</p>
+        <div class="pvec-inc-sources">
+          <a class="pvec-inc-src" href="https://www.infobae.com/panama/2026/06/30/un-ciberataque-golpea-a-la-uaf-la-entidad-que-rastrea-operaciones-sospechosas-en-panama/" target="_blank" rel="noopener">Infobae ↗</a>
+          <a class="pvec-inc-src" href="https://www.prensa.com/judiciales/la-uaf-suspende-sus-plataformas-luego-que-un-hacker-exhibiera-documentos-obtenidos-en-un-presunto-ciberataque/" target="_blank" rel="noopener">La Prensa ↗</a>
+          <a class="pvec-inc-src" href="https://www.tvn-2.com/nacionales/uaf-detecta-incidente-seguridad-asegura-indicios-informacion-coprometida_1_2248680.html" target="_blank" rel="noopener">TVN ↗</a>
+        </div>
+      </div>
+
+      <div class="pvec-incident">
+        <div class="pvec-inc-head">
+          <span class="pvec-inc-title">MEF — INC Ransom Ransomware Attack</span>
+          <span class="pvec-inc-date">Sep 2025</span>
+        </div>
+        <p class="pvec-inc-desc">INC Ransom infiltrated the Ministry of Economy and Finance via spear-phishing, exfiltrating over 1.5TB of data — including institutional emails, budget projections, and priority fiscal documents. Core systems were not disrupted, but the breach exposed the full scope of Panama's national fiscal administration.</p>
+        <div class="pvec-inc-sources">
+          <a class="pvec-inc-src" href="https://www.bleepingcomputer.com/news/security/panama-ministry-of-economy-discloses-breach-claimed-by-inc-ransomware/" target="_blank" rel="noopener">BleepingComputer ↗</a>
+          <a class="pvec-inc-src" href="https://securityaffairs.com/182203/data-breach/panamas-ministry-of-economy-and-finance-data-breach.html" target="_blank" rel="noopener">Security Affairs ↗</a>
+          <a class="pvec-inc-src" href="https://blog.nivel4.com/brecha-de-datos/ministerio-de-economia-de-panama-admite-filtracion-de-documentos-no-sensibles-tras-ciberataque" target="_blank" rel="noopener">NIVEL4 Labs ↗</a>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -6441,6 +6571,19 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
   <div class="pcred-aside">
     <p class="pcred-body" data-en="Every capability we deploy operates under the same rigor and discretion — regardless of scale, affiliation, or stage of the operation. The standard does not change." data-es="Cada capacidad que desplegamos opera con el mismo rigor y discreción — independientemente de la escala, afiliación o etapa de la operación. El estándar no cambia.">Every capability we deploy operates under the same rigor and discretion — regardless of scale, affiliation, or stage of the operation. The standard does not change.</p>
     <span class="pcred-tag" data-en="Proven under real political pressure." data-es="Probado bajo presión política real.">Proven under real political pressure.</span>
+  </div>
+
+  <div class="pcred-notes">
+    <div class="pcred-highlight">
+      <span class="pcred-hl-num">11</span>
+      <span class="pcred-hl-label">years</span>
+      <span class="pcred-hl-text">protecting sensitive infrastructure, corporations, and high-value profiles.</span>
+    </div>
+    <div class="pcred-highlight">
+      <span class="pcred-hl-num">100<sup>+</sup></span>
+      <span class="pcred-hl-label">projects</span>
+      <span class="pcred-hl-text">high-impact operations delivered successfully.</span>
+    </div>
   </div>
 
 </section>
@@ -6496,7 +6639,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 
       <div class="pagr-card">
         <span class="pagr-card-cat" data-en="Personal protection" data-es="Protección personal">Personal protection</span>
-        <p class="pagr-card-desc" data-en="We shield and secure with technology your..." data-es="Blindamos y aseguramos con tecnología tus...">We shield and secure with technology your...</p>
+        <p class="pagr-card-desc" data-en="Technology-layer shielding for every device that carries your information, your conversations, and your position." data-es="Blindaje tecnológico para cada dispositivo que porta tu información, conversaciones y posición.">Technology-layer shielding for every device that carries your information, your conversations, and your position.</p>
         <div class="pagr-chips">
           <span class="pagr-chip" data-en="Phones" data-es="Teléfonos">Phones</span>
           <span class="pagr-chip" data-en="Tablets" data-es="Tablets">Tablets</span>
@@ -6507,7 +6650,7 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 
       <div class="pagr-card">
         <span class="pagr-card-cat" data-en="Digital footprint" data-es="Huella digital">Digital footprint</span>
-        <p class="pagr-card-desc" data-en="We scan the deep web for sensitive data leaks. We protect your..." data-es="Escaneamos en la red profunda filtraciones de datos sensibles. Protegemos tu...">We scan the deep web for sensitive data leaks. We protect your...</p>
+        <p class="pagr-card-desc" data-en="We scan the deep web for sensitive data leaks — intercepting exposure before it becomes leverage against you." data-es="Escaneamos la red profunda en busca de filtraciones sensibles — interceptando la exposición antes de que se convierta en presión.">We scan the deep web for sensitive data leaks — intercepting exposure before it becomes leverage against you.</p>
         <div class="pagr-chips">
           <span class="pagr-chip" data-en="Digital identity" data-es="Identidad digital">Digital identity</span>
           <span class="pagr-chip" data-en="Accounts" data-es="Cuentas">Accounts</span>
@@ -6632,103 +6775,6 @@ body:not(.mode-pol) #pol-section-tabs { display: none !important; }
 
   </div>
 
-</section>
-
-<!-- POL HOW (hidden — placeholder) -->
-<section id="pol-how" class="pol-only" style="display:none">
-  <div id="pol-how-photo">
-    <img src="ChatGPT Image Jul 18, 2026, 04_15_05 PM.png" alt="" style="object-position: center 30%;">
-  </div>
-  <div class="pol-how-content">
-    <div class="pol-how-word">HOW</div>
-    <div class="pol-how-label" data-en="Dedicated Solutions" data-es="Soluciones dedicadas">Dedicated Solutions</div>
-    <h2 class="pol-how-headline" data-en="Four dimensions." data-es="Cuatro dimensiones.">Four dimensions.</h2>
-    <div class="pol-how-tag" data-en="Modular Approach" data-es="Enfoque Modular">Modular Approach</div>
-    <div class="pol-how-cats">
-      <span class="pol-how-cat" data-en="Protection" data-es="Protección">Protection</span>
-      <span class="pol-how-cat" data-en="Intelligence" data-es="Inteligencia">Intelligence</span>
-      <span class="pol-how-cat" data-en="Drone Solutions" data-es="Soluciones Drone">Drone Solutions</span>
-      <span class="pol-how-cat" data-en="Crisis &amp; Special Events" data-es="Crisis y Eventos Especiales">Crisis &amp; Special Events</span>
-    </div>
-  </div>
-</section>
-
-<!-- POL SERVICIOS -->
-<section id="pol-servicios" class="pol-only" style="display:none">
-  <div class="pol-svc-sub-br">
-    <span class="pol-eco-eyebrow" data-en="Services" data-es="Servicios">Services</span>
-    <h2 class="pol-eco-headline" data-en="Built for this environment." data-es="Construido para este entorno.">Built for this environment.</h2>
-    <p data-en="Each service was designed to operate in the political context — in office or on the campaign trail. This is not an adaptation. It is a protection architecture specific to public figures with real exposure." data-es="Cada servicio fue diseñado para operar en el contexto político — en ejercicio o en campaña. No es una adaptación. Es una arquitectura de protección específica para figuras públicas con exposición real.">Each service was designed to operate in the political context — in office or on the campaign trail. This is not an adaptation. It is a protection architecture specific to public figures with real exposure.</p>
-  </div>
-  <div class="pol-svc-grid">
-
-    <!-- ── ROW 1: PROTECTION ── -->
-    <div class="pol-svc-cat-label" data-en="Protection" data-es="Protección">Protection</div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Veil</span>
-      <span class="pol-svc-tag" data-en="Personal Device Security" data-es="Seguridad Personal de Dispositivos">Personal Device Security</span>
-      <p class="pol-svc-body" data-en="Every device on your perimeter — hardened, monitored, incident-ready. Your phone, your team's laptops, your family's tablets." data-es="Cada dispositivo en tu perímetro — reforzado, monitoreado, listo ante incidentes. Tu teléfono, los laptops de tu equipo, las tablets de tu familia.">Every device on your perimeter — hardened, monitored, incident-ready. Your phone, your team's laptops, your family's tablets.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Pulse</span>
-      <span class="pol-svc-tag" data-en="Deep Web Identity Protection" data-es="Protección de Identidad en la Deep Web">Deep Web Identity Protection</span>
-      <p class="pol-svc-body" data-en="We map your entire digital footprint and track what adversaries can build with it. You're alerted before they move." data-es="Mapeamos tu huella digital completa y rastreamos lo que los adversarios pueden construir con ella. Recibes alertas antes de que actúen.">We map your entire digital footprint and track what adversaries can build with it. You're alerted before they move.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Sanctum</span>
-      <span class="pol-svc-tag" data-en="Digital Shielding of Physical Spaces" data-es="Blindaje Digital de Espacios Físicos">Digital Shielding of Physical Spaces</span>
-      <p class="pol-svc-body" data-en="The room you trust most may already be compromised. Sanctum shields your physical spaces digitally — offices, residences, and campaign headquarters secured from the inside." data-es="La sala en la que más confías puede estar ya comprometida. Sanctum protege tus espacios físicos digitalmente — oficinas, residencias y sedes de campaña aseguradas desde adentro.">The room you trust most may already be compromised. Sanctum shields your physical spaces digitally — offices, residences, and campaign headquarters secured from the inside.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Social Lock</span>
-      <span class="pol-svc-tag" data-en="Social Media Account Protection" data-es="Protección de Cuentas en Redes Sociales">Social Media Account Protection</span>
-      <p class="pol-svc-body" data-en="Your official accounts, locked against hijacking, phishing, and takeover. Secure configuration and training for every administrator on your team." data-es="Tus cuentas oficiales, protegidas contra secuestro, phishing y toma de control. Configuración segura y formación para cada administrador de tu equipo.">Your official accounts, locked against hijacking, phishing, and takeover. Secure configuration and training for every administrator on your team.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">E-Sweep</span>
-      <span class="pol-svc-tag" data-en="Electronic Sweep for Secure Spaces" data-es="Barrido Electrónico de Espacios Seguros">Electronic Sweep for Secure Spaces</span>
-      <p class="pol-svc-body" data-en="Physical sweep of your most sensitive spaces. We find hidden microphones, covert cameras, RF transmitters, and GPS trackers before they find you." data-es="Barrido físico de tus espacios más sensibles. Encontramos micrófonos ocultos, cámaras encubiertas, transmisores RF y rastreadores GPS antes de que ellos te encuentren a ti.">Physical sweep of your most sensitive spaces. We find hidden microphones, covert cameras, RF transmitters, and GPS trackers before they find you.</p>
-    </div>
-
-    <!-- ── ROW 2: INTELLIGENCE ── -->
-    <div class="pol-svc-cat-label" data-en="Intelligence" data-es="Inteligencia">Intelligence</div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">DeepLynx</span>
-      <span class="pol-svc-tag" data-en="Large-Scale Network Intelligence" data-es="Inteligencia de Red a Gran Escala">Large-Scale Network Intelligence</span>
-      <p class="pol-svc-body" data-en="Maps the full conversation about you across open networks — detecting black campaigns, coordinated narratives, and online signals that translate into physical risk before they escalate." data-es="Mapea la conversación completa sobre ti en redes abiertas — detectando campañas negras, narrativas coordinadas y señales digitales que se convierten en riesgo físico antes de escalar.">Maps the full conversation about you across open networks — detecting black campaigns, coordinated narratives, and online signals that translate into physical risk before they escalate.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Threat Intel</span>
-      <span class="pol-svc-tag" data-en="Dedicated Threat Intelligence" data-es="Inteligencia de Amenazas Dedicada">Dedicated Threat Intelligence</span>
-      <p class="pol-svc-body" data-en="Analysts embedded in the layers your opponents use — hacktivist forums, Telegram, dark markets. Human eyes where algorithms can't reach." data-es="Analistas integrados en los canales que usan tus opositores — foros hacktivistas, Telegram, mercados oscuros. Ojos humanos donde los algoritmos no llegan.">Analysts embedded in the layers your opponents use — hacktivist forums, Telegram, dark markets. Human eyes where algorithms can't reach.</p>
-    </div>
-    <div class="pol-svc-empty" style="grid-column: span 3;"></div>
-
-    <!-- ── ROW 3: DRONES ── -->
-    <div class="pol-svc-cat-label" data-en="Drones" data-es="Drones">Drones</div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Argos</span>
-      <span class="pol-svc-tag" data-en="Drone Surveillance" data-es="Vigilancia con Drones">Drone Surveillance</span>
-      <p class="pol-svc-body" data-en="Autonomous drone surveillance over your properties and campaign HQ. Motion detection, anomaly logging, real-time reporting. Eyes where you can't be." data-es="Vigilancia autónoma con drones sobre tus propiedades y sede de campaña. Detección de movimiento, registro de anomalías, informes en tiempo real. Ojos donde no puedes estar.">Autonomous drone surveillance over your properties and campaign HQ. Motion detection, anomaly logging, real-time reporting. Eyes where you can't be.</p>
-    </div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Aegis</span>
-      <span class="pol-svc-tag" data-en="Drone Detection System" data-es="Sistema de Detección de Drones">Drone Detection System</span>
-      <p class="pol-svc-body" data-en="We monitor your airspace. Any unauthorized drone approaching your properties is detected, identified, and tracked before it gets close." data-es="Monitoreamos tu espacio aéreo. Cualquier dron no autorizado que se acerque a tus propiedades es detectado, identificado y rastreado antes de que llegue.">We monitor your airspace. Any unauthorized drone approaching your properties is detected, identified, and tracked before it gets close.</p>
-    </div>
-    <div class="pol-svc-empty" style="grid-column: span 3;"></div>
-
-    <!-- ── ROW 4: CRISIS ── -->
-    <div class="pol-svc-cat-label" data-en="Crisis &amp; Special Events" data-es="Crisis y Eventos Especiales">Crisis &amp; Special Events</div>
-    <div class="pol-svc-card">
-      <span class="pol-svc-name">Phantom</span>
-      <span class="pol-svc-tag" data-en="Special Events &amp; Crisis Management" data-es="Eventos Especiales y Gestión de Crisis">Special Events & Crisis Management</span>
-      <p class="pol-svc-body" data-en="When the threat is personal, directed, and urgent. Phantom is the highest-level response — counter-surveillance, crisis management, zero margin for error." data-es="Cuando la amenaza es personal, dirigida y urgente. Phantom es la respuesta de máximo nivel — contra-vigilancia, gestión de crisis, cero margen de error.">When the threat is personal, directed, and urgent. Phantom is the highest-level response — counter-surveillance, crisis management, zero margin for error.</p>
-    </div>
-    <div class="pol-svc-empty" style="grid-column: span 4;"></div>
-
-  </div>
-  <p style="margin-top: clamp(14px,2vh,22px); font-size: clamp(9px,0.72vw,11px); color: rgba(255,255,255,0.28); font-weight: 300; letter-spacing: 0.02em; line-height: 1.6;" data-en="* Some services are subject to regional availability and local regulations." data-es="* Algunos servicios están sujetos a disponibilidad regional y regulaciones locales.">* Some services are subject to regional availability and local regulations.</p>
 </section>
 
 <!-- POL PW — THE AGENCY & THE DETAIL -->
@@ -8464,7 +8510,105 @@ if (tableroWrap) {
     CX = w/2; CY = h/2; SC = Math.min(w,h);
     buildNodes(); updateTargets(true);
   }
-  window.__polRm = { get step() { return step; }, go: applyStep, resize: resize, resizeTo: resizeTo, draw: draw };
+  function drawForPrint() {
+    cancelAnimationFrame(animId);
+    step = 7; updateTargets(true);
+    const dpr = window.devicePixelRatio || 1;
+    const W = canvas.width/dpr, H = canvas.height/dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+
+    /* connection lines */
+    V.nodes.forEach(n => {
+      if (n.o < 0.02) return;
+      const ang = Math.atan2(n.y-CY, n.x-CX);
+      const edgeR = V.r2.r > 10 ? V.r2.r : 0;
+      ctx.beginPath(); ctx.moveTo(n.x, n.y);
+      ctx.lineTo(CX + Math.cos(ang)*edgeR, CY + Math.sin(ang)*edgeR);
+      ctx.strokeStyle = `rgba(255,255,255,${n.o*0.09})`; ctx.lineWidth = 0.5; ctx.stroke();
+    });
+
+    /* Ring 2 */
+    if (V.r2.o > 0.01) {
+      ctx.save();
+      ctx.shadowBlur = 18; ctx.shadowColor = `rgba(255,255,255,${V.r2.o*0.45})`;
+      ctx.beginPath(); ctx.arc(CX,CY, V.r2.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${V.r2.o*0.025})`; ctx.fill();
+      ctx.strokeStyle = `rgba(255,255,255,${V.r2.o*0.22})`; ctx.lineWidth = 0.75; ctx.stroke();
+      ctx.restore();
+    }
+
+    /* Ring 1 */
+    if (V.r1.o > 0.01) {
+      ctx.save();
+      ctx.shadowBlur = 14; ctx.shadowColor = `rgba(255,255,255,${V.r1.o*0.55})`;
+      ctx.beginPath(); ctx.arc(CX,CY, V.r1.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${V.r1.o*0.05})`; ctx.fill();
+      ctx.strokeStyle = `rgba(255,255,255,${V.r1.o*0.32})`; ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+    }
+
+    /* Nodes */
+    V.nodes.forEach(n => {
+      if (n.o < 0.02) return;
+      const isSpace = n.type === 'space';
+      const r = isSpace ? 3.5 : 2.5;
+      const g = ctx.createRadialGradient(n.x,n.y,0, n.x,n.y, r*7);
+      g.addColorStop(0, `rgba(255,255,255,${n.o*0.18})`);
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y, r*7, 0, Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath();
+      if (isSpace) { ctx.rect(n.x-r, n.y-r, r*2, r*2); }
+      else         { ctx.arc(n.x, n.y, r, 0, Math.PI*2); }
+      ctx.fillStyle = `rgba(255,255,255,${n.o*0.82})`; ctx.fill();
+    });
+
+    /* Scan ring at fixed angle */
+    if (V.scan.o > 0.01) {
+      const sa = Math.PI * 0.75;
+      const sweepLen = Math.PI * 0.65;
+      ctx.beginPath(); ctx.arc(CX,CY, V.scan.r, 0, Math.PI*2);
+      ctx.strokeStyle = `rgba(255,255,255,${V.scan.o*0.10})`; ctx.lineWidth = 0.5; ctx.stroke();
+      for (let i=0; i<20; i++) {
+        const f = i/20;
+        ctx.beginPath();
+        ctx.arc(CX,CY, V.scan.r, sa-sweepLen+f*sweepLen, sa-sweepLen+(f+1/20)*sweepLen);
+        ctx.strokeStyle = `rgba(255,255,255,${V.scan.o*f*0.13})`; ctx.lineWidth=1.5; ctx.stroke();
+      }
+      const sx = CX + Math.cos(sa)*V.scan.r;
+      const sy = CY + Math.sin(sa)*V.scan.r;
+      const sg = ctx.createRadialGradient(sx,sy,0, sx,sy,18);
+      sg.addColorStop(0, `rgba(255,255,255,${V.scan.o*0.28})`);
+      sg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sx,sy,18,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+      ctx.beginPath(); ctx.arc(sx,sy,2.5,0,Math.PI*2);
+      ctx.fillStyle = `rgba(255,255,255,${V.scan.o*0.88})`; ctx.fill();
+    }
+
+    /* Center dot */
+    const pg = ctx.createRadialGradient(CX,CY,0, CX,CY, 5*9);
+    pg.addColorStop(0, 'rgba(255,255,255,0.14)'); pg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath(); ctx.arc(CX,CY, 5*9, 0, Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+    ctx.beginPath(); ctx.arc(CX,CY, 5, 0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+
+    /* Shield echo */
+    if (V.sh.o > 0.01) {
+      ctx.save(); ctx.setLineDash([5,11]);
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r, 0, Math.PI*2);
+      ctx.strokeStyle=`rgba(255,255,255,${V.sh.o*0.28})`; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.setLineDash([3,16]);
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r*0.88, 0, Math.PI*2);
+      ctx.strokeStyle=`rgba(255,255,255,${V.sh.o*0.16})`; ctx.lineWidth=0.75; ctx.stroke(); ctx.restore();
+      const shg = ctx.createRadialGradient(CX,CY, V.sh.r*0.84, CX,CY, V.sh.r+24);
+      shg.addColorStop(0,'rgba(255,255,255,0)');
+      shg.addColorStop(0.5,`rgba(255,255,255,${V.sh.o*0.04})`);
+      shg.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(CX,CY, V.sh.r, 0, Math.PI*2);
+      ctx.strokeStyle=shg; ctx.lineWidth=60; ctx.stroke();
+    }
+  }
+
+  window.__polRm = { get step() { return step; }, go: applyStep, resize: resize, resizeTo: resizeTo, draw: draw, drawForPrint: drawForPrint };
 
   let started = false;
   const io = new IntersectionObserver(entries => {
@@ -8798,7 +8942,7 @@ function obscuralPrint() {
     el.classList.add('in');
   });
   // Force in-view class on all sections that use it for animations
-  var IN_VIEW_SECS = ['pol-hero','pol-stats','pol-riesgos','pol-ecosistema','pol-how','pol-servicios',
+  var IN_VIEW_SECS = ['pol-hero','pol-stats','pol-riesgos','pol-ecosistema',
     'pol-veil','pol-pulse','pol-sanctum','pol-esweep','pol-deeplink',
     'pol-sociallock','pol-research','pol-argos','pol-aegis','pol-phantom',
     'pol-pw-agency','pol-remate'];
@@ -8817,9 +8961,9 @@ function obscuralPrint() {
   document.title = 'Obscural_Politicians';
   setTimeout(function() {
     // pol-rm canvas: resize + draw, then snapshot → <img>
-    if (window.__polRm && window.__polRm.resize) {
+    if (window.__polRm && window.__polRm.drawForPrint) {
       window.__polRm.resizeTo(window.innerWidth, window.innerHeight);
-      window.__polRm.draw();
+      window.__polRm.drawForPrint();
       var _rmC = document.getElementById('pol-rm-canvas');
       if (_rmC && _rmC.width > 0 && !document.getElementById('pol-rm-print-snap')) {
         var _snap = document.createElement('img');
@@ -8916,8 +9060,8 @@ function obscuralPrint() {
     // Force pol-rm canvas to full state (aros) — handles Cmd+P path
     if (window.__polRm) {
       window.__polRm.go(7);
-      if (window.__polRm.resize) window.__polRm.resize();
-      if (window.__polRm.draw) window.__polRm.draw();
+      if (window.__polRm.resizeTo) window.__polRm.resizeTo(window.innerWidth, window.innerHeight);
+      if (window.__polRm.drawForPrint) window.__polRm.drawForPrint();
       var _rmC = document.getElementById('pol-rm-canvas');
       if (_rmC && _rmC.width > 0 && !document.getElementById('pol-rm-print-snap')) {
         var _snap = document.createElement('img');
@@ -9027,6 +9171,11 @@ function togglePolQr() {
     var btnT = document.getElementById('pol-alias-t');
     if (btnP) btnP.className = track ? 'ob-off' : 'ob-on';
     if (btnT) btnT.className = track ? 'ob-on'  : 'ob-off';
+    // Persist in URL so shared links arrive with the same alias
+    var u = new URL(window.location.href);
+    if (track) { u.searchParams.set('alias', 'track'); }
+    else        { u.searchParams.delete('alias'); }
+    history.replaceState(null, '', u.toString());
   }
 
   // Wire up buttons once DOM is ready (they're in static HTML so they exist)
@@ -9035,6 +9184,10 @@ function togglePolQr() {
     var btnT = document.getElementById('pol-alias-t');
     if (btnP) btnP.onclick = function() { setAlias(false); };
     if (btnT) btnT.onclick = function() { setAlias(true);  };
+    // Auto-activate alias from URL on load
+    if (new URLSearchParams(window.location.search).get('alias') === 'track') {
+      setAlias(true);
+    }
   });
 })();
 
@@ -9129,9 +9282,8 @@ function togglePolMode() {
   ];
   const polEls = POL_SECTIONS.map(id => document.getElementById(id));
   let polCurrent = 0;
-  // Nav lock: prevents any new navigation while a scroll is in flight.
-  // Also blocks the IO so it can't race-overwrite polCurrent.
-  let _navLocked = false, _navLockTimer = null;
+  // Short flag to stop IO from fighting setPolActive during a programmatic scroll.
+  let _polScrolling = false, _polScrollTimer = null;
 
   function setPolActive(idx) {
     polCurrent = Math.max(0, Math.min(POL_SECTIONS.length - 1, idx));
@@ -9141,43 +9293,30 @@ function togglePolMode() {
     });
   }
 
-  function goToPol(idx, force) {
+  function goToPol(idx) {
     if (idx < 0 || idx >= POL_SECTIONS.length) return;
-    if (_navLocked && !force) return; // already scrolling — drop this press
     const el = polEls[idx];
     if (!el) return;
-
-    _navLocked = true;
-    clearTimeout(_navLockTimer);
-
-    // Release lock when the browser finishes scrolling (scrollend event).
-    // Falls back to 1500ms if scrollend never fires (older browsers / instant scroll).
-    function _unlock() {
-      _navLocked = false;
-      clearTimeout(_navLockTimer);
-    }
-    window.addEventListener('scrollend', _unlock, { once: true });
-    _navLockTimer = setTimeout(function() {
-      window.removeEventListener('scrollend', _unlock);
-      _navLocked = false;
-    }, 1500);
-
-    setPolActive(idx); // update polCurrent immediately so next keypress reads right value
+    _polScrolling = true;
+    clearTimeout(_polScrollTimer);
+    _polScrollTimer = setTimeout(() => { _polScrolling = false; }, 700);
+    setPolActive(idx);
     const top = el.getBoundingClientRect().top + window.pageYOffset;
     window.scrollTo({ top, behavior: 'smooth' });
   }
 
-  // Tab clicks — look up by data-pol-target; bypass nav lock (user intent is explicit)
+  // Tab clicks
   document.querySelectorAll('#pol-section-tabs .s-tab').forEach(btn => {
     btn.addEventListener('click', () => {
       const idx = POL_SECTIONS.indexOf(btn.dataset.polTarget);
-      if (idx !== -1) { _navLocked = false; goToPol(idx); }
+      if (idx !== -1) goToPol(idx);
     });
   });
 
-  // Keyboard — capture phase; ignore key-repeat (held keys)
+  // Keyboard — capture phase; only active in pol-mode; ignore held keys
   window.addEventListener('keydown', e => {
-    if (e.repeat) return; // one action per physical key press
+    if (!document.body.classList.contains('mode-pol')) return;
+    if (e.repeat) return;
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowRight' &&
         e.key !== 'ArrowUp'   && e.key !== 'ArrowLeft') return;
 
@@ -9190,10 +9329,10 @@ function togglePolMode() {
         e.preventDefault(); e.stopImmediatePropagation();
         if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
           if (window.__polRm.step < 7) { window.__polRm.go(window.__polRm.step + 1); }
-          else { _navLocked = false; goToPol(polCurrent + 1); }
+          else { goToPol(polCurrent + 1); }
         } else {
           if (window.__polRm.step > 0) { window.__polRm.go(window.__polRm.step - 1); }
-          else { _navLocked = false; goToPol(polCurrent - 1); }
+          else { goToPol(polCurrent - 1); }
         }
         return;
       }
@@ -9204,10 +9343,10 @@ function togglePolMode() {
     else goToPol(polCurrent - 1);
   }, true);
 
-  // IntersectionObserver — syncs tab on manual (trackpad/mouse) scroll only
-  // Blocked during keyboard nav (_navLocked) to prevent race conditions
+  // IntersectionObserver — syncs tab on trackpad/mouse scroll
+  // Paused briefly after programmatic scrolls to prevent race with setPolActive
   const io = new IntersectionObserver(entries => {
-    if (_navLocked) return;
+    if (_polScrolling) return;
     entries.forEach(e => {
       if (e.isIntersecting) {
         const idx = POL_SECTIONS.indexOf(e.target.id);
