@@ -397,8 +397,15 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
   .send-title { font-size:clamp(24px,7vw,36px); }
 }
 .recaptcha-wrap { margin:28px 0 8px; display:flex; justify-content:center; }
+.human-check { display:flex; align-items:center; gap:12px; padding:14px 20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); cursor:pointer; user-select:none; min-width:260px; }
+.human-check input { display:none; }
+.human-box { width:18px; height:18px; border:1.5px solid rgba(255,255,255,0.35); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .2s; }
+.human-check input:checked ~ .human-box { background:rgba(76,208,128,0.9); border-color:rgba(76,208,128,0.9); }
+.human-check input:checked ~ .human-box::after { content:'✓'; font-size:12px; color:#000; font-weight:700; }
+.human-lbl { font-size:11px; font-weight:300; color:rgba(255,255,255,0.7); letter-spacing:0.04em; flex:1; }
+.human-logo { width:32px; height:32px; flex-shrink:0; opacity:0.4; }
 </style>
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?render=6LfklGMtAAAAAMezqLIej-XFTCpvrUyDW6Kv_Xl7"></script>
 </head>
 <body>
 
@@ -666,7 +673,12 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
       </div>
     </div>
     <div class="recaptcha-wrap">
-      <div class="g-recaptcha" data-sitekey="6LfklGMtAAAAAMezqLIej-XFTCpvrUyDW6Kv_Xl7" data-theme="dark"></div>
+      <label class="human-check">
+        <input type="checkbox" id="human-cb">
+        <span class="human-box"></span>
+        <span class="human-lbl">No soy un robot</span>
+        <svg class="human-logo" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg"><path d="M32 4C16.5 4 4 16.5 4 32s12.5 28 28 28 28-12.5 28-28S47.5 4 32 4zm0 8a8 8 0 110 16 8 8 0 010-16zm0 40c-7 0-13.2-3.6-17-9 .1-5.7 11.3-8.8 17-8.8s16.9 3.1 17 8.8c-3.8 5.4-10 9-17 9z" fill="rgba(255,255,255,0.15)"/></svg>
+      </label>
     </div>
     <p class="back-row-label">¿Quieres revisar?</p>
     <div class="back-row">
@@ -1237,12 +1249,13 @@ async function submitForm() {
   btn.disabled=true;
   btn.innerHTML='ENVIANDO <span class="sending-dots"><span>.</span><span>.</span><span>.</span></span>';
   st.textContent='';
-  const captchaResp = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : 'skip';
-  if (!captchaResp) {
-    btn.disabled=false;
-    btn.innerHTML='Enviar Assessment';
-    showToast('Completa el captcha para continuar');
+  if (!document.getElementById('human-cb').checked) {
+    btn.disabled=false; btn.innerHTML='Enviar Assessment';
+    showToast('Confirma que no eres un robot para continuar');
     return;
+  }
+  if (typeof grecaptcha !== 'undefined') {
+    try { await grecaptcha.execute('6LfklGMtAAAAAMezqLIej-XFTCpvrUyDW6Kv_Xl7', {action:'submit'}); } catch(_){}
   }
   if (SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
     setTimeout(()=>{ showThankyou(); },700);
