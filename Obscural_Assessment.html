@@ -390,11 +390,20 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
   .add-btn { padding:13px 16px; }
   .next-btn { margin-top:24px; }
 
+  /* ── Bottom nav ── */
+  .bottom-nav { flex-wrap:wrap; gap:8px; margin-top:28px; }
+  .bottom-nav .next-btn { margin-top:0; flex:1 1 100%; order:1; }
+  .bot-back { flex:1; justify-content:center; padding:13px 12px; font-size:7.5px; order:2; white-space:normal; text-align:center; }
+
   /* ── Send ── */
   .screen-send-center { padding:40px 16px; }
   .send-dashboard { max-width:100%; }
   .send-logo { width:72px; margin-bottom:20px; }
   .send-title { font-size:clamp(24px,7vw,36px); }
+  .human-check { min-width:0; width:100%; }
+  .back-row { flex-direction:column; }
+  .back-row .bot-back { flex:none; width:100%; padding:13px 16px; }
+  .send-btn { width:100%; padding:16px 24px; }
 }
 .recaptcha-wrap { margin:28px 0 8px; display:flex; justify-content:center; }
 .human-check { display:flex; align-items:center; gap:12px; padding:14px 20px; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); cursor:pointer; user-select:none; min-width:260px; }
