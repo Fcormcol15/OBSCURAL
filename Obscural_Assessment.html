@@ -234,6 +234,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
 
 .row-ref { font-size:8px; font-weight:300; letter-spacing:0.1em; color:rgba(255,255,255,0.16); background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); padding:1px 6px; flex-shrink:0; white-space:nowrap; min-width:46px; text-align:center; }
 .dl { font-size:11px; font-weight:300; color:rgba(255,255,255,0.7); flex:0 0 152px; }
+.dq::placeholder { color:rgba(255,255,255,0.2); }
 .dq { width:40px; flex-shrink:0; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.14); color:#fff; font-family:'Outfit',sans-serif; font-size:13px; font-weight:300; text-align:center; padding:2px 0; outline:none; transition:border-color .2s; }
 .dq:focus { border-color:rgba(255,255,255,0.4); }
 .dq:disabled { opacity:0.2; cursor:not-allowed; }
@@ -395,7 +396,9 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
   .send-logo { width:72px; margin-bottom:20px; }
   .send-title { font-size:clamp(24px,7vw,36px); }
 }
+.recaptcha-wrap { margin:28px 0 8px; display:flex; justify-content:center; }
 </style>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
 
@@ -458,14 +461,13 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
         El formulario está dividido en <strong>3 secciones</strong>: <strong>Familia</strong>, <strong>Staff</strong> y <strong>Localidades</strong>.
       </p>
       <div class="welcome-meta">
-        <span class="welcome-meta-item">Tiempo estimado: 15–20 min</span>
         <span class="welcome-meta-item">Confidencial</span>
         <span class="welcome-meta-item">3 secciones</span>
       </div>
       <div class="client-field">
-        <label for="client-name">Código de identificación</label>
-        <input type="text" id="client-name" placeholder="ej. FALCON · AZUL-22 · cualquier palabra clave" autocomplete="off">
-        <p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:8px;font-weight:300;letter-spacing:0.04em;">Tu identidad será verificada de forma confidencial por un asesor de Obscural.</p>
+        <label for="client-name">Clave de acceso</label>
+        <input type="text" id="client-name" placeholder="Ingresa la clave que te enviamos" autocomplete="off">
+        <p style="font-size:9px;color:rgba(255,255,255,0.3);margin-top:8px;font-weight:300;letter-spacing:0.04em;">Ingresa la clave de acceso enviada previamente por tu asesor de Obscural.</p>
       </div>
       <button class="start-btn" onclick="startForm()">Iniciar Assessment →</button>
     </div>
@@ -663,6 +665,9 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
         </div>
       </div>
     </div>
+    <div class="recaptcha-wrap">
+      <div class="g-recaptcha" data-sitekey="6LfklGMtAAAAAMezqLIej-XFTCpvrUyDW6Kv_Xl7" data-theme="dark"></div>
+    </div>
     <p class="back-row-label">¿Quieres revisar?</p>
     <div class="back-row">
       <button class="bot-back" onclick="jumpSection(1)">← Familia</button>
@@ -691,7 +696,7 @@ input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
 
 <script>
 // ══ CONFIG ══
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzYsb0YuDz8ZlZgxcQF25evaRHSu7EbrlkFAu02DDgOtCvEr8mxQhdpfHMB3o4HBj9q/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysW1jHjmYo0z8GJRm66dgk8LabmT7jo-fb4tGZLeAF1Z88jMvhrj46EICtK9934gJWFw/exec';
 const P_COLORS   = ['acc-0','acc-1','acc-2','acc-3','acc-4','acc-5','acc-6','acc-7'];
 const L_COLORS   = ['lacc-0','lacc-1','lacc-2','lacc-3','lacc-4','lacc-5'];
 const SCREENS    = ['screen-welcome','screen-familia','screen-staff','screen-localidades','screen-send'];
@@ -718,15 +723,43 @@ function showToast(msg) {
 }
 function clearErrors(els) { els.forEach(e => e.classList.remove('field-error')); }
 
-function startForm() {
+async function startForm() {
   const inp = document.getElementById('client-name');
-  if (!inp.value.trim()) {
+  const btn = document.querySelector('.start-btn');
+  const code = inp.value.trim();
+
+  if (!code) {
     inp.classList.add('field-error');
     inp.addEventListener('input', () => inp.classList.remove('field-error'), {once:true});
-    showToast('Ingresa un código de identificación para continuar');
+    showToast('Ingresa la clave de acceso para continuar');
     inp.focus();
     return;
   }
+
+  // Verificar clave contra ClavesActivas en Sheets
+  btn.textContent = 'Verificando…';
+  btn.disabled = true;
+  try {
+    const res  = await fetch(`${SCRIPT_URL}?action=validate&code=${encodeURIComponent(code)}`);
+    const json = await res.json();
+    if (!json.valid) {
+      inp.classList.add('field-error');
+      inp.addEventListener('input', () => inp.classList.remove('field-error'), {once:true});
+      showToast('Clave no válida o inactiva — contacta a tu asesor de Obscural');
+      btn.textContent = 'Iniciar Assessment →';
+      btn.disabled = false;
+      inp.focus();
+      return;
+    }
+  } catch(_) {
+    showToast('No se pudo verificar la clave — revisa tu conexión');
+    btn.textContent = 'Iniciar Assessment →';
+    btn.disabled = false;
+    return;
+  }
+
+  btn.textContent = 'Iniciar Assessment →';
+  btn.disabled = false;
   showSection(1);
   if (!document.getElementById('body-F01').children.length) {
     document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
@@ -734,51 +767,38 @@ function startForm() {
   updateCounters();
 }
 
+function _validateSection(screenId, secName) {
+  // Qty vacíos (excluir slots inactivos)
+  const emptyQty = [];
+  document.querySelectorAll(`#${screenId} .dq:not(:disabled)`).forEach(i => {
+    if(i.value==='' && !i.closest('[data-slot="off"]')) emptyQty.push(i);
+  });
+  if (emptyQty.length) {
+    emptyQty.forEach(i => { i.style.outline='1px solid rgba(200,50,50,0.6)'; setTimeout(()=>i.style.outline='',3000); });
+    showToast(`Ingresa un número en todos los campos de ${secName} (0 si no aplica)`);
+    const y = emptyQty[0].getBoundingClientRect().top + window.scrollY - 140;
+    document.documentElement.scrollTop=y; document.body.scrollTop=y;
+    return false;
+  }
+  // SNS sin respuesta (excluir slots inactivos)
+  const unselSNS = [];
+  document.querySelectorAll(`#${screenId} .sns`).forEach(s => {
+    if(!s.dataset.value && !s.closest('[data-slot="off"]')) unselSNS.push(s);
+  });
+  if (unselSNS.length) {
+    unselSNS.forEach(s => { s.style.outline='1px solid rgba(200,50,50,0.6)'; setTimeout(()=>s.style.outline='',3000); });
+    showToast(`Responde todas las preguntas de ${secName} antes de continuar`);
+    const y = unselSNS[0].getBoundingClientRect().top + window.scrollY - 140;
+    document.documentElement.scrollTop=y; document.body.scrollTop=y;
+    return false;
+  }
+  return true;
+}
+
 function nextSection() {
-  // Validar sección actual antes de avanzar
-  if (currentSection === 1) {
-    const empties = [];
-    document.querySelectorAll('#screen-familia .p-name-input').forEach(i => {
-      if (!i.value.trim()) empties.push(i);
-    });
-    if (empties.length) {
-      empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
-      showToast('Identifica a cada familiar antes de continuar');
-      const first = empties[0];
-      const y = first.getBoundingClientRect().top + window.scrollY - 140;
-      document.documentElement.scrollTop = y; document.body.scrollTop = y;
-      return;
-    }
-  }
-  if (currentSection === 2) {
-    const empties = [];
-    document.querySelectorAll('#screen-staff .p-name-input').forEach(i => {
-      if (!i.value.trim()) empties.push(i);
-    });
-    if (empties.length) {
-      empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
-      showToast('Identifica a cada miembro del staff antes de continuar');
-      const first = empties[0];
-      const y = first.getBoundingClientRect().top + window.scrollY - 140;
-      document.documentElement.scrollTop = y; document.body.scrollTop = y;
-      return;
-    }
-  }
-  if (currentSection === 3) {
-    const empties = [];
-    document.querySelectorAll('#screen-localidades .loc-tipo-select').forEach(s => {
-      if (!s.value) empties.push(s);
-    });
-    if (empties.length) {
-      empties.forEach(s => { s.classList.add('field-error'); s.addEventListener('change',()=>s.classList.remove('field-error'),{once:true}); });
-      showToast('Selecciona el tipo de cada localidad antes de continuar');
-      const first = empties[0];
-      const y = first.getBoundingClientRect().top + window.scrollY - 140;
-      document.documentElement.scrollTop = y; document.body.scrollTop = y;
-      return;
-    }
-    buildSendSummary();
-  }
+  if (currentSection === 1) { if (!_validateSection('screen-familia','Familia')) return; }
+  if (currentSection === 2) { if (!_validateSection('screen-staff','Staff')) return; }
+  if (currentSection === 3) { if (!_validateSection('screen-localidades','Localidades')) return; buildSendSummary(); }
   if (currentSection < SCREENS.length-1) showSection(currentSection+1);
 }
 function prevSection() {
@@ -793,40 +813,13 @@ function jumpSection(n) {
       if (!inp.value.trim()) {
         inp.classList.add('field-error');
         inp.addEventListener('input',()=>inp.classList.remove('field-error'),{once:true});
-        showToast('Ingresa un código de identificación para continuar');
+        showToast('Ingresa la clave de acceso para continuar');
         showSection(0); return;
       }
     }
-    // Validar familia antes de ir a sección 2+
-    if (n >= 2) {
-      const empties = [];
-      document.querySelectorAll('#screen-familia .p-name-input').forEach(i => { if (!i.value.trim()) empties.push(i); });
-      if (empties.length) {
-        empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
-        showToast('Identifica a cada familiar antes de continuar');
-        showSection(1); return;
-      }
-    }
-    // Validar staff antes de ir a sección 3+
-    if (n >= 3) {
-      const empties = [];
-      document.querySelectorAll('#screen-staff .p-name-input').forEach(i => { if (!i.value.trim()) empties.push(i); });
-      if (empties.length) {
-        empties.forEach(i => { i.classList.add('field-error'); i.addEventListener('input',()=>i.classList.remove('field-error'),{once:true}); });
-        showToast('Identifica a cada miembro del staff antes de continuar');
-        showSection(2); return;
-      }
-    }
-    // Validar localidades antes de enviar
-    if (n >= 4) {
-      const empties = [];
-      document.querySelectorAll('#screen-localidades .loc-tipo-select').forEach(s => { if (!s.value) empties.push(s); });
-      if (empties.length) {
-        empties.forEach(s => { s.classList.add('field-error'); s.addEventListener('change',()=>s.classList.remove('field-error'),{once:true}); });
-        showToast('Selecciona el tipo de cada localidad antes de continuar');
-        showSection(3); return;
-      }
-    }
+    if (n >= 2) { if (!_validateSection('screen-familia','Familia'))  { showSection(1); return; } }
+    if (n >= 3) { if (!_validateSection('screen-staff','Staff'))     { showSection(2); return; } }
+    if (n >= 4) { if (!_validateSection('screen-localidades','Localidades')) { showSection(3); return; } }
   }
   if (n===1 && !document.getElementById('body-F01').children.length)
     document.getElementById('body-F01').innerHTML = buildPersonBody('F','01');
@@ -898,17 +891,17 @@ function _row(pre,q,label,type,info,extra,grp) {
   const dg = grp ? ` data-group="${grp}"` : '';
   let c='';
   if (type==='qty') {
-    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">`;
+    c=`<input class="dq" type="number" id="${uid}" placeholder="0" min="0" oninput="updateCounters()">`;
   } else if (type==='qty-os2') {
     const[a,b]=extra;
-    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">
+    c=`<input class="dq" type="number" id="${uid}" placeholder="0" min="0" oninput="updateCounters()">
     <div class="dos"><label class="cb"><input type="checkbox"> ${a}</label><label class="cb"><input type="checkbox"> ${b}</label></div>`;
   } else if (type==='qty-os3') {
     const[a,b,c2]=extra;
-    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()">
+    c=`<input class="dq" type="number" id="${uid}" placeholder="0" min="0" oninput="updateCounters()">
     <div class="dos"><label class="cb"><input type="checkbox"> ${a}</label><label class="cb"><input type="checkbox"> ${b}</label><label class="cb"><input type="checkbox"> ${c2}</label></div>`;
   } else if (type==='qty-ns') {
-    c=`<input class="dq" type="number" id="${uid}" value="0" min="0" oninput="updateCounters()"><button class="ns-btn" onclick="toggleNS(this,'${uid}')">No sé</button>`;
+    c=`<input class="dq" type="number" id="${uid}" placeholder="0" min="0" oninput="updateCounters()"><button class="ns-btn" onclick="toggleNS(this,'${uid}')">No sé</button>`;
   } else if (type==='sns') {
     c=`<div class="sns" data-value=""><button onclick="setSNS(this,'si')">Sí</button><button onclick="setSNS(this,'no')">No</button><button onclick="setSNS(this,'ns')">No sé</button></div>`;
   } else if (type==='sns-fw') {
@@ -917,16 +910,24 @@ function _row(pre,q,label,type,info,extra,grp) {
   return `<div class="drow"${dg}><button class="info-btn" onclick="toggleTip(this)">i</button>${_t(info)}<span class="row-ref">${ref}</span><span class="dl">${label}</span>${c}</div>`;
 }
 function _ch(a,b) { return `<div class="col-head"><div class="ch-i"></div><div class="ch-ref"></div><div class="ch-dl">${a}</div><div class="ch-qty">Cant.</div><div class="ch-sel">${b||''}</div></div>`; }
+// Slot de reserva — activar: quitar data-slot="off" y style="display:none", cambiar label
+function _slot(pre,n) {
+  return `<div class="drow" data-slot="off" style="display:none">
+    <span class="dl" style="opacity:0.35;font-style:italic;">— Slot ${n} —</span>
+    <input class="dq" type="number" id="${pre}_slot${n}" placeholder="0" min="0" oninput="updateCounters()">
+    <button class="ns-btn" onclick="toggleNS(this,'${pre}_slot${n}')">No sé</button>
+  </div>`;
+}
 
 // ══ PERSON BODY ══
 function buildPersonBody(type,num) {
   const pre=`${type}${num}`; let q=1,h='';
   h+=`<div class="grp-label">Dispositivos</div>`;
   h+=_ch('Dispositivo','Sistema operativo');
-  h+=_row(pre,q++,'Teléfonos',          'qty-os2','Celulares personales y de trabajo.',['iOS','Android'],'device');
-  h+=_row(pre,q++,'Tabletas',           'qty-os2','iPad, tablets u otros dispositivos de pantalla grande.',['iOS','Android'],'device');
-  h+=_row(pre,q++,'Comput. escritorio', 'qty-os3','Equipos de escritorio fijos. No incluyas laptops aquí.',['Mac','Win','Linux'],'device');
-  h+=_row(pre,q++,'Laptops',            'qty-os3','Laptops, MacBooks o ultrabooks portátiles.',['Mac','Win','Linux'],'device');
+  h+=_row(pre,q++,'Teléfonos',             'qty-os2','Celulares personales y de trabajo.',['iOS','Android'],'device');
+  h+=_row(pre,q++,'Tabletas',              'qty-os2','iPad, tablets u otros dispositivos de pantalla grande.',['iOS','Android'],'device');
+  h+=_row(pre,q++,'Computadoras / Laptops','qty-os3','Equipos de escritorio, laptops, MacBooks o ultrabooks portátiles.',['Mac','Win','Linux'],'device');
+  h+=_row(pre,q++,'Servidores',            'qty-ns', 'Servidores físicos o virtuales en la localidad personal.',null,'device');
 
   h+=`<div class="grp-label">Entorno digital</div>`;
   h+=_ch('Campo','');
@@ -934,7 +935,9 @@ function buildPersonBody(type,num) {
   h+=_row(pre,q++,'Números de teléfono',   'qty',   'Todos los SIM activos: personales, de trabajo y de respaldo.',null,'digital');
   h+=_row(pre,q++,'Dominios web',          'qty',   'Sitios web o dominios registrados a nombre de esta persona.',null,'digital');
   h+=_row(pre,q++,'Correos electrónicos',  'qty',   'Cuentas de correo activas: Gmail, Outlook, corporativo, etc.',null,'digital');
-  h+=_row(pre,q++,'Cuentas bancarias dig.','qty-ns','Apps bancarias o billeteras digitales (Mercado Pago, PayPal, etc.).',null,'digital');
+  // ── Slots de reserva (5) ─────────────────────────────────
+  h+=`<div class="grp-label" data-slot="off" style="display:none">Adicionales</div>`;
+  for(let s=1;s<=5;s++) h+=_slot(pre,s);
   return h;
 }
 
@@ -944,7 +947,7 @@ function buildLocBody(id) {
   h+=`<div class="grp-label first">Conectividad</div>`;
   h+=_ch('Servicio','');
   h+=_row(pre,q++,'Proveedores de internet',  'qty',   'Compañías que proveen internet (Telmex, Totalplay, Izzi, Starlink…).',null,'isp');
-  h+=_row(pre,q++,'Proveedores audio/video',  'qty',   'TV por cable o satélite (Sky, Dish, Megacable…).');
+  h+=_row(pre,q++,'Proveedores audio/video <span style="opacity:0.45;font-weight:300;">(distintos al de internet)</span>',  'qty',   'TV por cable o satélite (Sky, Dish, Megacable…).');
   h+=_row(pre,q++,'Otros servicios digitales','qty-ns','Líneas dedicadas, MPLS, VoIP u otros.');
 
   h+=`<div class="grp-label">IoT</div>`;
@@ -954,11 +957,10 @@ function buildLocBody(id) {
   h+=_row(pre,q++,'Smart TVs',                 'qty-ns','Televisores con internet y aplicaciones.',null,'iot');
   h+=_row(pre,q++,'Refrigeradores inteligentes','qty-ns','Refrigeradores con conectividad o pantalla táctil.',null,'iot');
   h+=_row(pre,q++,'Cerraduras inteligentes',   'qty-ns','Cerraduras electrónicas o con acceso por app.',null,'iot');
-  h+=_row(pre,q++,'Sensores',                  'qty-ns','Sensores de movimiento, temperatura, gas, humo…',null,'iot');
   h+=_row(pre,q++,'Alarmas',                   'qty-ns','Sistemas de alarma conectados a internet o app.',null,'iot');
   h+=_row(pre,q++,'Bocinas / Sonido',          'qty-ns','Sonos, Alexa, Google Nest Audio…',null,'iot');
   h+=_row(pre,q++,'Consolas de videojuegos',   'qty-ns','PlayStation, Xbox, Nintendo Switch…',null,'iot');
-  h+=_row(pre,q++,'Asistentes de voz',         'qty-ns','Alexa, Google Home, HomePod…',null,'iot');
+  h+=_row(pre,q++,'Asistentes de voz <span style="font-weight:300;opacity:0.6;">(ej. Alexa, Apple HomePod…)</span>','qty-ns','Alexa, Google Home, HomePod…',null,'iot');
   h+=_row(pre,q++,'Control central / Hub',     'qty-ns','Panel de domótica centralizado (Control4, Crestron, KNX…).',null,'iot');
   h+=_row(pre,q++,'Domótica / Automatización', 'sns',   '¿Esta localidad tiene sistema de automatización o casa inteligente?',null,'domo');
 
@@ -975,6 +977,9 @@ function buildLocBody(id) {
   h+=_ch('Elemento','');
   h+=_row(pre,q++,'Firewalls',             'qty-ns','Cantidad de firewalls perimetrales instalados en esta localidad (Fortinet, Cisco, pfSense, Sophos…).',null,'fw-qty');
   h+=_row(pre,q++,'Firewall centralizado', 'sns-fw','¿Existe un firewall centralizado que controla el tráfico de toda esta localidad?');
+  // ── Slots de reserva (5) ─────────────────────────────────
+  h+=`<div class="grp-label" data-slot="off" style="display:none">Adicionales</div>`;
+  for(let s=1;s<=5;s++) h+=_slot(pre,s);
   return h;
 }
 
@@ -988,10 +993,7 @@ function addFamilia() {
   el.innerHTML=`
     <div class="p-card-head" onclick="toggleCard(this)">
       <span class="p-badge">${id}</span>
-      <div class="p-field">
-        <span class="p-field-lbl">parentesco →</span>
-        <input class="p-name-input" type="text" placeholder="ej. cónyuge, hijo/a, madre…" onclick="event.stopPropagation()">
-      </div>
+      <span class="p-name-static">Familiar ${String(familiaIdx-1).padStart(2,'0')}</span>
       <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
     </div>
@@ -1012,10 +1014,7 @@ function addStaff() {
   el.innerHTML=`
     <div class="p-card-head" onclick="toggleCard(this)">
       <span class="p-badge">${id}</span>
-      <div class="p-field">
-        <span class="p-field-lbl">rol →</span>
-        <input class="p-name-input" type="text" placeholder="ej. asistente, conductor, chef, guardia…" onclick="event.stopPropagation()">
-      </div>
+      <span class="p-name-static">Staff ${num}</span>
       <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
     </div>
@@ -1036,16 +1035,7 @@ function addLocalidad() {
   el.innerHTML=`
     <div class="loc-card-head" onclick="toggleCard(this)">
       <span class="loc-badge">${id}</span>
-      <div class="loc-field">
-        <span class="loc-field-lbl">tipo →</span>
-        <select class="loc-tipo-select" onclick="event.stopPropagation()">
-          <option value="">selecciona tipo de localidad…</option>
-          <option>Casa principal</option><option>Casa de campo</option>
-          <option>Departamento</option><option>Oficina</option>
-          <option>Rancho / Hacienda</option><option>Barco / Yate</option>
-          <option>Auto / Van</option><option>Avión / Jet</option>
-        </select>
-      </div>
+      <span class="p-name-static">Locación ${num}</span>
       <span class="fw-badge ns">FW ?</span>
       <button class="p-collapse-btn" tabindex="-1">▲ colapsar</button>
       <button class="p-remove-btn" onclick="event.stopPropagation();removeCard('${id}')" tabindex="-1">✕</button>
@@ -1067,7 +1057,7 @@ function sumQty(root,grp) {
   if (!root) return 0;
   let n=0;
   const sel=grp?`[data-group="${grp}"] .dq:not(:disabled)`:'.dq:not(:disabled)';
-  root.querySelectorAll(sel).forEach(i=>n+=parseInt(i.value)||0);
+  root.querySelectorAll(sel).forEach(i=>{ if(!i.closest('[data-slot="off"]')) n+=parseInt(i.value)||0; });
   return n;
 }
 function sumSNS(root,grp,val) {
@@ -1175,7 +1165,9 @@ function collectFormData() {
   };
   const getName = cardId => {
     if (cardId === 'F01') return 'Titular / VIP';
-    return document.getElementById(`card-${cardId}`)?.querySelector('.p-name-input')?.value.trim() || '';
+    if (cardId.startsWith('F')) return `Familiar ${cardId.substring(1)}`;
+    if (cardId.startsWith('S')) return `Staff ${cardId.substring(1)}`;
+    return '';
   };
 
   const personRow = (pre, tipo, id) => ({
@@ -1183,12 +1175,15 @@ function collectFormData() {
     telefonos: getQty(`${pre}_q1`), telefonos_os: getOS(`${pre}_q1`),
     tabletas:  getQty(`${pre}_q2`), tabletas_os:  getOS(`${pre}_q2`),
     escritorio:getQty(`${pre}_q3`), escritorio_os:getOS(`${pre}_q3`),
-    laptops:   getQty(`${pre}_q4`), laptops_os:   getOS(`${pre}_q4`),
+    laptops:   getQty(`${pre}_q4`), laptops_os:   '',
     redes_sociales:  getQty(`${pre}_q5`),
     numeros_tel:     getQty(`${pre}_q6`),
     dominios:        getQty(`${pre}_q7`),
     correos:         getQty(`${pre}_q8`),
-    cuentas_banco:   getQty(`${pre}_q9`),
+    cuentas_banco:   0,
+    slot_1: getQty(`${pre}_slot1`), slot_2: getQty(`${pre}_slot2`),
+    slot_3: getQty(`${pre}_slot3`), slot_4: getQty(`${pre}_slot4`),
+    slot_5: getQty(`${pre}_slot5`),
   });
 
   const personas = [];
@@ -1204,7 +1199,7 @@ function collectFormData() {
   document.querySelectorAll('#localidades-cards .loc-card').forEach(c => {
     const id = c.id.replace('card-',''), pre = id;
     localidades.push({
-      id, tipo: c.querySelector('.loc-tipo-select')?.value || '',
+      id, tipo: '',
       isp:            getQty(`${pre}_q1`),
       audio_video:    getQty(`${pre}_q2`),
       otros_servicios:getQty(`${pre}_q3`),
@@ -1213,21 +1208,24 @@ function collectFormData() {
       smart_tvs:      getQty(`${pre}_q6`),
       refrigeradores: getQty(`${pre}_q7`),
       cerraduras:     getQty(`${pre}_q8`),
-      sensores:       getQty(`${pre}_q9`),
-      alarmas:        getQty(`${pre}_q10`),
-      bocinas:        getQty(`${pre}_q11`),
-      consolas:       getQty(`${pre}_q12`),
-      asistentes_voz: getQty(`${pre}_q13`),
-      hub_control:    getQty(`${pre}_q14`),
+      sensores:       0,
+      alarmas:        getQty(`${pre}_q9`),
+      bocinas:        getQty(`${pre}_q10`),
+      consolas:       getQty(`${pre}_q11`),
+      asistentes_voz: getQty(`${pre}_q12`),
+      hub_control:    getQty(`${pre}_q13`),
       domotica:       getSNS(id, 0),
-      modems:         getQty(`${pre}_q16`),
-      routers:        getQty(`${pre}_q17`),
-      access_points:  getQty(`${pre}_q18`),
-      nas:            getQty(`${pre}_q19`),
-      serv_virtuales: getQty(`${pre}_q20`),
-      serv_fisicos:   getQty(`${pre}_q21`),
-      firewalls:      getQty(`${pre}_q22`),
+      modems:         getQty(`${pre}_q15`),
+      routers:        getQty(`${pre}_q16`),
+      access_points:  getQty(`${pre}_q17`),
+      nas:            getQty(`${pre}_q18`),
+      serv_virtuales: getQty(`${pre}_q19`),
+      serv_fisicos:   getQty(`${pre}_q20`),
+      firewalls:      getQty(`${pre}_q21`),
       fw_centralizado:getSNS(id, 1),
+      slot_1: getQty(`${pre}_slot1`), slot_2: getQty(`${pre}_slot2`),
+      slot_3: getQty(`${pre}_slot3`), slot_4: getQty(`${pre}_slot4`),
+      slot_5: getQty(`${pre}_slot5`),
     });
   });
 
@@ -1239,6 +1237,13 @@ async function submitForm() {
   btn.disabled=true;
   btn.innerHTML='ENVIANDO <span class="sending-dots"><span>.</span><span>.</span><span>.</span></span>';
   st.textContent='';
+  const captchaResp = typeof grecaptcha !== 'undefined' ? grecaptcha.getResponse() : 'skip';
+  if (!captchaResp) {
+    btn.disabled=false;
+    btn.innerHTML='Enviar Assessment';
+    showToast('Completa el captcha para continuar');
+    return;
+  }
   if (SCRIPT_URL==='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
     setTimeout(()=>{ showThankyou(); },700);
     return;
