@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Obscural · Tablero de Operaciones</title>
+<style>
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%; overflow:hidden;
+  background:#050505;
+  color:#e8e8e8;
+  font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+  user-select:none;
+}
+body { display:flex; flex-direction:column; }
+
+/* ── HEADER ── */
+.hdr {
+  flex:0 0 44px;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 22px;
+  border-bottom:1px solid #111;
+}
+.brand { font-size:13px; font-weight:400; color:#ccc; }
+.hdr-r { display:flex; align-items:center; gap:16px; }
+.pbi-badge { font-size:9px; font-weight:700; color:#c8a84b; border:1px solid #c8a84b55; padding:3px 10px; letter-spacing:.18em; }
+.filter-grp { display:flex; gap:2px; }
+.filt { font-size:10px; color:#2e2e2e; padding:4px 12px; cursor:pointer; border-bottom:2px solid transparent; transition:color .15s; }
+.filt:hover { color:#666; }
+.filt.on { color:#aaa; border-bottom-color:#ffffff; }
+
+/* ── MAIN ── */
+main { flex:1; display:flex; flex-direction:column; gap:2px; padding:2px; min-height:0; }
+
+/* ── KPI ROW ── */
+.kpis { display:grid; grid-template-columns:1fr 1fr; gap:2px; flex:0 0 auto; }
+.kpi {
+  background:#0a0a0a;
+  padding:20px 24px 16px;
+  cursor:pointer;
+  transition:background .15s;
+  position:relative;
+}
+.kpi::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:#161616; transition:background .15s; }
+.kpi.warn::after { background:#ffffff22; }
+.kpi:hover { background:#0d0d0d; }
+.kl { font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:#2e2e2e; margin-bottom:8px; }
+.kv { font-size:56px; font-weight:300; line-height:1; letter-spacing:-3px; color:#fff; }
+.kv.medium { font-size:36px; font-weight:300; letter-spacing:-.5px; }
+.ks { font-size:9px; color:#252525; margin-top:6px; }
+.ks .accent { color:#555; }
+
+/* ── CHARTS ROW ── */
+.charts { display:grid; grid-template-columns:1fr 1fr; gap:2px; flex:1; min-height:0; }
+.panel { background:#0a0a0a; display:flex; flex-direction:column; padding:14px 16px 12px; min-height:0; }
+.ptitle { font-size:9px; text-transform:uppercase; letter-spacing:.12em; color:#252525; flex-shrink:0; margin-bottom:10px; }
+
+/* ── VERTICAL BARS ── */
+.vchart { flex:1; display:flex; flex-direction:column; min-height:0; }
+.vplot { flex:1; position:relative; min-height:0; }
+
+/* Horizontal grid lines */
+.vgridlines {
+  position:absolute; inset:0; pointer-events:none;
+  display:flex; flex-direction:column; justify-content:space-between;
+}
+.vgl { border-top:1px dashed #111; position:relative; }
+.vgl-lbl { position:absolute; left:-26px; top:-7px; font-size:7.5px; color:#1c1c1c; }
+
+/* Bars container: absolute fill, flex row */
+.vbars-wrap {
+  position:absolute; inset:0; bottom:0;
+  display:flex; align-items:flex-end;
+  padding:0 6px; gap:6px;
+}
+.vbc {
+  flex:1;
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:flex-end; height:100%;
+  gap:3px; cursor:pointer;
+}
+.vbv { font-size:8px; color:#2a2a2a; line-height:1; transition:color .15s; flex-shrink:0; }
+.vbar {
+  width:100%;
+  border-radius:1px 1px 0 0;
+  background:#252525;
+  transition:background .15s, opacity .2s;
+  flex-shrink:0;
+}
+.vbc:hover .vbar { background:#666; }
+.vbc:hover .vbv  { color:#888; }
+.vbc.selected .vbar { background:#d0d0d0; }
+.vbc.selected .vbv  { color:#fff; font-weight:600; }
+.vbc.dimmed   .vbar { background:#141414; opacity:.4; }
+.vbc.dimmed   .vbv  { color:#181818; }
+
+.vxlabels { display:flex; gap:6px; padding:6px 6px 0; flex-shrink:0; }
+.vxl { flex:1; font-size:7.5px; color:#1c1c1c; text-align:center; transition:color .15s; }
+.vxl.selected { color:#ccc; }
+.vxl.dimmed   { color:#111; }
+
+/* ── HORIZONTAL BARS ── */
+.hchart { flex:1; display:flex; flex-direction:column; justify-content:space-evenly; min-height:0; }
+.hrow { display:flex; align-items:center; gap:12px; cursor:pointer; }
+.hname { font-size:12px; color:#2e2e2e; width:64px; text-align:right; flex-shrink:0; transition:color .15s; }
+.htrack { flex:1; height:26px; background:#080808; position:relative; }
+.hbar { height:100%; border-radius:1px; transition:background .15s, opacity .2s; }
+.hval { position:absolute; top:50%; transform:translateY(-50%); font-size:10px; color:#2e2e2e; font-weight:500; white-space:nowrap; transition:color .15s; }
+
+.hrow:hover .hbar  { filter:brightness(1.6); }
+.hrow:hover .hname { color:#888; }
+.hrow:hover .hval  { color:#888; }
+.hrow.selected .hname { color:#fff; }
+.hrow.selected .hbar  { filter:brightness(2); }
+.hrow.selected .hval  { color:#ccc; }
+.hrow.dimmed .hname   { color:#181818; }
+.hrow.dimmed .hbar    { opacity:.25; }
+.hrow.dimmed .hval    { color:#181818; }
+
+.hxaxis { display:flex; justify-content:space-between; margin-top:8px; flex-shrink:0; padding:0 2px; }
+.hxl { font-size:7.5px; color:#1a1a1a; }
+
+/* ── TOOLTIP ── */
+.tip {
+  position:fixed; pointer-events:none; z-index:999;
+  background:#161616; border:1px solid #222;
+  padding:7px 12px; font-size:10px; color:#666;
+  opacity:0; transition:opacity .1s; white-space:nowrap;
+}
+.tip.show { opacity:1; }
+.tip strong { color:#ddd; font-weight:500; display:block; font-size:13px; }
+
+/* ── FOOTER ── */
+.ftr { flex:0 0 26px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; border-top:1px solid #0e0e0e; }
+.ftr span { font-size:8px; color:#1a1a1a; letter-spacing:.08em; text-transform:uppercase; }
+.dot { display:inline-block; width:5px; height:5px; border-radius:50%; background:#1a3325; margin-right:7px; animation:pulse 2.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.2} }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="brand">Tablero de Operaciones</div>
+  <div class="hdr-r">
+    <div class="filter-grp">
+      <div class="filt on" data-range="week">Esta semana</div>
+      <div class="filt" data-range="month">Mes</div>
+      <div class="filt" data-range="year">Año</div>
+    </div>
+    <div class="pbi-badge">POWER BI</div>
+  </div>
+</div>
+
+<main>
+  <div class="kpis">
+    <div class="kpi warn" data-kpi="threats">
+      <div class="kl">Amenazas Activas</div>
+      <div class="kv" id="kv-threats">3</div>
+      <div class="ks"><span class="accent">↓ 2</span> vs. semana anterior</div>
+    </div>
+    <div class="kpi" data-kpi="incidents">
+      <div class="kl">Incidentes Cerrados</div>
+      <div class="kv" id="kv-incidents">47</div>
+      <div class="ks"><span class="accent">↑ 8</span> vs. semana anterior</div>
+    </div>
+    <div class="kpi" data-kpi="compliance">
+      <div class="kl">Dispositivos Seguros</div>
+      <div class="kv" id="kv-compliance">98%</div>
+      <div class="ks"><span class="accent">↑ 1.2 pp</span> vs. semana anterior</div>
+    </div>
+    <div class="kpi" data-kpi="risk">
+      <div class="kl">Nivel de Riesgo</div>
+      <div class="kv medium" id="kv-risk">MEDIO</div>
+      <div class="ks">Estable · sin cambios</div>
+    </div>
+  </div>
+
+  <div class="charts">
+    <div class="panel">
+      <div class="ptitle">Incidentes por Semana</div>
+      <div class="vchart">
+        <div class="vplot" id="vplot">
+          <div class="vgridlines" id="vgrid"></div>
+          <div class="vbars-wrap" id="vbars"></div>
+        </div>
+        <div class="vxlabels" id="vxlabels"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ptitle">Índice de Riesgo por Persona</div>
+      <div class="hchart" id="hchart"></div>
+    </div>
+  </div>
+</main>
+
+<div class="ftr">
+  <span><span class="dot"></span>En vivo · betatau.sharepoint.com</span>
+  <span id="fd"></span>
+</div>
+
+<div class="tip" id="tip"><strong id="tip-val"></strong><span id="tip-label"></span></div>
+
+<script>
+const weekData  = { labels:['S1','S2','S3','S4','S5','S6','S7','S8'], values:[4,7,10,12,6,8,5,11] };
+const monthData = { labels:['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct'], values:[4,7,9,15,6,8,4,11,7,4] };
+const yearData  = { labels:['2020','2021','2022','2023','2024'], values:[22,38,45,61,47] };
+const persons = [
+  { name:'VIP',    val:82, bg:'#3a3a3a' },
+  { name:'Pareja', val:51, bg:'#2a2a2a' },
+  { name:'Hijo',   val:18, bg:'#1e1e1e' },
+  { name:'Hija',   val:14, bg:'#191919' }
+];
+const kpiSets = {
+  week:  { threats:'3',  incidents:'47',  compliance:'98%', risk:'MEDIO' },
+  month: { threats:'5',  incidents:'134', compliance:'97%', risk:'MEDIO' },
+  year:  { threats:'12', incidents:'581', compliance:'95%', risk:'ALTO'  }
+};
+
+let currentRange = 'week', selectedBar = null, selectedPerson = null;
+const tip = document.getElementById('tip');
+
+function showTip(e, val, lbl) {
+  document.getElementById('tip-val').textContent = val;
+  document.getElementById('tip-label').textContent = lbl;
+  tip.classList.add('show');
+  moveTip(e);
+}
+function moveTip(e) {
+  tip.style.left = (e.clientX + 14) + 'px';
+  tip.style.top  = (e.clientY - 42) + 'px';
+}
+function hideTip() { tip.classList.remove('show'); }
+
+function buildVChart(data) {
+  const max = Math.max(...data.values);
+  const steps = 4;
+  // grid
+  const gridEl = document.getElementById('vgrid');
+  gridEl.innerHTML = '';
+  for (let i = steps; i >= 0; i--) {
+    const d = document.createElement('div');
+    d.className = 'vgl';
+    d.innerHTML = `<span class="vgl-lbl">${Math.round(max * i / steps)}</span>`;
+    gridEl.appendChild(d);
+  }
+  // bars
+  const barsEl = document.getElementById('vbars');
+  const xlabEl = document.getElementById('vxlabels');
+  barsEl.innerHTML = '';
+  xlabEl.innerHTML = '';
+  data.values.forEach((v, i) => {
+    const pct = (v / max * 100).toFixed(1);
+    const col = document.createElement('div');
+    col.className = 'vbc';
+    col.dataset.idx = i;
+    col.innerHTML = `<div class="vbv">${v}</div><div class="vbar" style="height:${pct}%"></div>`;
+    col.addEventListener('mouseenter', e => showTip(e, v + ' incidentes', data.labels[i]));
+    col.addEventListener('mousemove', moveTip);
+    col.addEventListener('mouseleave', hideTip);
+    col.addEventListener('click', () => { selectedBar = selectedBar === i ? null : i; updateVSel(data); });
+    barsEl.appendChild(col);
+    const xl = document.createElement('div');
+    xl.className = 'vxl'; xl.dataset.idx = i; xl.textContent = data.labels[i];
+    xlabEl.appendChild(xl);
+  });
+  updateVSel(data);
+}
+
+function updateVSel(data) {
+  document.querySelectorAll('.vbc').forEach((el, i) => {
+    el.classList.remove('selected','dimmed');
+    if (selectedBar !== null) el.classList.add(i === selectedBar ? 'selected' : 'dimmed');
+  });
+  document.querySelectorAll('.vxl').forEach((el, i) => {
+    el.classList.remove('selected','dimmed');
+    if (selectedBar !== null) el.classList.add(i === selectedBar ? 'selected' : 'dimmed');
+  });
+}
+
+function buildHChart() {
+  const hchart = document.getElementById('hchart');
+  hchart.innerHTML = '';
+  persons.forEach((p, i) => {
+    const row = document.createElement('div');
+    row.className = 'hrow'; row.dataset.idx = i;
+    const valLeft = p.val + 4;
+    row.innerHTML = `
+      <div class="hname">${p.name}</div>
+      <div class="htrack">
+        <div class="hbar" style="width:${p.val}%;background:${p.bg}"></div>
+        <div class="hval" style="left:${valLeft}%">${p.val}</div>
+      </div>`;
+    row.addEventListener('mouseenter', e => showTip(e, p.val + ' / 100', 'Riesgo · ' + p.name));
+    row.addEventListener('mousemove', moveTip);
+    row.addEventListener('mouseleave', hideTip);
+    row.addEventListener('click', () => { selectedPerson = selectedPerson === i ? null : i; updateHSel(); });
+    hchart.appendChild(row);
+  });
+  const ax = document.createElement('div'); ax.className = 'hxaxis';
+  ['0','25','50','75','100'].forEach(v => { const s = document.createElement('span'); s.className='hxl'; s.textContent=v; ax.appendChild(s); });
+  hchart.appendChild(ax);
+  updateHSel();
+}
+
+function updateHSel() {
+  document.querySelectorAll('.hrow').forEach((el, i) => {
+    el.classList.remove('selected','dimmed');
+    if (selectedPerson !== null) el.classList.add(i === selectedPerson ? 'selected' : 'dimmed');
+  });
+}
+
+document.querySelectorAll('.filt').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filt').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    currentRange = btn.dataset.range;
+    selectedBar = null;
+    const kpi = kpiSets[currentRange];
+    ['threats','incidents','compliance','risk'].forEach(k => {
+      document.getElementById('kv-' + k).textContent = kpi[k];
+    });
+    buildVChart(currentRange === 'week' ? weekData : currentRange === 'month' ? monthData : yearData);
+  });
+});
+
+document.querySelectorAll('.kpi').forEach(k => {
+  k.addEventListener('click', () => { selectedBar = null; selectedPerson = null; updateVSel(); updateHSel(); });
+});
+
+buildVChart(weekData);
+buildHChart();
+document.getElementById('fd').textContent = 'Obscural Cybersecurity · ' + new Date().getFullYear();
+</script>
+</body>
+</html>
