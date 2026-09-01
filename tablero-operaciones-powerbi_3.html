@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tablero de Operaciones · OBSCURAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   OBSCURAL — Tablero de Operaciones
+   Estructura Power BI · Identidad OBSCURAL: escala de grises.
+   Único acento: rojo muy oscuro, reservado para alertas.
+   ============================================================ */
+
+:root{
+  /* --- Escala de grises OBSCURAL --- */
+  --fondo:#050505;        /* fondo de documento */
+  --visual:#0b0b0b;       /* superficie de cada visual */
+  --visual-2:#141414;     /* hover / filas */
+  --linea:#1e1e1e;        /* separadores y bordes */
+  --marco:#222222;        /* borde activo */
+  --ghost:#282828;        /* fantasmas, tracks */
+  --dim:#555555;          /* texto terciario, iconos */
+  --dim-claro:#888888;    /* tags y captions */
+  --blanco:#ffffff;       /* texto principal */
+
+  /* --- Único acento: alerta --- */
+  --alerta:#5e1414;       /* rojo muy oscuro (relleno) */
+  --alerta-2:#7d1c1c;     /* estado activo / hover */
+  --alerta-linea:#3a0d0d; /* borde tenue */
+
+  /* --- Serie de datos: pasos de gris ordenados por magnitud --- */
+  --s1:#ffffff;
+  --s2:#bdbdbd;
+  --s3:#858585;
+  --s4:#616161;
+  --s5:#454545;
+
+  --radius:2px;
+  --font:"Outfit",-apple-system,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--fondo);
+  color:var(--blanco);
+  font-family:var(--font);
+  font-size:13px;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Lienzo del reporte ---------- */
+.pbi-canvas{max-width:1240px;margin:0 auto;padding:20px 16px}
+
+.pbi-report-head{padding:2px 2px 18px;border-bottom:1px solid var(--linea);margin-bottom:14px}
+.eyebrow{
+  font-size:9px;font-weight:700;letter-spacing:.32em;text-transform:uppercase;
+  color:var(--dim);margin:0 0 10px;
+}
+.pbi-report-head h1{
+  margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em;color:var(--blanco);line-height:1.05;
+}
+.pbi-report-head .sub{font-size:12px;color:var(--dim-claro);margin:7px 0 0}
+
+.pbi-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:8px}
+
+/* ---------- Contenedor "visual" ---------- */
+.visual{
+  position:relative;
+  background:var(--visual);
+  border:1px solid var(--linea);
+  border-radius:var(--radius);
+  padding:14px 16px;
+  min-width:0;
+  transition:border-color .12s ease;
+}
+.visual:hover{border-color:var(--marco)}
+.visual-title{
+  font-size:13px;font-weight:700;color:var(--blanco);
+  margin:0 0 3px;line-height:1.25;padding-right:64px;letter-spacing:-.005em;
+}
+.visual-sub{font-size:11px;color:var(--dim);margin:0 0 12px}
+
+/* Encabezado flotante del visual (Power BI) */
+.visual-head{
+  position:absolute;top:8px;right:10px;
+  display:flex;gap:2px;opacity:0;transition:opacity .12s ease;
+}
+.visual:hover .visual-head,.visual:focus-within .visual-head{opacity:1}
+.vh-btn{
+  width:22px;height:22px;border:0;border-radius:2px;background:transparent;
+  color:var(--dim);cursor:pointer;display:grid;place-items:center;padding:0;
+}
+.vh-btn:hover{background:var(--visual-2);color:var(--blanco)}
+.vh-btn svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.vh-btn.dots svg{fill:currentColor;stroke:none}
+
+/* ---------- Slicers ---------- */
+.slicer-bar{grid-column:span 12;display:flex;flex-wrap:wrap;gap:8px;align-items:stretch}
+.slicer{background:var(--visual);border:1px solid var(--linea);border-radius:var(--radius);padding:9px 12px}
+.slicer-label{
+  font-size:9px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:8px;
+}
+.chip-row{display:flex;gap:4px;flex-wrap:wrap}
+.chip{
+  font:inherit;font-size:12px;font-weight:500;color:var(--dim-claro);
+  background:transparent;border:1px solid var(--marco);
+  border-radius:2px;padding:5px 12px;cursor:pointer;white-space:nowrap;
+  transition:color .12s ease,border-color .12s ease,background .12s ease;
+}
+.chip:hover{border-color:var(--dim);color:var(--blanco)}
+.chip[aria-pressed="true"]{background:var(--blanco);border-color:var(--blanco);color:#050505;font-weight:600}
+.slicer-select{
+  font:inherit;font-size:12px;color:var(--dim-claro);background:var(--visual-2);
+  border:1px solid var(--marco);border-radius:2px;padding:6px 26px 6px 10px;cursor:pointer;
+  appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%23888888' stroke-width='1.3'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 8px center;background-size:11px;
+}
+.filter-state{
+  margin-left:auto;display:flex;align-items:center;gap:10px;
+  font-size:11px;color:var(--dim);padding:0 2px;letter-spacing:.02em;
+}
+.clear-btn{
+  font:inherit;font-size:11px;color:var(--dim-claro);background:transparent;
+  border:1px solid var(--marco);border-radius:2px;padding:5px 10px;cursor:pointer;
+}
+.clear-btn:hover{border-color:var(--dim);color:var(--blanco)}
+.clear-btn[hidden]{display:none}
+
+/* ---------- Cards (KPI) ---------- */
+.card{grid-column:span 3;display:flex;flex-direction:column;justify-content:center;min-height:104px}
+.card .kpi-value{
+  font-size:42px;font-weight:600;line-height:1;letter-spacing:-.035em;color:var(--blanco);
+}
+.card .kpi-value.text{font-size:28px;letter-spacing:-.01em}
+.card .kpi-label{
+  font-size:9px;font-weight:700;color:var(--dim);margin-top:11px;
+  text-transform:uppercase;letter-spacing:.28em;
+}
+.card .kpi-note{display:flex;align-items:center;gap:6px;font-size:11px;margin-top:9px;color:var(--dim-claro)}
+
+/* Marca de alerta: barra roja muy oscura a la izquierda */
+.card.alert{border-left:2px solid var(--alerta)}
+.alert-dot{width:7px;height:7px;border-radius:50%;background:var(--alerta-2);flex:0 0 auto}
+
+/* Medidor */
+.meter{height:3px;background:var(--ghost);margin-top:14px;overflow:hidden}
+.meter > i{display:block;height:100%;background:var(--blanco)}
+
+/* ---------- Gráficos ---------- */
+.v-column{grid-column:span 8}
+.v-donut{grid-column:span 4}
+.v-table{grid-column:span 12}
+
+.chart-wrap{position:relative;width:100%}
+svg.chart{display:block;width:100%;overflow:visible}
+svg.chart text{font-family:var(--font)}
+
+.legend{display:flex;flex-wrap:wrap;gap:5px 16px;margin-top:12px;padding-top:11px;border-top:1px solid var(--linea)}
+.legend button{
+  display:flex;align-items:center;gap:7px;background:transparent;border:0;padding:2px 0;
+  font:inherit;font-size:11px;color:var(--dim-claro);cursor:pointer;letter-spacing:.01em;
+}
+.legend button:hover{color:var(--blanco)}
+.legend .sw{width:9px;height:9px;flex:0 0 auto}
+.legend .n{color:var(--dim);font-variant-numeric:tabular-nums}
+.legend button[data-dim="true"]{opacity:.35}
+
+/* ---------- Tablas ---------- */
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table.pbi-table{width:100%;border-collapse:collapse;font-size:12px;min-width:660px}
+table.pbi-table th{
+  text-align:left;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);border-bottom:1px solid var(--marco);padding:9px 10px;white-space:nowrap;
+}
+table.pbi-table td{padding:10px;border-bottom:1px solid var(--linea);color:var(--dim-claro)}
+table.pbi-table td.id{color:var(--blanco);font-weight:500;letter-spacing:.04em}
+table.pbi-table td.name{color:var(--blanco)}
+table.pbi-table tbody tr:hover{background:var(--visual-2)}
+table.pbi-table td.num,table.pbi-table th.num{text-align:right;font-variant-numeric:tabular-nums}
+table.pbi-table tbody tr[data-dim="true"]{opacity:.3}
+.cat-dot{display:inline-block;width:8px;height:8px;margin-right:8px}
+
+.data-table-wrap{display:none;margin-top:2px}
+.data-table-wrap.show{display:block}
+.chart-wrap.hide{display:none}
+
+/* Severidad: forma + texto, nunca solo color */
+.sev{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.sev .mark{width:8px;height:8px;flex:0 0 auto}
+.sev.alta{color:var(--blanco)}
+.sev.alta .mark{background:var(--alerta-2)}
+.sev.media{color:var(--dim-claro)}
+.sev.media .mark{background:var(--dim-claro);transform:rotate(45deg);width:7px;height:7px}
+.sev.baja{color:var(--dim)}
+.sev.baja .mark{background:transparent;border:1px solid var(--dim);border-radius:50%}
+
+/* ---------- Tooltip ---------- */
+.pbi-tooltip{
+  position:fixed;z-index:50;pointer-events:none;opacity:0;transform:translateY(2px);
+  transition:opacity .1s ease;
+  background:#0b0b0b;border:1px solid var(--marco);border-radius:2px;
+  box-shadow:0 8px 28px rgba(0,0,0,.8);padding:10px 12px;min-width:158px;
+}
+.pbi-tooltip.show{opacity:1;transform:none}
+.pbi-tooltip .tt-head{
+  font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:8px;
+}
+.pbi-tooltip .tt-row{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--dim-claro);margin-top:4px}
+.pbi-tooltip .tt-row .sw{width:8px;height:8px;flex:0 0 auto}
+.pbi-tooltip .tt-row .val{margin-left:auto;color:var(--blanco);font-weight:500;font-variant-numeric:tabular-nums}
+
+/* ---------- Pie ---------- */
+.pbi-foot{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:16px 2px 4px;margin-top:8px;border-top:1px solid var(--linea);
+  font-size:9px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);
+}
+.pbi-foot .sep{color:var(--ghost)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .card{grid-column:span 6}
+  .v-column,.v-donut,.v-table{grid-column:span 12}
+}
+@media (max-width:560px){
+  .card{grid-column:span 12}
+  .card .kpi-value{font-size:34px}
+  .pbi-report-head h1{font-size:24px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="pbi-canvas">
+
+  <div class="pbi-report-head">
+    <p class="eyebrow">Operaciones · Tablero</p>
+    <h1>Tablero de Operaciones.</h1>
+    <p class="sub">Centro de Operaciones OBSCURAL · Seguridad y respuesta</p>
+  </div>
+
+  <div class="pbi-grid">
+
+    <!-- ============ SLICERS ============ -->
+    <div class="slicer-bar">
+      <div class="slicer">
+        <div class="slicer-label">Periodo</div>
+        <div class="chip-row" id="slicer-periodo">
+          <button class="chip" type="button" data-weeks="8" aria-pressed="true">Últimas 8 semanas</button>
+          <button class="chip" type="button" data-weeks="4" aria-pressed="false">Últimas 4 semanas</button>
+        </div>
+      </div>
+      <div class="slicer">
+        <div class="slicer-label">Unidad</div>
+        <select class="slicer-select" aria-label="Unidad">
+          <option>Todas las unidades</option>
+          <option>Corporativo</option>
+          <option>Operaciones de campo</option>
+          <option>Proveedores</option>
+        </select>
+      </div>
+      <div class="filter-state">
+        <span id="filter-text">Sin filtros aplicados</span>
+        <button class="clear-btn" type="button" id="clear-filters" hidden>Borrar selección</button>
+      </div>
+    </div>
+
+    <!-- ============ CARDS ============ -->
+    <section class="visual card alert">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-label">Amenazas activas</div>
+      <div class="kpi-note"><span class="alert-dot"></span><span>+1 vs. semana anterior</span></div>
+    </section>
+
+    <section class="visual card">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <div class="kpi-value" id="kpi-cerrados">47</div>
+      <div class="kpi-label">Incidentes cerrados</div>
+      <div class="kpi-note"><span id="kpi-cerrados-sub">Últimas 8 semanas</span></div>
+    </section>
+
+    <section class="visual card">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <div class="kpi-value">98%</div>
+      <div class="kpi-label">Dispositivos seguros</div>
+      <div class="meter" role="img" aria-label="98 por ciento de 100"><i style="width:98%"></i></div>
+    </section>
+
+    <section class="visual card">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <div class="kpi-value text">MEDIO</div>
+      <div class="kpi-label">Nivel de riesgo</div>
+      <div class="kpi-note"><span>Estable desde S6</span></div>
+    </section>
+
+    <!-- ============ COLUMNAS APILADAS ============ -->
+    <section class="visual v-column">
+      <div class="visual-head">
+        <button class="vh-btn" type="button" id="toggle-table" aria-label="Mostrar como tabla" title="Mostrar como tabla">
+          <svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1"/><path d="M2 6.5h12M6.5 6.5v6.5"/></svg>
+        </button>
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <h2 class="visual-title">Incidentes por semana y categoría</h2>
+      <p class="visual-sub">Seleccione una columna para filtrar el resto del reporte</p>
+
+      <div class="chart-wrap" id="col-wrap">
+        <svg class="chart" id="col-chart" role="img" aria-label="Columnas apiladas de incidentes por semana y categoría"></svg>
+      </div>
+
+      <div class="data-table-wrap table-scroll" id="col-table-wrap">
+        <table class="pbi-table">
+          <thead><tr><th>Semana</th><th class="num">Phishing</th><th class="num">Malware</th><th class="num">Accesos</th><th class="num">Fuga de datos</th><th class="num">Otros</th><th class="num">Total</th></tr></thead>
+          <tbody id="col-table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="legend" id="legend"></div>
+    </section>
+
+    <!-- ============ ANILLO ============ -->
+    <section class="visual v-donut">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <h2 class="visual-title">Distribución por categoría</h2>
+      <p class="visual-sub">Incidentes cerrados en el periodo</p>
+      <div class="chart-wrap">
+        <svg class="chart" id="donut-chart" role="img" aria-label="Anillo de distribución de incidentes por categoría"></svg>
+      </div>
+    </section>
+
+    <!-- ============ TABLA ============ -->
+    <section class="visual v-table">
+      <div class="visual-head">
+        <button class="vh-btn dots" type="button" aria-label="Más opciones"><svg viewBox="0 0 16 16"><circle cx="3" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="13" cy="8" r="1.3"/></svg></button>
+      </div>
+      <h2 class="visual-title">Amenazas activas</h2>
+      <p class="visual-sub">Casos abiertos con seguimiento del equipo de operaciones</p>
+      <div class="table-scroll">
+        <table class="pbi-table">
+          <thead>
+            <tr><th>ID</th><th>Amenaza</th><th>Categoría</th><th>Severidad</th><th>Origen</th><th>Estado</th><th class="num">Días</th></tr>
+          </thead>
+          <tbody id="threat-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="pbi-foot">
+    <span>Actualizado 15 ago 2026 · 9:00 a. m.</span>
+    <span class="sep">·</span>
+    <span>Centro de Operaciones OBSCURAL</span>
+    <span class="sep">·</span>
+    <span>Confidencial</span>
+  </div>
+</div>
+
+<div class="pbi-tooltip" id="tooltip" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ========== 1. Modelo de datos ========== */
+  /* Serie en pasos de gris, ordenados por magnitud: sin color. */
+  var CATS = [
+    {key:"phishing", name:"Phishing",          color:"#ffffff"},
+    {key:"malware",  name:"Malware",           color:"#bdbdbd"},
+    {key:"accesos",  name:"Accesos indebidos", color:"#858585"},
+    {key:"fuga",     name:"Fuga de datos",     color:"#616161"},
+    {key:"otros",    name:"Otros",             color:"#454545"}
+  ];
+
+  // [semana, phishing, malware, accesos, fuga, otros]
+  var RAW = [
+    ["S1", 1,1,1,0,0],
+    ["S2", 2,1,1,1,0],
+    ["S3", 2,1,1,0,0],
+    ["S4", 3,2,2,1,0],
+    ["S5", 1,1,0,0,0],
+    ["S6", 2,2,1,1,0],
+    ["S7", 2,1,1,0,1],
+    ["S8", 5,4,3,1,1]
+  ];
+
+  var THREATS = [
+    {id:"AMZ-041", nombre:"Phishing dirigido a nómina", cat:"phishing", sev:"Alta",  origen:"Correo corporativo", estado:"En análisis", dias:2},
+    {id:"AMZ-039", nombre:"Malware en endpoint BOG-14", cat:"malware",  sev:"Media", origen:"Portátil de campo",  estado:"Contenida",   dias:5},
+    {id:"AMZ-036", nombre:"Acceso anómalo por VPN",     cat:"accesos",  sev:"Media", origen:"VPN externa",        estado:"Monitoreo",   dias:9}
+  ];
+
+  var SURFACE = "#0b0b0b";   // separador entre segmentos
+  var GRID    = "#1e1e1e";
+  var AXIS    = "#282828";
+  var INK     = "#ffffff";
+  var INK_2   = "#888888";
+  var INK_3   = "#555555";
+
+  /* ========== 2. Estado (filtrado cruzado) ========== */
+  var state = { weeks: 8, week: null, cat: null };
+  function activeData(){ return RAW.slice(RAW.length - state.weeks); }
+  function total(r){ return r[1]+r[2]+r[3]+r[4]+r[5]; }
+  function fmt(n){ return n.toLocaleString("es-CO"); }
+
+  /* ========== 3. Tooltip ========== */
+  var tipEl = document.getElementById("tooltip");
+  function showTip(html, ev){ tipEl.innerHTML = html; tipEl.classList.add("show"); moveTip(ev); }
+  function moveTip(ev){
+    var pad = 14, w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+    var x = ev.clientX + pad, y = ev.clientY + pad;
+    if (x + w > window.innerWidth - 8)  x = ev.clientX - w - pad;
+    if (y + h > window.innerHeight - 8) y = ev.clientY - h - pad;
+    tipEl.style.left = Math.max(8, x) + "px";
+    tipEl.style.top  = Math.max(8, y) + "px";
+  }
+  function hideTip(){ tipEl.classList.remove("show"); }
+
+  /* ========== 4. Utilidades SVG ========== */
+  var NS = "http://www.w3.org/2000/svg";
+  function el(name, attrs){
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) if (attrs[k] !== null && attrs[k] !== undefined) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  function topRoundedPath(x, y, w, h, r){
+    r = Math.max(0, Math.min(r, w/2, h));
+    return "M"+x+","+(y+h)+"V"+(y+r)+"a"+r+","+r+" 0 0 1 "+r+",-"+r+
+           "h"+(w-2*r)+"a"+r+","+r+" 0 0 1 "+r+","+r+"V"+(y+h)+"Z";
+  }
+
+  /* ========== 5. Columnas apiladas ========== */
+  var colSvg = document.getElementById("col-chart");
+
+  function renderColumns(){
+    var data = activeData();
+    var wrap = document.getElementById("col-wrap");
+    var W = wrap.clientWidth || 640;
+    var H = 268;
+    var m = {top:20, right:8, bottom:32, left:32};
+    var plotW = W - m.left - m.right;
+    var plotH = H - m.top - m.bottom;
+
+    var maxTotal = 0;
+    data.forEach(function(r){ maxTotal = Math.max(maxTotal, total(r)); });
+    var yMax = Math.max(5, Math.ceil(maxTotal / 5) * 5);
+    var y = function(v){ return m.top + plotH - (v / yMax) * plotH; };
+
+    colSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    colSvg.setAttribute("height", H);
+    while (colSvg.firstChild) colSvg.removeChild(colSvg.firstChild);
+
+    var step = yMax / 5;
+    for (var t = 0; t <= yMax + 0.001; t += step){
+      colSvg.appendChild(el("line", {x1:m.left, x2:W-m.right, y1:y(t), y2:y(t),
+        stroke:GRID, "stroke-width":1, "shape-rendering":"crispEdges"}));
+      var tk = el("text", {x:m.left-9, y:y(t)+4, "text-anchor":"end", "font-size":10,
+        "font-weight":500, fill:INK_3});
+      tk.textContent = fmt(t);
+      colSvg.appendChild(tk);
+    }
+
+    var band = plotW / data.length;
+    var barW = Math.min(88, band * 0.62);   // grosor de columna
+
+    data.forEach(function(row, i){
+      var cx = m.left + band * i + band/2;
+      var x  = cx - barW/2;
+      var acc = 0, tot = total(row);
+      var dimBar = (state.week !== null && state.week !== row[0]);
+
+      CATS.forEach(function(c, ci){
+        var v = row[ci+1];
+        if (v <= 0) return;
+        var yBottom = y(acc), yTop = y(acc + v);
+        acc += v;
+        var isTop = (acc === tot);
+        var h = Math.max(2, yBottom - yTop - 2);   // separador de 2px
+        var yy = yBottom - h;
+        var dimCat = (state.cat !== null && state.cat !== c.key);
+        var op = (dimBar || dimCat) ? 0.22 : 1;
+
+        var shape = isTop
+          ? el("path", {d: topRoundedPath(x, yy, barW, h, 3), fill:c.color, opacity:op})
+          : el("rect", {x:x, y:yy, width:barW, height:h, fill:c.color, opacity:op});
+
+        shape.style.cursor = "pointer";
+        shape.setAttribute("tabindex", "0");
+        shape.setAttribute("role", "button");
+        shape.setAttribute("aria-label", row[0]+", "+c.name+", "+v+" incidentes");
+
+        var tipHtml = '<div class="tt-head">'+row[0]+' · '+c.name+'</div>'+
+          '<div class="tt-row"><span class="sw" style="background:'+c.color+'"></span>'+
+          '<span>Incidentes</span><span class="val">'+fmt(v)+'</span></div>'+
+          '<div class="tt-row"><span class="sw" style="background:'+AXIS+'"></span>'+
+          '<span>Total semana</span><span class="val">'+fmt(tot)+'</span></div>';
+
+        shape.addEventListener("mouseenter", function(ev){ showTip(tipHtml, ev); });
+        shape.addEventListener("mousemove", moveTip);
+        shape.addEventListener("mouseleave", hideTip);
+        shape.addEventListener("click", function(){ toggleWeek(row[0]); });
+        shape.addEventListener("keydown", function(ev){
+          if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); toggleWeek(row[0]); }
+        });
+        colSvg.appendChild(shape);
+      });
+
+      var lbl = el("text", {x:cx, y:y(tot)-8, "text-anchor":"middle", "font-size":11,
+        "font-weight":600, fill: dimBar ? INK_3 : INK});
+      lbl.textContent = fmt(tot);
+      colSvg.appendChild(lbl);
+
+      var xl = el("text", {x:cx, y:H-11, "text-anchor":"middle", "font-size":10,
+        "font-weight":600, "letter-spacing":"0.12em", fill: dimBar ? INK_3 : INK_2});
+      xl.textContent = row[0];
+      colSvg.appendChild(xl);
+    });
+
+    colSvg.appendChild(el("line", {x1:m.left, x2:W-m.right, y1:y(0), y2:y(0),
+      stroke:AXIS, "stroke-width":1, "shape-rendering":"crispEdges"}));
+  }
+
+  /* ========== 6. Anillo ========== */
+  var donutSvg = document.getElementById("donut-chart");
+
+  function renderDonut(){
+    var data = activeData().filter(function(r){ return state.week === null || r[0] === state.week; });
+    var totals = CATS.map(function(c, ci){
+      return data.reduce(function(s, r){ return s + r[ci+1]; }, 0);
+    });
+    var sum = totals.reduce(function(a,b){ return a+b; }, 0) || 1;
+
+    var W = donutSvg.parentNode.clientWidth || 300;
+    var R = Math.min(94, Math.max(66, W*0.30)), r0 = R * 0.64;
+    var H = Math.max(200, Math.min(268, R*2 + 44));
+    var cx = W/2, cy = H/2;
+
+    donutSvg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    donutSvg.setAttribute("height", H);
+    while (donutSvg.firstChild) donutSvg.removeChild(donutSvg.firstChild);
+
+    var ang = -Math.PI/2;
+    CATS.forEach(function(c, ci){
+      var v = totals[ci];
+      if (v <= 0) return;
+      var frac = v / sum, a0 = ang, a1 = ang + frac * Math.PI * 2;
+      ang = a1;
+      var large = (a1 - a0) > Math.PI ? 1 : 0;
+      var p = function(a, rad){ return [cx + Math.cos(a)*rad, cy + Math.sin(a)*rad]; };
+      var o0 = p(a0, R), o1 = p(a1, R), i1 = p(a1, r0), i0 = p(a0, r0);
+      var d = "M"+o0[0]+","+o0[1]+"A"+R+","+R+" 0 "+large+" 1 "+o1[0]+","+o1[1]+
+              "L"+i1[0]+","+i1[1]+"A"+r0+","+r0+" 0 "+large+" 0 "+i0[0]+","+i0[1]+"Z";
+
+      var dim = (state.cat !== null && state.cat !== c.key);
+      var arc = el("path", {d:d, fill:c.color, opacity: dim ? 0.22 : 1,
+        stroke:SURFACE, "stroke-width":2, tabindex:"0", role:"button",
+        "aria-label": c.name+", "+v+" incidentes, "+Math.round(frac*100)+" por ciento"});
+      arc.style.cursor = "pointer";
+
+      var tipHtml = '<div class="tt-head">'+c.name+'</div>'+
+        '<div class="tt-row"><span class="sw" style="background:'+c.color+'"></span>'+
+        '<span>Incidentes</span><span class="val">'+fmt(v)+'</span></div>'+
+        '<div class="tt-row"><span class="sw" style="background:'+AXIS+'"></span>'+
+        '<span>Participación</span><span class="val">'+Math.round(frac*100)+'%</span></div>';
+
+      arc.addEventListener("mouseenter", function(ev){ showTip(tipHtml, ev); });
+      arc.addEventListener("mousemove", moveTip);
+      arc.addEventListener("mouseleave", hideTip);
+      arc.addEventListener("click", function(){ toggleCat(c.key); });
+      arc.addEventListener("keydown", function(ev){
+        if (ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); toggleCat(c.key); }
+      });
+      donutSvg.appendChild(arc);
+    });
+
+    var idx = CATS.map(function(c){ return c.key; }).indexOf(state.cat);
+    var center = state.cat ? totals[idx] : sum;
+    var big = el("text", {x:cx, y:cy+3, "text-anchor":"middle", "font-size":32,
+      "font-weight":600, "letter-spacing":"-0.03em", fill:INK});
+    big.textContent = fmt(center);
+    donutSvg.appendChild(big);
+    var small = el("text", {x:cx, y:cy+21, "text-anchor":"middle", "font-size":9,
+      "font-weight":700, "letter-spacing":"0.24em", fill:INK_3});
+    small.textContent = state.cat ? "EN CATEGORÍA" : "INCIDENTES";
+    donutSvg.appendChild(small);
+
+    var lg = document.getElementById("legend");
+    lg.innerHTML = "";
+    CATS.forEach(function(c, ci){
+      var b = document.createElement("button");
+      b.type = "button";
+      b.setAttribute("data-dim", String(state.cat !== null && state.cat !== c.key));
+      b.setAttribute("aria-pressed", String(state.cat === c.key));
+      b.innerHTML = '<span class="sw" style="background:'+c.color+'"></span>'+
+                    c.name+' <span class="n">'+fmt(totals[ci])+'</span>';
+      b.addEventListener("click", function(){ toggleCat(c.key); });
+      lg.appendChild(b);
+    });
+  }
+
+  /* ========== 7. Tablas ========== */
+  function renderTables(){
+    var body = document.getElementById("col-table-body");
+    body.innerHTML = "";
+    activeData().forEach(function(r){
+      var tr = document.createElement("tr");
+      var cells = '<td class="id">'+r[0]+"</td>";
+      for (var i=1;i<=5;i++) cells += '<td class="num">'+fmt(r[i])+"</td>";
+      cells += '<td class="num" style="color:#fff;font-weight:600">'+fmt(total(r))+"</td>";
+      tr.innerHTML = cells;
+      body.appendChild(tr);
+    });
+
+    var tb = document.getElementById("threat-body");
+    tb.innerHTML = "";
+    THREATS.forEach(function(t){
+      var c = CATS.filter(function(x){ return x.key === t.cat; })[0];
+      var sevClass = t.sev === "Alta" ? "alta" : (t.sev === "Media" ? "media" : "baja");
+      var tr = document.createElement("tr");
+      tr.setAttribute("data-dim", String(state.cat !== null && state.cat !== t.cat));
+      tr.innerHTML =
+        '<td class="id">'+t.id+"</td>"+
+        '<td class="name">'+t.nombre+"</td>"+
+        '<td><span class="cat-dot" style="background:'+c.color+'"></span>'+c.name+"</td>"+
+        '<td><span class="sev '+sevClass+'"><span class="mark"></span>'+t.sev+"</span></td>"+
+        "<td>"+t.origen+"</td>"+
+        "<td>"+t.estado+"</td>"+
+        '<td class="num">'+t.dias+"</td>";
+      tb.appendChild(tr);
+    });
+  }
+
+  /* ========== 8. Cards y estado ========== */
+  function renderCards(){
+    var data = activeData().filter(function(r){ return state.week === null || r[0] === state.week; });
+    var idx = CATS.map(function(c){ return c.key; }).indexOf(state.cat);
+    var sum = data.reduce(function(s, r){ return s + (state.cat ? r[idx+1] : total(r)); }, 0);
+    document.getElementById("kpi-cerrados").textContent = fmt(sum);
+    var sub = state.week ? ("Semana "+state.week) : ("Últimas "+state.weeks+" semanas");
+    if (state.cat) sub += " · " + CATS[idx].name;
+    document.getElementById("kpi-cerrados-sub").textContent = sub;
+  }
+
+  function renderFilterState(){
+    var parts = [];
+    if (state.week) parts.push("Semana " + state.week);
+    if (state.cat) parts.push(CATS.filter(function(x){ return x.key === state.cat; })[0].name);
+    var txt = document.getElementById("filter-text");
+    var btn = document.getElementById("clear-filters");
+    if (parts.length){
+      txt.textContent = "Filtrado por: " + parts.join(" · ");
+      btn.hidden = false;
+    } else {
+      txt.textContent = "Sin filtros aplicados";
+      btn.hidden = true;
+    }
+  }
+
+  /* ========== 9. Interacción ========== */
+  function renderAll(){ renderColumns(); renderDonut(); renderTables(); renderCards(); renderFilterState(); }
+  function toggleWeek(w){ state.week = (state.week === w) ? null : w; hideTip(); renderAll(); }
+  function toggleCat(k){  state.cat  = (state.cat  === k) ? null : k; hideTip(); renderAll(); }
+
+  document.getElementById("slicer-periodo").addEventListener("click", function(ev){
+    var b = ev.target.closest(".chip");
+    if (!b) return;
+    state.weeks = parseInt(b.getAttribute("data-weeks"), 10);
+    state.week = null;
+    Array.prototype.forEach.call(this.querySelectorAll(".chip"), function(c){
+      c.setAttribute("aria-pressed", String(c === b));
+    });
+    renderAll();
+  });
+
+  document.getElementById("clear-filters").addEventListener("click", function(){
+    state.week = null; state.cat = null; renderAll();
+  });
+
+  document.getElementById("toggle-table").addEventListener("click", function(){
+    var w = document.getElementById("col-wrap");
+    var t = document.getElementById("col-table-wrap");
+    var showTable = !t.classList.contains("show");
+    t.classList.toggle("show", showTable);
+    w.classList.toggle("hide", showTable);
+    this.setAttribute("aria-label", showTable ? "Mostrar como gráfico" : "Mostrar como tabla");
+  });
+
+  var rt;
+  window.addEventListener("resize", function(){
+    clearTimeout(rt);
+    rt = setTimeout(function(){ renderColumns(); renderDonut(); }, 120);
+  });
+
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ renderColumns(); renderDonut(); });
+  renderAll();
+})();
+</script>
+</body>
+</html>
