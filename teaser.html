@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obscural — Private Digital Intelligence & Protection</title>
+  <meta name="description" content="A private digital intelligence and protection firm for the world's most exposed individuals. For families with visible wealth, executives, artists, and public figures.">
+
+  <!-- Open Graph / LinkedIn -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://obscural.tech/">
+  <meta property="og:title" content="Obscural — Private Digital Intelligence & Protection">
+  <meta property="og:description" content="For families with visible wealth. For executives. For artists followed everywhere. For public figures under permanent scrutiny. Enter.">
+  <meta property="og:image" content="https://obscural.tech/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="627">
+  <meta property="og:locale" content="en_US">
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Obscural — Private Digital Intelligence & Protection">
+  <meta name="twitter:description" content="For families with visible wealth. For executives. For artists followed everywhere. For public figures under permanent scrutiny. Enter.">
+  <meta name="twitter:image" content="https://obscural.tech/og.png">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { height: 100%; scroll-behavior: smooth; }
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      overflow-y: scroll;
+      cursor: none;
+      height: 100%;
+      scroll-snap-type: y mandatory;
+    }
+    /* every top-level section snaps */
+    section, #s06 {
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+      min-height: 100vh;
+    }
+    /* ── HERO LOGO ── */
+    #hero-logo svg { height: 18px; width: auto; display: block; }
+
+    /* ── CURSOR ── */
+    #dot {
+      position: fixed; width: 4px; height: 4px;
+      border-radius: 50%; background: #fff;
+      pointer-events: none; z-index: 99999;
+      transform: translate(-50%,-50%);
+      mix-blend-mode: difference;
+      transition: transform 0.1s ease;
+    }
+
+    /* ── SCROLL FADE IN ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.30s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+    .reveal-delay-4 { transition-delay: 0.60s; }
+    .reveal-delay-5 { transition-delay: 0.75s; }
+
+    /* ═══════════════════════════════════════════════
+       01 — HERO
+    ═══════════════════════════════════════════════ */
+    #hero {
+      height: 100vh;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 32px;
+      position: relative;
+      overflow: hidden;
+      background-image: url('ChatGPT Image Jul 17, 2026, 12_22_44 PM.png');
+      background-size: cover;
+      background-position: center center;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.78) 100%);
+      z-index: 0;
+    }
+    #hero > * { position: relative; z-index: 1; }
+
+    /* Wordmark top-left */
+    #hero-logo {
+      position: absolute;
+      top: 36px; left: 40px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeInSlow 1.4s ease 0.4s forwards;
+    }
+
+    @keyframes fadeInSlow {
+      from { opacity: 0; transform: translateY(-6px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    #hero-line {
+      font-size: clamp(38px, 6.2vw, 88px);
+      font-weight: 200;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      max-width: 1000px;
+      opacity: 0;
+      animation: fadeInSlow 1.6s ease 0.9s forwards;
+    }
+
+    #hero-sub {
+      margin-top: 28px;
+      font-size: 13px;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      opacity: 0;
+      animation: fadeInSlow 1.6s ease 1.6s forwards;
+    }
+
+    /* Scroll indicator */
+    #hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeInSlow 1.2s ease 2.4s forwards;
+    }
+    #hero-scroll span {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    #hero-scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50%       { opacity: 0.8; transform: scaleY(1.15); }
+    }
+
+    /* Ambient glow */
+    #hero::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -60%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.04) 0%, transparent 70%);
+      pointer-events: none;
+      animation: ambientPulse 6s ease-in-out infinite;
+      z-index: 0;
+    }
+    @keyframes ambientPulse {
+      0%, 100% { opacity: 0.6; transform: translate(-50%, -60%) scale(1); }
+      50%       { opacity: 1;   transform: translate(-50%, -60%) scale(1.1); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       02 — FACTS (slide completo)
+    ═══════════════════════════════════════════════ */
+    #facts {
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 60px;
+    }
+
+    #facts-inner {
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 52px;
+    }
+
+    #facts-header { display: flex; flex-direction: column; gap: 16px; }
+
+    #facts-title {
+      font-size: clamp(38px, 5.5vw, 80px);
+      font-weight: 200;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: #fff;
+    }
+
+    #facts-tag {
+      font-size: clamp(13px, 1.3vw, 16px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.38);
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    #facts-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .fact-card {
+      position: relative;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 36px 32px 30px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      overflow: hidden;
+      transition: border-color 0.5s ease, background 0.5s ease;
+    }
+
+    /* Shimmer de borde superior al hover */
+    .fact-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(255,255,255,0.60) 50%,
+        transparent 100%);
+      transition: left 0s;
+    }
+    .fact-card:hover::before {
+      left: 100%;
+      transition: left 0.7s ease;
+    }
+    .fact-card:hover {
+      border-color: rgba(255,255,255,0.22);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .fact-index {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      color: rgba(255,255,255,0.20);
+    }
+
+    .fact-number {
+      font-size: clamp(52px, 6.5vw, 108px);
+      font-weight: 200;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: #fff;
+    }
+
+    .fact-number sup {
+      font-size: 0.30em;
+      font-weight: 300;
+      letter-spacing: 0;
+      vertical-align: super;
+      margin-left: 3px;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .fact-desc {
+      font-size: clamp(12px, 1.1vw, 14px);
+      font-weight: 300;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.48);
+    }
+
+    .fact-source {
+      margin-top: auto;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      text-decoration: none;
+      display: block;
+      transition: color 0.3s ease;
+    }
+    .fact-source:hover { color: rgba(255,255,255,0.45); }
+
+    @media (max-width: 900px) {
+      #facts { height: auto; padding: 80px 32px; }
+      #facts-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      #facts-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       03 — PARTEAGUAS
+    ═══════════════════════════════════════════════ */
+    #parteaguas {
+      height: 100vh;
+      min-height: 600px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 48px;
+      overflow: hidden;
+    }
+
+    #parteaguas-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Vignette — oscurece centro para legibilidad, puntos visibles en periferia */
+    #parteaguas::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 65% 65% at 50% 50%,
+        rgba(0,0,0,0.50) 0%, rgba(0,0,0,0.20) 60%, transparent 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #parteaguas-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      max-width: 860px;
+    }
+
+    #parteaguas-logo svg {
+      width: clamp(180px, 32vw, 460px);
+      height: auto;
+      display: block;
+      opacity: 0.92;
+    }
+
+    #parteaguas-subtitle {
+      font-size: clamp(15px, 1.8vw, 22px);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.72);
+      max-width: 600px;
+      margin-bottom: 32px;
+    }
+
+    #parteaguas-body {
+      font-size: clamp(12px, 1.2vw, 15px);
+      font-weight: 300;
+      line-height: 1.85;
+      color: rgba(255,255,255,0.35);
+      max-width: 620px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      margin-bottom: 28px;
+    }
+
+    #parteaguas-tag {
+      font-size: clamp(11px, 1.1vw, 14px);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.38);
+      font-style: italic;
+    }
+
+    /* ═══════════════════════════════════════════════
+       04 — WHO
+    ═══════════════════════════════════════════════ */
+    #audiencias { padding: 0; background: #030303; border-top: 1px solid rgba(255,255,255,0.04); }
+    .who-sticky {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-start; gap: clamp(40px,8vh,100px);
+      padding: clamp(80px,10vh,120px) clamp(32px,6vw,96px) clamp(24px,3vh,48px);
+      background: #030303; overflow: hidden;
+    }
+    .who-title {
+      font-size: clamp(80px,16vw,240px);
+      font-weight: 700; letter-spacing: -0.06em;
+      line-height: 0.82; color: #fff;
+      margin-bottom: 0;
+    }
+    .profiles-cols {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 1px; background: rgba(255,255,255,0.05);
+      flex: 1; max-height: 52vh;
+    }
+    .profile-col {
+      background: #030303; padding: 36px 28px 64px;
+      cursor: pointer; position: relative;
+      min-height: 340px; display: flex; flex-direction: column; justify-content: flex-end;
+      overflow: hidden;
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .profile-col.in { opacity: 1; transform: none; }
+    .profile-col:nth-child(2) { transition-delay: 0.08s; }
+    .profile-col:nth-child(3) { transition-delay: 0.16s; }
+    .profile-col:nth-child(4) { transition-delay: 0.24s; }
+    .profile-col-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      filter: brightness(0.92) saturate(0.88);
+      transition: filter 0.5s ease;
+    }
+    .profile-col::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(3,3,3,0.92) 0%, rgba(3,3,3,0.2) 55%, transparent 100%);
+      pointer-events: none;
+    }
+    .profile-col > *:not(.profile-col-img):not(.profile-vectors) { position: relative; z-index: 2; }
+    .profile-vectors {
+      position: absolute !important; top: 0; left: 0; right: 0; bottom: 0; z-index: 4;
+      background: rgba(3,3,3,0.90);
+      display: flex; flex-direction: column; justify-content: center;
+      padding: clamp(20px,3vh,36px) clamp(20px,2vw,32px);
+      opacity: 0; transition: opacity 0.55s ease;
+      pointer-events: none;
+    }
+    .profile-col:hover .profile-vectors { opacity: 1; }
+    .profile-col:hover .profile-col-img { filter: brightness(0.85) saturate(0.90); }
+    .pv-label {
+      font-size: 7px; letter-spacing: 0.3em; text-transform: uppercase;
+      color: rgba(255,255,255,0.2); margin-bottom: 14px; display: block;
+    }
+    .pv-item {
+      font-size: clamp(11px,0.9vw,13px); font-weight: 300;
+      color: rgba(255,255,255,0.52); padding: 9px 0;
+      border-top: 1px solid rgba(255,255,255,0.07); line-height: 1.4;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .pv-item::before {
+      content: ''; flex-shrink: 0;
+      width: 3px; height: 3px; border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+    }
+    .profile-col-n {
+      font-size: 8px; letter-spacing: 0.24em;
+      color: rgba(255,255,255,0.14); display: block; margin-bottom: 40px;
+    }
+    .profile-col-type {
+      font-size: clamp(18px,1.9vw,26px);
+      font-weight: 200; letter-spacing: -0.01em; line-height: 1.1;
+      color: #fff; display: block; margin-bottom: 14px;
+    }
+    .profile-col-head {
+      font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+      font-weight: 400; line-height: 1.6;
+      color: rgba(255,255,255,0.35); margin-bottom: 0;
+    }
+    .profile-col-head em { color: rgba(255,255,255,0.2); font-style: normal; display: block; }
+
+    @media (max-width: 768px) {
+      .profiles-cols { grid-template-columns: repeat(2,1fr); max-height: none; }
+      .profile-col { min-height: 220px; padding: 20px 14px 18px; }
+      .who-title { font-size: clamp(56px,18vw,110px); }
+    }
+
+    /* ═══════════════════════════════════════════════
+       05 — QUÉ HACEMOS (radar)
+    ═══════════════════════════════════════════════ */
+    #servicios {
+      min-height: 100vh;
+      display: flex;
+      background: #000;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    #svc-left {
+      flex: 0 0 42%;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: clamp(48px,8vh,96px) clamp(32px,5vw,80px);
+      border-right: 1px solid rgba(255,255,255,0.04);
+      z-index: 1;
+    }
+    #svc-eyebrow {
+      display: block;
+      font-size: 9px; letter-spacing: 0.32em; text-transform: uppercase;
+      color: rgba(255,255,255,0.22); margin-bottom: clamp(24px,4vh,48px);
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #svc-eyebrow.in { opacity: 1; transform: none; }
+    #svc-title {
+      font-size: clamp(52px,8vw,120px);
+      font-weight: 700; letter-spacing: -0.05em;
+      line-height: 0.88; color: rgba(255,255,255,0.45);
+      margin-bottom: clamp(24px,3vh,44px);
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #svc-title.in { opacity: 1; transform: none; }
+    .svc-list { display: flex; flex-direction: column; }
+    .svc-item {
+      font-size: clamp(11px, 1.0vw, 15px);
+      font-weight: 300;
+      color: rgba(255,255,255,0.62);
+      padding: clamp(6px,0.8vh,10px) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      opacity: 0; transform: translateY(8px);
+      transition: opacity 0.65s cubic-bezier(.16,1,.3,1), transform 0.65s cubic-bezier(.16,1,.3,1);
+    }
+    .svc-item.in { opacity: 1; transform: none; }
+    .svc-item:nth-child(2) { transition-delay: 0.08s; }
+    .svc-item:nth-child(3) { transition-delay: 0.16s; }
+    .svc-item:nth-child(4) { transition-delay: 0.24s; }
+    .svc-item:nth-child(5) { transition-delay: 0.32s; }
+    .svc-item:nth-child(6) { transition-delay: 0.40s; }
+    .svc-item--bold {
+      font-size: clamp(12px, 1.1vw, 16px);
+      font-weight: 400; color: rgba(255,255,255,0.90);
+    }
+    #svc-right {
+      flex: 1;
+      position: relative;
+    }
+    #svc-canvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+    }
+    @media (max-width: 768px) {
+      #servicios { flex-direction: column; }
+      #svc-left { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+      #svc-right { min-height: 50vh; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       06 — CIERRE + CTA
+    ═══════════════════════════════════════════════ */
+    /* ── CIERRE ── */
+    #cierre {
+      min-height: 100vh;
+      display: flex;
+      background: #000;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+    }
+    #cierre-left {
+      flex: 0 0 42%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(48px,8vh,96px) clamp(32px,5vw,80px);
+      border-right: 1px solid rgba(255,255,255,0.04);
+    }
+    #cierre-right {
+      flex: 1;
+      position: relative;
+    }
+    #cierre-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    #cierre-eyebrow {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.30);
+      margin-bottom: 28px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    #cierre-eyebrow.in { opacity: 1; transform: none; }
+
+    #cierre-what {
+      font-size: clamp(44px, 6vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.05em;
+      line-height: 0.88;
+      color: #fff;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    #cierre-what.in { opacity: 1; transform: none; }
+
+    #cierre-sub {
+      font-size: clamp(16px, 2vw, 26px);
+      font-weight: 200;
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.50);
+      margin-bottom: 40px;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.8s ease 0.12s, transform 0.8s ease 0.12s;
+    }
+    #cierre-sub.in { opacity: 1; transform: none; }
+
+    #cierre-list {
+      list-style: none;
+      margin: 0 0 40px;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    #cierre-list li {
+      font-size: clamp(15px, 2vw, 20px);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.4;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    #cierre-list li.in { opacity: 1; transform: none; }
+    .cierre-aside {
+      font-size: 0.7em;
+      font-weight: 300;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.28);
+      margin-left: 6px;
+    }
+
+    #cierre-tagline {
+      font-size: 11px;
+      font-weight: 300;
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.32);
+      margin-bottom: 36px;
+      font-style: italic;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    #cierre-tagline.in { opacity: 1; }
+
+    #cierre-cta {
+      display: inline-block;
+      align-self: flex-start;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.26em;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 16px 44px;
+      opacity: 0;
+      transition: opacity 0.8s ease, border-color 0.4s ease, background 0.4s ease;
+    }
+    #cierre-cta.in { opacity: 1; }
+    #cierre-cta:hover {
+      border-color: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.05);
+    }
+
+    #cierre-footer {
+      position: absolute;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.15);
+      white-space: nowrap;
+    }
+
+    /* ── NAV BAR ── */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 9000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px clamp(24px,4vw,64px);
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transform: translateY(-100%);
+      transition: transform 0.55s cubic-bezier(.16,1,.3,1);
+    }
+    #nav.visible { transform: translateY(0); }
+    #nav-logo svg { height: 14px; width: auto; display: block; opacity: 0.90; }
+    #nav-links { display: flex; align-items: center; gap: 32px; }
+    #nav-links a {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.50);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    #nav-links a:hover { color: #fff; }
+    #lang-btn {
+      background: none;
+      border: 1px solid rgba(255,255,255,0.22);
+      color: rgba(255,255,255,0.50);
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      padding: 5px 11px; cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    #lang-btn:hover { color: #fff; border-color: rgba(255,255,255,0.55); }
+    #nav-contact {
+      color: #fff !important;
+      border: 1px solid rgba(255,255,255,0.22);
+      padding: 8px 20px;
+      transition: border-color 0.3s ease, color 0.3s ease !important;
+    }
+    #nav-contact:hover { border-color: rgba(255,255,255,0.70) !important; }
+
+    /* ── PER-SECTION BOTTOM-RIGHT CTA ── */
+    .section-email {
+      position: absolute;
+      bottom: 28px; right: clamp(24px,4vw,64px);
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.18);
+      text-decoration: none;
+      transition: color 0.3s ease;
+      z-index: 10;
+    }
+    .section-email:hover { color: rgba(255,255,255,0.55); }
+
+    /* ── SECTION 06 — LOGO CLOSE ── */
+    @keyframes ecoPulse {
+      0%   { transform: translate(-50%,-50%) scale(1);   opacity: 0.85; }
+      100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
+    }
+    .eco-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.15);
+      transform: translate(-50%,-50%) scale(1);
+      opacity: 0;
+      animation: ecoPulse 3.6s ease-out infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .eco-ring:nth-child(2) { animation-delay: 1.2s; }
+    .eco-ring:nth-child(3) { animation-delay: 2.4s; }
+    #s06 {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background: #000;
+      border-top: 1px solid rgba(255,255,255,0.04);
+    }
+    #s06-logo {
+      width: clamp(160px, 28vw, 320px);
+      margin-bottom: 56px;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 1s ease, transform 1s ease;
+      position: relative; z-index: 1;
+    }
+    #s06-logo.in { opacity: 1; transform: none; }
+    #s06-email {
+      display: block;
+      font-size: clamp(14px, 1.8vw, 22px);
+      font-weight: 300;
+      letter-spacing: 0.18em;
+      color: #fff;
+      text-decoration: none;
+      text-transform: lowercase;
+      opacity: 0;
+      transition: opacity 0.9s ease 0.3s, color 0.3s ease;
+    }
+    #s06-email.in { opacity: 1; }
+    #s06-email:hover { color: rgba(255,255,255,0.60); }
+    #s06-fine {
+      position: absolute;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.14);
+      white-space: nowrap;
+    }
+
+    @media (max-width: 768px) {
+      #cierre { flex-direction: column; }
+      #cierre-left { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
+      #cierre-right { min-height: 60vw; }
+      #cierre-list { display: flex; }
+      #cierre-cta { align-self: center; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      #hero-logo { top: 24px; left: 24px; }
+      #facts, #parteaguas, #audiencias { padding: 80px 24px; }
+      #servicios { padding: 80px 24px; }
+      #cierre { padding: 80px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="dot"></div>
+
+<!-- ═══════════════════ NAV ═══════════════════ -->
+<nav id="nav">
+  <a id="nav-logo" href="https://obscural.tech" target="_blank" rel="noopener">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+      <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+      <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+      <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+      <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+      <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+      <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+      <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+      <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+    </svg>
+  </a>
+  <div id="nav-links">
+    <a href="https://obscural.tech" target="_blank" rel="noopener">obscural.tech</a>
+    <a id="nav-contact" href="#s06" data-en="Contact Us" data-es="Contáctanos">Contact Us</a>
+    <button id="lang-btn" onclick="toggleLang()">ESP</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ 01 — HERO ═══════════════════ -->
+<section id="hero">
+  <div id="hero-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+      <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+      <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+      <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+      <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+      <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+      <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+      <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+      <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+    </svg>
+  </div>
+  <h1 id="hero-line" data-en="We protect your personal, family,&lt;br&gt;and professional legacy." data-es="Estamos para proteger tu patrimonio&lt;br&gt;personal, familiar y profesional." data-html="true">We protect your personal, family,<br>and professional legacy.</h1>
+  <p id="hero-sub" data-en="Introducing Obscural." data-es="Te presentamos Obscural.">Introducing Obscural.</p>
+  <div id="hero-scroll">
+    <div id="hero-scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- ═══════════════════ 02 — FACTS ═══════════════════ -->
+<section id="facts" style="position:relative">
+  <div id="facts-inner">
+
+    <div id="facts-header">
+      <h2 id="facts-title" class="reveal" data-en="A real threat." data-es="Una amenaza real.">A real threat.</h2>
+      <p id="facts-tag" class="reveal reveal-delay-1" data-en="Wealth attracts attention. Digital exposure makes it accessible." data-es="El patrimonio siempre atrajo atención. La exposición digital lo hizo accesible.">Wealth attracts attention. Digital exposure makes it accessible.</p>
+    </div>
+
+    <div id="facts-grid">
+
+      <div class="fact-card reveal reveal-delay-1">
+        <span class="fact-index">01</span>
+        <div class="fact-number"><span class="count" data-target="62" data-decimal="0">0</span><sup>%</sup></div>
+        <p class="fact-desc" data-en="Of family offices managing assets over $1 billion suffered a cyberattack in the past year." data-es="De los family offices con activos superiores a $1,000 millones sufrió un ciberataque en el último año.">Of family offices managing assets over $1 billion suffered a cyberattack in the past year.</p>
+        <a class="fact-source" href="https://www.deloitte.com/content/dam/assets-zone2/uk/en/docs/services/deloitte-private/2024/global-dp-fo-cybersecuirty-summary-report-landscape.pdf" target="_blank" rel="noopener" data-en="Deloitte · Family Office Cybersecurity Report 2024 · Global" data-es="Deloitte · Family Office Cybersecurity Report 2024 · Global">Deloitte · Family Office Cybersecurity Report 2024 · Global</a>
+      </div>
+
+      <div class="fact-card reveal reveal-delay-2">
+        <span class="fact-index">02</span>
+        <div class="fact-number"><span class="count" data-target="51" data-decimal="0">0</span><sup>%</sup></div>
+        <p class="fact-desc" data-en="Of organizations reported cyberattacks targeting their executives and family members — up from 42% two years prior." data-es="De las organizaciones reportó ataques dirigidos a sus ejecutivos y a sus familiares — antes era 42%.">Of organizations reported cyberattacks targeting their executives and family members — up from 42% two years prior.</p>
+        <a class="fact-source" href="https://ponemonsullivanreport.com/2025/04/deepfake-deception-how-ai-harms-the-fortunes-and-reputations-of-executives-and-corporations/" target="_blank" rel="noopener" data-en="Ponemon Institute · Deepfake Deception · 2025" data-es="Ponemon Institute · Deepfake Deception · 2025">Ponemon Institute · Deepfake Deception · 2025</a>
+      </div>
+
+      <div class="fact-card reveal reveal-delay-3">
+        <span class="fact-index">03</span>
+        <div class="fact-number"><span class="count" data-target="50" data-decimal="0">0</span><sup>%</sup></div>
+        <p class="fact-desc" data-en="Of organizations reported exposure of their executives' home addresses, personal phones, and personal emails." data-es="De las organizaciones reportó exposición del domicilio, teléfono personal y correo personal de sus ejecutivos.">Of organizations reported exposure of their executives' home addresses, personal phones, and personal emails.</p>
+        <a class="fact-source" href="https://ponemonsullivanreport.com/2025/04/deepfake-deception-how-ai-harms-the-fortunes-and-reputations-of-executives-and-corporations/" target="_blank" rel="noopener" data-en="Ponemon Institute · Deepfake Deception · 2025" data-es="Ponemon Institute · Deepfake Deception · 2025">Ponemon Institute · Deepfake Deception · 2025</a>
+      </div>
+
+      <div class="fact-card reveal reveal-delay-4">
+        <span class="fact-index">04</span>
+        <div class="fact-number">1,400</div>
+        <p class="fact-desc" data-en="WhatsApp users — heads of state, ministers, journalists — silently hacked by Pegasus spyware in a single operation." data-es="Usuarios de WhatsApp — jefes de Estado, ministros, periodistas — hackeados en silencio por Pegasus en una sola operación.">WhatsApp users — heads of state, ministers, journalists — silently hacked by Pegasus spyware in a single operation.</p>
+        <a class="fact-source" href="https://techcrunch.com/2025/05/30/eight-things-we-learned-from-whatsapp-vs-nso-group-spyware-lawsuit/" target="_blank" rel="noopener">TechCrunch · WhatsApp v. NSO Group · May 2025</a>
+      </div>
+
+    </div>
+  </div>
+  <a class="section-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+</section>
+
+<!-- ═══════════════════ 03 — PARTEAGUAS ═══════════════════ -->
+<section id="parteaguas" style="position:relative">
+  <canvas id="parteaguas-canvas"></canvas>
+
+  <div id="parteaguas-content">
+    <div id="parteaguas-logo" class="reveal">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+        <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+        <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+        <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+        <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+        <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+        <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+        <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+        <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+      </svg>
+    </div>
+
+    <p id="parteaguas-subtitle" class="reveal reveal-delay-1" data-en="A private digital intelligence and protection firm for the world's most exposed individuals." data-es="Una firma privada de inteligencia y protección digital para las personas más expuestas del mundo.">A private digital intelligence and protection firm for the world's most exposed individuals.</p>
+
+    <p id="parteaguas-body" class="reveal reveal-delay-2" data-en="For families with visible wealth. For executives at major companies. For artists with a public identity. For public figures under permanent scrutiny. For high-net-worth clients. For those who move in banking, law, politics, or media." data-es="Para familias con patrimonio visible. Para ejecutivos de grandes empresas. Para artistas con identidad expuesta. Para figuras públicas bajo escrutinio permanente. Para el cliente de alto patrimonio. Para quienes se mueven en banca, derecho, política o medios.">For families with visible wealth. For executives at major companies. For artists with a public identity. For public figures under permanent scrutiny. For high-net-worth clients. For those who move in banking, law, politics, or media.</p>
+
+    <p id="parteaguas-tag" class="reveal reveal-delay-3" data-en="We are your partner in digital security." data-es="Somos tu partner en seguridad digital.">We are your partner in digital security.</p>
+  </div>
+  <a class="section-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+</section>
+
+<!-- ═══════════════════ 04 — WHO ═══════════════════ -->
+<section id="audiencias" style="position:relative">
+  <div class="who-sticky">
+    <div>
+      <span style="font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:rgba(255,255,255,0.22);display:block;margin-bottom:12px;" data-en="04 — Who We Protect" data-es="04 — Con quiénes trabajamos">04 — Who We Protect</span>
+      <h2 class="who-title reveal">WHO.</h2>
+    </div>
+
+    <div class="profiles-cols" id="profiles-cols">
+      <!-- 01 The Executive -->
+      <div class="profile-col" data-who="0">
+        <img class="profile-col-img" src="img_jet.png" alt="" style="object-position: 30% 20%;">
+        <div class="profile-vectors">
+          <span class="pv-label" data-en="What we protect" data-es="Qué protegemos">What we protect</span>
+          <div class="pv-item" data-en="Confidential decisions." data-es="Decisiones confidenciales.">Confidential decisions.</div>
+          <div class="pv-item" data-en="Executive communications." data-es="Comunicaciones ejecutivas.">Executive communications.</div>
+          <div class="pv-item" data-en="Trusted relationships." data-es="Relaciones de confianza.">Trusted relationships.</div>
+          <div class="pv-item" data-en="Family privacy." data-es="Privacidad familiar.">Family privacy.</div>
+        </div>
+        <span class="profile-col-n">01</span>
+        <span class="profile-col-type">The Executive</span>
+        <h3 class="profile-col-head">Decisions move markets.<em>Exposure arrives first.</em></h3>
+      </div>
+      <!-- 02 The Artist -->
+      <div class="profile-col" data-who="1">
+        <img class="profile-col-img" src="img_concert.png" alt="">
+        <div class="profile-vectors">
+          <span class="pv-label" data-en="What we protect" data-es="Qué protegemos">What we protect</span>
+          <div class="pv-item" data-en="Identity." data-es="Identidad.">Identity.</div>
+          <div class="pv-item" data-en="Creative property." data-es="Propiedad creativa.">Creative property.</div>
+          <div class="pv-item" data-en="Reputation." data-es="Reputación.">Reputation.</div>
+          <div class="pv-item" data-en="Private life." data-es="Vida privada.">Private life.</div>
+        </div>
+        <span class="profile-col-n">02</span>
+        <span class="profile-col-type">The Artist</span>
+        <h3 class="profile-col-head">Identity is the asset.<em>Visibility is the risk.</em></h3>
+      </div>
+      <!-- 03 The Family -->
+      <div class="profile-col" data-who="2">
+        <img class="profile-col-img" src="ChatGPT Image Jul 16, 2026, 12_16_09 AM.png" alt="">
+        <div class="profile-vectors">
+          <span class="pv-label" data-en="What we protect" data-es="Qué protegemos">What we protect</span>
+          <div class="pv-item" data-en="Children." data-es="Hijos.">Children.</div>
+          <div class="pv-item" data-en="The home." data-es="El hogar.">The home.</div>
+          <div class="pv-item" data-en="Daily privacy." data-es="Privacidad cotidiana.">Daily privacy.</div>
+          <div class="pv-item" data-en="Peace of mind." data-es="Tranquilidad.">Peace of mind.</div>
+        </div>
+        <span class="profile-col-n">03</span>
+        <span class="profile-col-type">The Family</span>
+        <h3 class="profile-col-head">Built to last.<em>If protected.</em></h3>
+      </div>
+      <!-- 04 The Public Figure -->
+      <div class="profile-col" data-who="3">
+        <img class="profile-col-img" src="ChatGPT Image Jul 16, 2026, 09_39_44 PM.png" alt="">
+        <div class="profile-vectors">
+          <span class="pv-label" data-en="What we protect" data-es="Qué protegemos">What we protect</span>
+          <div class="pv-item" data-en="Credibility." data-es="Credibilidad.">Credibility.</div>
+          <div class="pv-item" data-en="Personal security." data-es="Seguridad personal.">Personal security.</div>
+          <div class="pv-item" data-en="Freedom of movement." data-es="Libertad de movimiento.">Freedom of movement.</div>
+          <div class="pv-item" data-en="Public trust." data-es="Confianza pública.">Public trust.</div>
+        </div>
+        <span class="profile-col-n">04</span>
+        <span class="profile-col-type">The Public Figure</span>
+        <h3 class="profile-col-head">Permanent scrutiny.<em>Zero privacy by default.</em></h3>
+      </div>
+    </div>
+  </div>
+  <a class="section-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+</section>
+
+<!-- ═══════════════════ 05 — CIERRE ═══════════════════ -->
+<section id="servicios">
+  <div id="svc-left">
+    <span id="svc-eyebrow" data-en="05 — Coverage" data-es="05 — Cobertura">05 — Coverage</span>
+    <h2 id="svc-title">WHAT.</h2>
+    <p id="cierre-sub" data-en="We protect you." data-es="Te protegemos.">We protect you.</p>
+    <ul id="cierre-list">
+      <li data-en="You." data-es="A ti.">You.</li>
+      <li data-en="Your family." data-es="Tu familia.">Your family.</li>
+      <li data-en="Your inner circle." data-es="Tu círculo cercano.">Your inner circle.</li>
+      <li data-en="Your spaces. &lt;span class=&quot;cierre-aside&quot;&gt;[Home, Office, Studio]&lt;/span&gt;" data-es="Tus espacios. &lt;span class=&quot;cierre-aside&quot;&gt;[Hogar, Oficina, Estudio]&lt;/span&gt;" data-html="true">Your spaces. <span class="cierre-aside">[Home, Office, Studio]</span></li>
+      <li data-en="Your digital life." data-es="Tu vida digital.">Your digital life.</li>
+      <li data-en="Your devices." data-es="Tus equipos electrónicos.">Your devices.</li>
+    </ul>
+    <p id="cierre-tagline" data-en="We are your partner in digital protection." data-es="Somos tu partner en protección digital.">We are your partner in digital protection.</p>
+    <a id="cierre-cta" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+  </div>
+  <div id="svc-right">
+    <canvas id="svc-canvas"></canvas>
+  </div>
+  <a class="section-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+</section>
+
+<!-- ═══════════════════ 06 — LOGO CLOSE ═══════════════════ -->
+<section id="s06">
+  <span class="eco-ring"></span>
+  <span class="eco-ring"></span>
+  <span class="eco-ring"></span>
+  <div id="s06-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -2 273.62 51.37">
+      <path fill="#fff" d="M32.04,11.63h-14.59C7.81,11.63,0,19.45,0,29.09s7.81,17.45,17.45,17.45h14.59c9.64,0,17.45-7.81,17.45-17.45s-7.81-17.45-17.45-17.45ZM17.45,40.81c-6.46,0-11.72-5.26-11.72-11.72s5.26-11.72,11.72-11.72h5.92c-3.59,2.66-5.92,6.91-5.92,11.72s2.34,9.06,5.93,11.72h-5.92Z"/>
+      <path fill="#fff" d="M120.46,30.62c-.43-.65-.89-1.23-1.35-1.74-.47-.51-1.07-.97-1.81-1.37-.74-.4-1.39-.74-1.96-1.02-.57-.28-1.3-.55-2.21-.8-.9-.26-1.62-.45-2.16-.57-.54-.12-1.25-.28-2.14-.48-.87-.2-1.55-.36-2.04-.47-.49-.11-1.04-.27-1.65-.49-.61-.21-1.08-.42-1.39-.62-.31-.2-.58-.46-.8-.77-.22-.31-.33-.66-.33-1.04,0-.85.45-1.48,1.35-1.89.9-.41,2.07-.62,3.49-.62,2.92,0,5.88,1.03,8.89,3.08l4.68-6.45c-4.15-3.05-8.78-4.58-13.91-4.58-2.72,0-5.16.4-7.31,1.2-2.15.8-3.89,2.07-5.21,3.8-1.33,1.73-1.99,3.81-1.99,6.24,0,.89.1,1.73.28,2.51.19.78.42,1.47.69,2.06.27.59.65,1.15,1.15,1.69.5.53.97.99,1.4,1.35.43.37,1.01.72,1.72,1.07.71.35,1.31.62,1.81.82.49.2,1.15.42,1.97.65.82.23,1.47.41,1.92.52.46.11,1.1.26,1.92.43,1.11.27,1.96.48,2.52.63.57.16,1.19.38,1.86.65.67.28,1.14.6,1.42.95.28.36.42.77.42,1.24,0,.89-.51,1.58-1.52,2.07-1.02.49-2.36.74-4.03.74-3.7,0-7.03-1.26-10-3.78l-4.65,6.45c4.28,3.52,9.27,5.28,14.98,5.28,4.41,0,8.05-1.03,10.91-3.09,2.86-2.06,4.3-4.94,4.3-8.64,0-1-.1-1.93-.3-2.77-.2-.85-.52-1.59-.95-2.24Z"/>
+      <path fill="#fff" d="M142.94,20.46c1.6,0,3.06.39,4.38,1.17,1.31.78,2.34,1.83,3.07,3.14l8.69-5.28c-1.63-2.7-3.85-4.82-6.69-6.37-2.83-1.55-5.98-2.32-9.46-2.32-5.37,0-9.86,1.75-13.46,5.25-3.6,3.5-5.4,7.85-5.4,13.04s1.8,9.54,5.4,13.04c3.6,3.5,8.08,5.25,13.46,5.25,3.48,0,6.63-.77,9.46-2.32,2.83-1.55,5.06-3.68,6.69-6.4l-8.69-5.25c-.74,1.31-1.76,2.36-3.07,3.14-1.32.78-2.78,1.17-4.38,1.17-2.45,0-4.49-.82-6.12-2.47-1.63-1.65-2.44-3.7-2.44-6.15s.81-4.5,2.44-6.15c1.63-1.65,3.67-2.47,6.12-2.47Z"/>
+      <path fill="#fff" d="M184.49,31.19c0,1.96-.59,3.54-1.77,4.73-1.18,1.19-2.75,1.79-4.71,1.79s-3.54-.6-4.73-1.79c-1.19-1.19-1.79-2.77-1.79-4.73V11.63h-10v20.93c0,4.46,1.51,8.04,4.53,10.75,3.02,2.71,7.02,4.06,11.99,4.06s8.99-1.35,11.98-4.06c3-2.71,4.5-6.29,4.5-10.75V11.63h-10v19.56Z"/>
+      <path fill="#fff" d="M209.28,15.58v-3.95h-10v34.9h10v-16.28c0-2.74.82-4.91,2.46-6.52,1.64-1.6,3.96-2.41,6.97-2.41h1.5v-10.26h-1.5c-3.7,0-6.84,1.5-9.43,4.51Z"/>
+      <rect fill="#fff" x="263.62" width="10" height="46.54"/>
+      <path fill="#fff" d="M72.75,10.8c-3.6,0-6.94,1.12-9.74,3.04V0h-10v46.54h10v-2.21c2.79,1.92,6.14,3.04,9.74,3.04,9.75,0,17.65-8.19,17.65-18.29s-7.9-18.29-17.65-18.29ZM71.71,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+      <path fill="#fff" d="M248.83,13.86c-2.8-1.93-6.16-3.06-9.77-3.06-9.75,0-17.65,8.19-17.65,18.29s7.9,18.29,17.65,18.29c3.61,0,6.97-1.13,9.77-3.06v2.23h10V11.63h-10v2.23ZM240.4,37.78c-4.8,0-8.69-3.89-8.69-8.69s3.89-8.69,8.69-8.69,8.69,3.89,8.69,8.69-3.89,8.69-8.69,8.69Z"/>
+    </svg>
+  </div>
+  <a id="s06-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
+</section>
+
+<script>
+  /* ── KEYBOARD NAVIGATION ── */
+  (function() {
+    var sections = Array.from(document.querySelectorAll('section, #s06'));
+    var busy = false;
+    function goTo(el) {
+      busy = true;
+      el.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(function() { busy = false; }, 900);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (busy) return;
+      var key = e.key;
+      var isNext = key === 'ArrowDown' || key === 'ArrowRight';
+      var isPrev = key === 'ArrowUp'   || key === 'ArrowLeft';
+      if (!isNext && !isPrev) return;
+      e.preventDefault();
+      var current = sections.reduce(function(best, s) {
+        return Math.abs(s.getBoundingClientRect().top) < Math.abs(best.getBoundingClientRect().top) ? s : best;
+      }, sections[0]);
+      var idx = sections.indexOf(current);
+      if (isNext && idx < sections.length - 1) goTo(sections[idx + 1]);
+      if (isPrev && idx > 0)                   goTo(sections[idx - 1]);
+    });
+  })();
+
+  /* ── CURSOR ── */
+  const dot = document.getElementById('dot');
+  document.addEventListener('mousemove', e => {
+    dot.style.left = e.clientX + 'px';
+    dot.style.top  = e.clientY + 'px';
+  });
+
+  /* ── NAV — slide down after hero ── */
+  (function() {
+    var nav = document.getElementById('nav');
+    var hero = document.getElementById('hero');
+    var navObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (!e.isIntersecting) { nav.classList.add('visible'); }
+        else { nav.classList.remove('visible'); }
+      });
+    }, { threshold: 0.15 });
+    navObs.observe(hero);
+
+    // smooth scroll Contact Us → #s06
+    document.getElementById('nav-contact').addEventListener('click', function(e) {
+      e.preventDefault();
+      document.getElementById('s06').scrollIntoView({ behavior: 'smooth' });
+    });
+  })();
+
+  /* ── SECTION 06 — logo + email reveal ── */
+  (function() {
+    var logo  = document.getElementById('s06-logo');
+    var email = document.getElementById('s06-email');
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          logo.classList.add('in');
+          email.classList.add('in');
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    obs.observe(document.getElementById('s06'));
+  })();
+
+  /* ── SCROLL REVEAL (IntersectionObserver) ── */
+  const revealEls = document.querySelectorAll('.reveal');
+  const revealObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  revealEls.forEach(el => revealObs.observe(el));
+
+  /* ── WHO CARDS — animate in on scroll ── */
+  const profileCols = document.querySelectorAll('.profile-col');
+  const profileObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        profileObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  profileCols.forEach(el => profileObs.observe(el));
+
+  /* svc-item observer removed — list replaced by cierre-list */
+
+  /* ── CIERRE — left column reveal + radar sync ── */
+  (function() {
+    var triggered = false;
+    var isMobile = window.innerWidth < 768;
+    var section  = document.getElementById('servicios');
+
+    // Text sequence — same on all devices
+    // List items: 1 second apart starting at 900ms
+    var textEls = [
+      { el: document.getElementById('svc-eyebrow'),    delay:    0 },
+      { el: document.getElementById('svc-title'),      delay:  200 },
+      { el: document.getElementById('cierre-sub'),     delay:  600 },
+      { el: document.getElementById('cierre-tagline'), delay: 4800 },
+      { el: document.getElementById('cierre-cta'),     delay: 5100 },
+    ];
+    // Pausa de 1.8s tras "Te protegemos." — luego cada ítem cada 500ms
+    Array.from(document.querySelectorAll('#cierre-list li')).forEach(function(li, i) {
+      textEls.push({ el: li, delay: 1800 + i * 500 });
+    });
+
+    // Radar: sincronizado con cada ítem de la lista
+    var radarSteps = [
+      { delay: 1800, step: 'r1'   },   // A ti.
+      { delay: 2300, step: 'dots' },   // Tu familia.
+      { delay: 2800, step: 'r2'   },   // Tu círculo cercano.
+      { delay: 3300, step: 'scan' },   // Tus espacios.
+      { delay: 3800, step: 'sq'   },   // Tu vida digital.
+      { delay: 4300, step: 'sh'   },   // Tus equipos.
+    ];
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting && !triggered) {
+          triggered = true;
+
+          textEls.forEach(function(item) {
+            if (!item.el) return;
+            setTimeout(function() { item.el.classList.add('in'); }, item.delay);
+          });
+
+          if (!isMobile && typeof window._radarStep === 'function') {
+            // Recalculate canvas dimensions now that section is visible
+            if (typeof window._radarResize === 'function') window._radarResize();
+            radarSteps.forEach(function(s) {
+              setTimeout(function() { window._radarStep(s.step); }, s.delay);
+            });
+          }
+
+          obs.unobserve(section);
+        }
+      });
+    }, { threshold: 0.12 });
+    obs.observe(section);
+  })();
+
+  /* ── CIERRE CANVAS — radar with fixed labeled nodes ── */
+  (function() {
+    var canvas = document.getElementById('cierre-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var T = 0, CX = 0, CY = 0, SC = 0, scanAngle = -Math.PI/2;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    // Fixed positions — evenly spread, no orbiting, no collisions
+    // deg = clock angle (0 = top), rFrac = fraction of SC
+    var DEFS = [
+      { text: 'TÚ.',                    deg:   0, rFrac: 0.145 },
+      { text: 'Tu familia.',            deg:  62, rFrac: 0.240 },
+      { text: 'Tus personas queridas.', deg: 130, rFrac: 0.185 },
+      { text: 'Tu patrimonio.',         deg: 188, rFrac: 0.255 },
+      { text: 'Tus hogares.',           deg: 248, rFrac: 0.210 },
+      { text: 'Tu vida digital.',       deg: 308, rFrac: 0.245 },
+    ];
+
+    var nodes = DEFS.map(function(d) {
+      var rad = (d.deg - 90) * Math.PI / 180;
+      return { text: d.text, rad: rad, rFrac: d.rFrac,
+               x: 0, y: 0, nodeO: 0, labelO: 0, labelTo: 0 };
+    });
+
+    var rings = {
+      r1:   { r: 0, tr: 0 },
+      r2:   { r: 0, tr: 0 },
+      scan: { r: 0, tr: 0 },
+      sh:   { r: 0, tr: 0 },
+    };
+
+    function place() {
+      nodes.forEach(function(n) {
+        var r = SC * n.rFrac;
+        n.x = CX + Math.cos(n.rad) * r;
+        n.y = CY + Math.sin(n.rad) * r;
+        n.nodeO = 1;
+      });
+    }
+
+    function resize() {
+      var wrap = canvas.parentElement;
+      var W = wrap.clientWidth, H = wrap.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      CX = W / 2; CY = H / 2; SC = Math.min(W, H);
+      rings.r1.tr = SC * 0.100; rings.r1.r = rings.r1.tr;
+      rings.r2.tr = SC * 0.165; rings.r2.r = rings.r2.tr;
+      rings.scan.tr = SC * 0.320; rings.scan.r = rings.scan.tr;
+      rings.sh.tr = SC * 0.410;  rings.sh.r = rings.sh.tr;
+      place();
+    }
+
+    var lp = function(a, b, f) { return a + (b - a) * f; };
+
+    // staggered label reveal on scroll
+    var triggered = false;
+    function triggerLabels() {
+      if (triggered) return; triggered = true;
+      nodes.forEach(function(n, i) {
+        setTimeout(function() { n.labelTo = 1; }, 500 + i * 420);
+      });
+    }
+
+    function drawLabel(n) {
+      if (n.labelO < 0.02) return;
+      var offDist = SC * 0.048 + 8;
+      var lx = CX + Math.cos(n.rad) * (SC * n.rFrac + offDist);
+      var ly = CY + Math.sin(n.rad) * (SC * n.rFrac + offDist);
+      var fs = Math.max(11, Math.min(SC * 0.032, 18));
+      ctx.save();
+      ctx.font = '300 ' + fs + 'px "Outfit", sans-serif';
+      ctx.fillStyle = 'rgba(255,255,255,' + (n.labelO * 0.85) + ')';
+      ctx.textBaseline = 'middle';
+      // align: left if node is on right half, right if left half
+      var cosA = Math.cos(n.rad);
+      ctx.textAlign = cosA >= -0.15 ? 'left' : 'right';
+      // connector line from node to label start
+      var lineEnd = lx + (cosA >= -0.15 ? -6 : 6);
+      ctx.beginPath();
+      ctx.moveTo(n.x, n.y);
+      ctx.lineTo(lineEnd, ly);
+      ctx.strokeStyle = 'rgba(255,255,255,' + (n.labelO * 0.20) + ')';
+      ctx.lineWidth = 0.6;
+      ctx.stroke();
+      ctx.fillText(n.text, lx, ly);
+      ctx.restore();
+    }
+
+    function draw() {
+      requestAnimationFrame(draw);
+      T += 0.016;
+      var dprL = window.devicePixelRatio || 1;
+      var W = canvas.width / dprL, H = canvas.height / dprL;
+      ctx.setTransform(dprL, 0, 0, dprL, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+
+      scanAngle += 0.018;
+
+      // lerp label opacities
+      nodes.forEach(function(n) { n.labelO = lp(n.labelO, n.labelTo, 0.035); });
+
+      // connection lines node → center ring
+      nodes.forEach(function(n) {
+        if (n.nodeO < 0.02) return;
+        var edgeR = rings.r2.r;
+        var ex = CX + Math.cos(n.rad) * edgeR;
+        var ey = CY + Math.sin(n.rad) * edgeR;
+        ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(ex, ey);
+        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+        ctx.lineWidth = 0.5; ctx.stroke();
+      });
+
+      // Ring 2
+      ctx.save();
+      ctx.shadowBlur = 20; ctx.shadowColor = 'rgba(255,255,255,0.35)';
+      ctx.beginPath(); ctx.arc(CX, CY, rings.r2.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.018)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 0.75; ctx.stroke();
+      ctx.restore();
+
+      // Ring 1
+      ctx.save();
+      ctx.shadowBlur = 14; ctx.shadowColor = 'rgba(255,255,255,0.45)';
+      ctx.beginPath(); ctx.arc(CX, CY, rings.r1.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.26)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.restore();
+
+      // Nodes + labels
+      nodes.forEach(function(n) {
+        if (n.nodeO < 0.02) return;
+        var r = 2.8;
+        var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 7);
+        g.addColorStop(0, 'rgba(255,255,255,0.16)');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(n.x, n.y, r * 7, 0, Math.PI * 2);
+        ctx.fillStyle = g; ctx.fill();
+        ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff'; ctx.fill();
+        drawLabel(n);
+      });
+
+      // Scan ring
+      ctx.beginPath(); ctx.arc(CX, CY, rings.scan.r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 0.5; ctx.stroke();
+      var sweepLen = Math.PI * 0.65;
+      for (var i = 0; i < 20; i++) {
+        var f = i / 20;
+        ctx.beginPath();
+        ctx.arc(CX, CY, rings.scan.r,
+          scanAngle - sweepLen + f * sweepLen,
+          scanAngle - sweepLen + (f + 1/20) * sweepLen);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (f * 0.10) + ')';
+        ctx.lineWidth = 1.5; ctx.stroke();
+      }
+      var sx = CX + Math.cos(scanAngle) * rings.scan.r;
+      var sy = CY + Math.sin(scanAngle) * rings.scan.r;
+      var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 16);
+      sg.addColorStop(0, 'rgba(255,255,255,0.22)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(sx, sy, 16, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
+      ctx.beginPath(); ctx.arc(sx, sy, 2.5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+
+      // Shield dashed
+      ctx.save(); ctx.setLineDash([5, 11]); ctx.lineDashOffset = -T * 22;
+      ctx.beginPath(); ctx.arc(CX, CY, rings.sh.r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.20)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.setLineDash([3, 16]); ctx.lineDashOffset = T * 16;
+      ctx.beginPath(); ctx.arc(CX, CY, rings.sh.r * 0.88, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,0.11)'; ctx.lineWidth = 0.75; ctx.stroke(); ctx.restore();
+
+      // Center
+      var pulse = 1 + 0.18 * Math.sin(T * 1.6);
+      var pg = ctx.createRadialGradient(CX, CY, 0, CX, CY, 45 * pulse);
+      pg.addColorStop(0, 'rgba(255,255,255,0.13)'); pg.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(CX, CY, 45 * pulse, 0, Math.PI * 2); ctx.fillStyle = pg; ctx.fill();
+      ctx.beginPath(); ctx.arc(CX, CY, 5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
+    }
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) { if (e.isIntersecting) { triggerLabels(); obs.disconnect(); } });
+    }, { threshold: 0.18 });
+    obs.observe(document.getElementById('cierre'));
+  })();
+
+  /* ── RADAR CANVAS ── */
+  (function() {
+    var canvas = document.getElementById('svc-canvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var T = 0, CX = 0, CY = 0, SC = 0, scanAngle = 0;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    var V = {
+      r1:   { r:0, tr:0, o:0, to:0 },
+      r2:   { r:0, tr:0, o:0, to:0 },
+      scan: { r:0, tr:0, o:0, to:0 },
+      sh:   { r:0, tr:0, o:0, to:0 },
+      nodes: []
+    };
+
+    function mkNode(deg, baseRFrac, type, angVel) {
+      var rad = (deg - 90) * Math.PI / 180;
+      return { x:0, y:0, tx:0, ty:0, angle:rad, baseRFrac:baseRFrac, baseR:0, angVel:angVel, o:0, to:0, type:type };
+    }
+
+    function buildNodes() {
+      V.nodes = [
+        ...[0,90,180,270].map(function(a) { return mkNode(a, 0.135, 'dot',  -0.0022); }),
+        ...[30,150,270].map(function(a)   { return mkNode(a, 0.240, 'sq',   +0.0013); })
+      ];
+      positionNodes();
+    }
+
+    function positionNodes() {
+      V.nodes.forEach(function(n) {
+        n.baseR = SC * n.baseRFrac;
+        n.tx = CX + Math.cos(n.angle) * n.baseR;
+        n.ty = CY + Math.sin(n.angle) * n.baseR;
+        n.x = n.tx; n.y = n.ty;
+        // keep current opacity (don't reset once revealed)
+        if (n.o === undefined) n.o = 0;
+      });
+    }
+
+    function resize() {
+      var wrap = canvas.parentElement;
+      var W = wrap.clientWidth, H = wrap.clientHeight;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      CX = W/2; CY = H/2; SC = Math.min(W, H);
+      V.r1.tr  = SC*0.100;
+      V.r2.tr  = SC*0.165;
+      V.scan.tr = SC*0.320;
+      V.sh.tr  = SC*0.410;
+      // snap radius but keep opacity at current value
+      ['r1','r2','scan','sh'].forEach(function(k) { V[k].r = V[k].tr; });
+      buildNodes();
+    }
+
+    // Expose resize so the trigger can recalculate when section becomes visible
+    window._radarResize = resize;
+
+    // Expose step function for synchronized reveal
+    window._radarStep = function(step) {
+      if (step === 'r1')   { V.r1.to   = 1; }
+      if (step === 'r2')   { V.r2.to   = 1; }
+      if (step === 'scan') { V.scan.to  = 1; }
+      if (step === 'sh')   { V.sh.to    = 1; }
+      if (step === 'dots') { V.nodes.forEach(function(n) { if (n.type==='dot') n.to = 1; }); }
+      if (step === 'sq')   { V.nodes.forEach(function(n) { if (n.type==='sq')  n.to = 1; }); }
+    };
+
+    var lp = function(a,b,f) { return a + (b-a)*f; };
+
+    function draw() {
+      requestAnimationFrame(draw);
+      T += 0.016;
+      var dprL = window.devicePixelRatio || 1;
+      var W = canvas.width/dprL, H = canvas.height/dprL;
+      // Auto-resize if canvas has zero dimensions (section was hidden at load time)
+      if (W === 0 || H === 0) { resize(); W = canvas.width/dprL; H = canvas.height/dprL; }
+      var spd = 0.07;
+      ctx.setTransform(dprL,0,0,dprL,0,0);
+      ctx.clearRect(0,0,W,H);
+
+      /* orbit nodes */
+      V.nodes.forEach(function(n) {
+        n.angle += n.angVel;
+        n.tx = CX + Math.cos(n.angle) * n.baseR;
+        n.ty = CY + Math.sin(n.angle) * n.baseR;
+        n.x = lp(n.x, n.tx, spd*0.65);
+        n.y = lp(n.y, n.ty, spd*0.65);
+        n.o = lp(n.o, n.to, spd*0.75);
+      });
+
+      ['r1','r2','scan','sh'].forEach(function(k) {
+        V[k].r = lp(V[k].r, V[k].tr, spd);
+        V[k].o = lp(V[k].o, V[k].to, spd);
+      });
+
+      scanAngle += 0.018;
+
+      /* connection lines */
+      V.nodes.forEach(function(n) {
+        if (n.o < 0.02) return;
+        var ang = Math.atan2(n.y-CY, n.x-CX);
+        var edgeR = V.r2.r > 10 ? V.r2.r : 0;
+        ctx.beginPath(); ctx.moveTo(n.x, n.y);
+        ctx.lineTo(CX + Math.cos(ang)*edgeR, CY + Math.sin(ang)*edgeR);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (n.o*0.08) + ')';
+        ctx.lineWidth = 0.5; ctx.stroke();
+      });
+
+      /* Ring 2 */
+      if (V.r2.o > 0.01) {
+        ctx.save();
+        ctx.shadowBlur = 18; ctx.shadowColor = 'rgba(255,255,255,' + (V.r2.o*0.40) + ')';
+        ctx.beginPath(); ctx.arc(CX,CY, V.r2.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (V.r2.o*0.025) + ')'; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,' + (V.r2.o*0.20) + ')'; ctx.lineWidth = 0.75; ctx.stroke();
+        ctx.restore();
+      }
+
+      /* Ring 1 */
+      if (V.r1.o > 0.01) {
+        ctx.save();
+        ctx.shadowBlur = 14; ctx.shadowColor = 'rgba(255,255,255,' + (V.r1.o*0.50) + ')';
+        ctx.beginPath(); ctx.arc(CX,CY, V.r1.r, 0, Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (V.r1.o*0.05) + ')'; ctx.fill();
+        ctx.strokeStyle = 'rgba(255,255,255,' + (V.r1.o*0.28) + ')'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.restore();
+      }
+
+      /* Nodes */
+      V.nodes.forEach(function(n) {
+        if (n.o < 0.02) return;
+        var isSquare = n.type === 'sq';
+        var r = isSquare ? 3.5 : 2.5;
+        var g = ctx.createRadialGradient(n.x,n.y,0, n.x,n.y, r*7);
+        g.addColorStop(0, 'rgba(255,255,255,' + (n.o*0.16) + ')');
+        g.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(n.x,n.y, r*7, 0, Math.PI*2); ctx.fillStyle=g; ctx.fill();
+        ctx.beginPath();
+        if (isSquare) { ctx.rect(n.x-r, n.y-r, r*2, r*2); }
+        else          { ctx.arc(n.x, n.y, r, 0, Math.PI*2); }
+        ctx.fillStyle = 'rgba(255,255,255,' + (n.o*0.80) + ')'; ctx.fill();
+      });
+
+      /* Scan ring */
+      if (V.scan.o > 0.01) {
+        ctx.beginPath(); ctx.arc(CX,CY, V.scan.r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (V.scan.o*0.09) + ')'; ctx.lineWidth = 0.5; ctx.stroke();
+        var sweepLen = Math.PI * 0.65;
+        for (var i=0; i<20; i++) {
+          var f = i/20;
+          ctx.beginPath();
+          ctx.arc(CX,CY, V.scan.r, scanAngle-sweepLen+f*sweepLen, scanAngle-sweepLen+(f+1/20)*sweepLen);
+          ctx.strokeStyle = 'rgba(255,255,255,' + (V.scan.o*f*0.12) + ')'; ctx.lineWidth=1.5; ctx.stroke();
+        }
+        var sx = CX + Math.cos(scanAngle)*V.scan.r;
+        var sy = CY + Math.sin(scanAngle)*V.scan.r;
+        var sg = ctx.createRadialGradient(sx,sy,0, sx,sy,18);
+        sg.addColorStop(0, 'rgba(255,255,255,' + (V.scan.o*0.25) + ')');
+        sg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath(); ctx.arc(sx,sy,18,0,Math.PI*2); ctx.fillStyle=sg; ctx.fill();
+        ctx.beginPath(); ctx.arc(sx,sy,2.5,0,Math.PI*2);
+        ctx.fillStyle = 'rgba(255,255,255,' + (V.scan.o*0.85) + ')'; ctx.fill();
+      }
+
+      /* Shield dashed */
+      if (V.sh.o > 0.01) {
+        ctx.save(); ctx.setLineDash([5,11]); ctx.lineDashOffset = -T*22;
+        ctx.beginPath(); ctx.arc(CX,CY, V.sh.r, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (V.sh.o*0.25) + ')'; ctx.lineWidth=1; ctx.stroke(); ctx.restore();
+
+        ctx.save(); ctx.setLineDash([3,16]); ctx.lineDashOffset = T*16;
+        ctx.beginPath(); ctx.arc(CX,CY, V.sh.r*0.88, 0, Math.PI*2);
+        ctx.strokeStyle = 'rgba(255,255,255,' + (V.sh.o*0.14) + ')'; ctx.lineWidth=0.75; ctx.stroke(); ctx.restore();
+      }
+
+      /* Center dot */
+      var pulse = 1 + 0.20 * Math.sin(T * 1.6);
+      var pg = ctx.createRadialGradient(CX,CY,0, CX,CY, 5*9*pulse);
+      pg.addColorStop(0, 'rgba(255,255,255,0.14)'); pg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath(); ctx.arc(CX,CY, 5*9*pulse, 0, Math.PI*2); ctx.fillStyle=pg; ctx.fill();
+      ctx.beginPath(); ctx.arc(CX,CY, 5, 0, Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+    }
+
+    resize();
+    draw();
+    window.addEventListener('resize', resize);
+  })();
+
+  /* ── NUMBER COUNTER ── */
+  function animateCounter(el) {
+    const target  = parseFloat(el.dataset.target);
+    const decimal = parseInt(el.dataset.decimal) || 0;
+    const dur     = 1600;
+    const start   = performance.now();
+
+    function step(now) {
+      const p = Math.min((now - start) / dur, 1);
+      // easeOutExpo
+      const ease = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+      const val  = target * ease;
+      el.textContent = decimal > 0 ? val.toFixed(decimal) : Math.floor(val);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterEls = document.querySelectorAll('.count');
+  const counterObs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(e.target);
+        counterObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  counterEls.forEach(el => counterObs.observe(el));
+
+  /* ── FLOATING DOTS (Section 03) ── */
+  (function() {
+    var canvas = document.getElementById('parteaguas-canvas');
+    var ctx    = canvas.getContext('2d');
+    var dpr    = Math.min(window.devicePixelRatio || 1, 2);
+    var W = 0, H = 0, dots = [];
+    var N = 160;
+
+    function resize() {
+      W = canvas.offsetWidth;
+      H = canvas.offsetHeight;
+      canvas.width  = Math.round(W * dpr);
+      canvas.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function initDots() {
+      dots = [];
+      for (var i = 0; i < N; i++) {
+        dots.push({
+          x:  Math.random() * W,
+          y:  Math.random() * H,
+          r:  0.8 + Math.random() * 1.8,
+          op: 0.18 + Math.random() * 0.38,
+          vx: (Math.random() - 0.5) * 0.28,
+          vy: (Math.random() - 0.5) * 0.28,
+          breathPhase: Math.random() * Math.PI * 2,
+          breathSpeed: 0.004 + Math.random() * 0.007
+        });
+      }
+    }
+
+    function draw() {
+      requestAnimationFrame(draw);
+      if (W < 1) return;
+      ctx.clearRect(0, 0, W, H);
+
+      dots.forEach(function(d) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.x < 0) d.x = W; if (d.x > W) d.x = 0;
+        if (d.y < 0) d.y = H; if (d.y > H) d.y = 0;
+        d.breathPhase += d.breathSpeed;
+        var op = d.op * (0.7 + 0.3 * Math.sin(d.breathPhase));
+
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,' + op + ')';
+        ctx.fill();
+      });
+    }
+
+    resize();
+    initDots();
+    draw();
+    window.addEventListener('resize', function() { resize(); initDots(); });
+  })();
+</script>
+
+<!-- ═══════════════════ LANGUAGE SWITCHER ═══════════════════ -->
+<script>
+  var _lang = 'en';
+
+  function applyLang(lang) {
+    _lang = lang;
+    document.documentElement.lang = lang;
+    document.getElementById('lang-btn').textContent = lang === 'en' ? 'ESP' : 'ENG';
+
+    document.querySelectorAll('[data-en][data-es]').forEach(function(el) {
+      var content = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-es');
+      if (el.getAttribute('data-html') === 'true') {
+        el.innerHTML = content;
+      } else {
+        el.textContent = content;
+      }
+    });
+  }
+
+  function toggleLang() {
+    applyLang(_lang === 'en' ? 'es' : 'en');
+  }
+
+  // Initialize English on load
+  document.addEventListener('DOMContentLoaded', function() { applyLang('en'); });
+</script>
+</body>
+</html>

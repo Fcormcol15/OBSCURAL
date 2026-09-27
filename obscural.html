@@ -3,7 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Obscural</title>
+  <title>Obscural — Private Digital Intelligence & Protection</title>
+  <meta name="description" content="A private digital intelligence and protection firm for the world's most exposed individuals. Access by introduction only.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://obscural.tech/">
+  <meta property="og:title" content="Obscural">
+  <meta property="og:description" content="Private Digital Intelligence & Protection. Access by introduction only.">
+  <meta property="og:image" content="https://obscural.tech/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="627">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Obscural">
+  <meta name="twitter:description" content="Private Digital Intelligence & Protection. Access by introduction only.">
+  <meta name="twitter:image" content="https://obscural.tech/og.png">
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -206,6 +219,28 @@
       transition: color .5s ease; white-space: nowrap;
     }
     .nav-links a:hover { color: rgba(255,255,255,.8); }
+    .lang-sep { color: rgba(255,255,255,.15); font-size:10px; }
+    .lang-btn {
+      background: none; font-family: inherit;
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      font-weight: 500; cursor: pointer;
+      padding: 5px 10px;
+      transition: color 0.4s ease, border-color 0.4s ease, opacity 0.4s ease;
+    }
+    .lang-btn.lang-active {
+      color: rgba(255,255,255,0.95);
+      border: 1px solid rgba(255,255,255,0.5);
+      opacity: 1;
+    }
+    .lang-btn.lang-idle {
+      color: rgba(255,255,255,0.45);
+      border: 1px solid rgba(255,255,255,0.18);
+      animation: lang-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes lang-pulse {
+      0%, 100% { opacity: 0.55; }
+      50%       { opacity: 1; }
+    }
 
     /* ══ SECTIONS ══ */
     #site { position: relative; z-index: 1; }
@@ -291,17 +326,6 @@
     }
     .btn-hero:hover { background: #fff; color: #000; border-color: #fff; }
 
-    /* ── EXPOSURE ── */
-    #exposure .sec {
-      background: #070707;
-      flex-direction: column; text-align: center; justify-content: center;
-      min-height: 80vh;
-    }
-    .exp-pre  { font-size:clamp(11px,1vw,14px); color:rgba(255,255,255,.18); letter-spacing:.08em; margin-bottom:22px; }
-    .exp-num  { font-size:clamp(100px,18vw,250px); font-weight:700; line-height:.85; letter-spacing:-.05em; margin-bottom:18px; display:block; }
-    .exp-post { font-size:clamp(14px,1.4vw,19px); font-weight:400; color:rgba(255,255,255,.8); }
-    .exp-note { font-size:11px; color:rgba(255,255,255,.18); letter-spacing:.08em; margin-top:10px; }
-
     /* ── ABOUT ── */
     #about .sec { background:#000; }
     .two-col { display:grid; grid-template-columns:200px 1fr; gap:100px; align-items:start; max-width:1060px; width:100%; }
@@ -309,8 +333,6 @@
     .about-p:last-child { margin-bottom:0; }
 
     /* ── WHAT ── */
-    #what .sec { background:#050505; flex-direction:column; align-items:flex-start; }
-    .sec-top { margin-bottom:80px; }
     .pr-row { display:grid; grid-template-columns:200px 1fr; gap:60px; padding:34px 0; border-top:1px solid rgba(255,255,255,.04); max-width:900px; width:100%; align-items:baseline; }
     .pr-row:last-child { border-bottom:1px solid rgba(255,255,255,.04); }
     .pr-s { font-size:14px; font-weight:500; color:rgba(255,255,255,.9); }
@@ -367,7 +389,6 @@
     .sol-n  { font-size:10px; letter-spacing:.2em; color:rgba(255,255,255,.14); padding-top:7px; }
     .sol-nm { font-size:28px; font-weight:600; letter-spacing:-.02em; }
     .sol-ds { font-size:13px; color:rgba(255,255,255,.28); line-height:1.9; font-weight:300; }
-    .sol-tg { font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.12); text-align:right; padding-top:7px; }
     .sol-more { display:block; margin-top:18px; font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,255,255,.18); transition:color .4s; }
     a.sol-row:hover .sol-more { color:rgba(255,255,255,.6); }
 
@@ -471,31 +492,6 @@
     }
     .sol-row:hover .sol-tg { color: rgba(255,255,255,0.2); }
 
-    /* ── PRODUCT MOCKUPS ── */
-    .mockup-grid {
-      display: grid;
-      grid-template-columns: repeat(3,1fr);
-      gap: 2px;
-      margin-top: 80px;
-      width: 100%;
-    }
-    .mockup-cell {
-      position: relative; overflow: hidden;
-      aspect-ratio: 4/3; background: #080808;
-    }
-    .mockup-cell img {
-      width: 100%; height: 100%;
-      object-fit: cover; display: block;
-      filter: brightness(0.8);
-      transition: filter .6s ease, transform .8s cubic-bezier(.16,1,.3,1);
-    }
-    .mockup-cell:hover img { filter: brightness(1); transform: scale(1.03); }
-    .mockup-lbl {
-      position: absolute; bottom: 18px; left: 20px;
-      font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
-      color: rgba(255,255,255,.22);
-    }
-
     /* ── WHAT WE PROTECT — hover effect ── */
     .pr-row {
       position: relative; overflow: hidden;
@@ -579,15 +575,6 @@
     .stat-source a { color: inherit; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.08); transition: color 0.2s, border-color 0.2s; }
     .stat-source a:hover { color: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.25); }
 
-    /* ── ACCESS CARD ── */
-    .access-card-wrap {
-      width: clamp(130px, 15vw, 200px);
-      margin: 0 auto 60px;
-    }
-    .access-card-wrap img { width: 100%; display: block; border-radius: 8px; }
-    .access-card-wrap.r-fade { transform: translateY(40px) rotate(-5deg); }
-    .access-card-wrap.r-fade.in { transform: translateY(0) rotate(-1.5deg); }
-
     /* ── MOBILE ── */
     @media (max-width: 768px) {
       body { cursor:auto; }
@@ -642,9 +629,6 @@
       /* contact */
       #contact .sec { padding:80px 24px; }
       .ct-h { font-size:clamp(22px,7vw,36px); }
-
-      /* mockup (por si acaso) */
-      .mockup-grid { grid-template-columns:1fr; gap:2px; }
 
       /* hero word: pill + texto juntos */
       #heroWord { gap: clamp(1px, 1vw, 4px); }
@@ -843,12 +827,15 @@
       </svg>
     </a>
     <ul class="nav-links">
-      <li><a href="#" class="active">Home</a></li>
-      <li><a href="who-what.html">Who We Protect</a></li>
-      <li><a href="solutions.html">Solutions</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="#" class="active" data-en="Home" data-es="Inicio">Home</a></li>
+      <li><a href="who-what.html" data-en="Who We Protect" data-es="A Quién Protegemos">Who We Protect</a></li>
+      <li><a href="solutions.html" data-en="Solutions" data-es="Soluciones">Solutions</a></li>
+      <li><a href="#contact" data-en="Contact" data-es="Contacto">Contact</a></li>
       <li><a href="#" id="op-open-btn" style="opacity:0.45;letter-spacing:0.28em;">1P</a></li>
     </ul>
+    <span class="lang-sep">|</span>
+    <button class="lang-btn lang-active" id="btn-en" onclick="setLang('en')">ENG</button>
+    <button class="lang-btn lang-idle"   id="btn-es" onclick="setLang('es')">ESP</button>
   </nav>
 
   <!-- ══ HERO — el wordmark se queda ══ -->
@@ -867,7 +854,7 @@
       </div>
       <div id="heroBscural">bscural</div>
     </div>
-    <p id="heroTagline">Turn on security.</p>
+    <p id="heroTagline" data-en="Turn on security." data-es="Activa la protección.">Turn on security.</p>
   </div>
 
   <!-- ══ SITE ══ -->
@@ -881,8 +868,8 @@
             <span class="t-clip"><span class="t-inner">They can't attack</span></span>
             <span class="t-clip"><span class="t-inner">what they can't see.</span></span>
           </div>
-          <p class="hero-sub r-fade d2">A private digital intelligence and protection firm<br>for the world's most exposed individuals.</p>
-          <div class="r-fade d3"><a href="#contact" class="btn-hero">Request Access</a></div>
+          <p class="hero-sub r-fade d2" data-en="A private digital intelligence and protection firm<br>for the world's most exposed individuals." data-es="Una firma privada de inteligencia digital y protección<br>para los individuos más expuestos del mundo.">A private digital intelligence and protection firm<br>for the world's most exposed individuals.</p>
+          <div class="r-fade d3"><a href="#contact" class="btn-hero" data-en="Request Access" data-es="Solicitar Acceso">Request Access</a></div>
         </div>
       </div>
     </section>
@@ -891,29 +878,29 @@
     <section class="editorial">
       <img src="img4.png" alt="">
       <div class="editorial-caption">
-        <p class="lbl r-fade">The exposed</p>
-        <p class="r-fade d1">Because the most<br>visible are the most<br>vulnerable.</p>
+        <p class="lbl r-fade" data-en="The exposed" data-es="El expuesto">The exposed</p>
+        <p class="r-fade d1" data-en="Because the most<br>visible are the most<br>vulnerable." data-es="Los más visibles<br>son los más<br>vulnerables.">Because the most<br>visible are the most<br>vulnerable.</p>
       </div>
     </section>
 
     <!-- §3 BY THE NUMBERS -->
     <section id="stats">
       <div class="sec">
-        <div class="r-fade"><p class="lbl">By the numbers</p></div>
+        <div class="r-fade"><p class="lbl" data-en="By the numbers" data-es="En números">By the numbers</p></div>
         <div class="stats-grid">
           <div class="stat-cell r-fade d1">
             <span class="stat-num">12×</span>
-            <p class="stat-desc">C-suite executives are 12 times more likely to be targeted in a cyberattack than any other employee in their organization.</p>
+            <p class="stat-desc" data-en="C-suite executives are 12 times more likely to be targeted in a cyberattack than any other employee in their organization." data-es="Los ejecutivos de alto nivel tienen 12 veces más probabilidades de ser objetivo de un ciberataque que cualquier otro empleado de su organización.">C-suite executives are 12 times more likely to be targeted in a cyberattack than any other employee in their organization.</p>
             <span class="stat-source"><a href="https://www.verizon.com/business/resources/reports/dbir/" target="_blank" rel="noopener">Verizon DBIR · 2019</a></span>
           </div>
           <div class="stat-cell r-fade d2">
             <span class="stat-num">$4.88M</span>
-            <p class="stat-desc">Average total cost of a data breach in 2024 — the highest in the 19-year history of the IBM report.</p>
+            <p class="stat-desc" data-en="Average total cost of a data breach in 2024 — the highest in the 19-year history of the IBM report." data-es="Costo total promedio de una brecha de datos en 2024 — el más alto en los 19 años de historia del reporte de IBM.">Average total cost of a data breach in 2024 — the highest in the 19-year history of the IBM report.</p>
             <span class="stat-source"><a href="https://www.ibm.com/reports/data-breach" target="_blank" rel="noopener">IBM Cost of a Data Breach Report · 2024</a></span>
           </div>
           <div class="stat-cell r-fade d3">
             <span class="stat-num">71%</span>
-            <p class="stat-desc">Of organizations experienced a successful phishing attack in 2023 — making the human layer the most consistently exploited entry point year after year.</p>
+            <p class="stat-desc" data-en="Of organizations experienced a successful phishing attack in 2023 — making the human layer the most consistently exploited entry point year after year." data-es="De las organizaciones sufrió un ataque de phishing exitoso en 2023 — convirtiendo la capa humana en el vector de ataque más explotado año tras año.">Of organizations experienced a successful phishing attack in 2023 — making the human layer the most consistently exploited entry point year after year.</p>
             <span class="stat-source"><a href="https://www.proofpoint.com/us/resources/threat-reports/state-of-phish" target="_blank" rel="noopener">Proofpoint State of the Phish · 2024</a></span>
           </div>
         </div>
@@ -924,10 +911,10 @@
     <section id="about">
       <div class="sec">
         <div class="two-col">
-          <div class="r-fade"><p class="lbl">About</p></div>
+          <div class="r-fade"><p class="lbl" data-en="About" data-es="Nosotros">About</p></div>
           <div>
-            <div class="r-clip"><p class="r-inner about-p">The higher your profile, the more defined your digital target becomes. Conventional cybersecurity builds walls. Obscural operates differently — we systematically reduce your digital footprint until you cease to exist as a visible target.</p></div>
-            <div class="r-clip d2"><p class="r-inner about-p">We don't just defend — we make you disappear from the radar. We are not an IT company. We are a closed, highly specialized firm that works by referral, moves with absolute discretion, and protects those who cannot afford exposure.</p></div>
+            <div class="r-clip"><p class="r-inner about-p" data-en="The higher your profile, the more defined your digital target becomes. Conventional cybersecurity builds walls. Obscural operates differently — we systematically reduce your digital footprint until you cease to exist as a visible target." data-es="A mayor exposición pública, más definido el blanco digital. La ciberseguridad convencional construye muros. Obscural opera diferente — reducimos la huella digital hasta hacerla invisible.">The higher your profile, the more defined your digital target becomes. Conventional cybersecurity builds walls. Obscural operates differently — we systematically reduce your digital footprint until you cease to exist as a visible target.</p></div>
+            <div class="r-clip d2"><p class="r-inner about-p" data-en="We don't just defend — we make you disappear from the radar. We are not an IT company. We are a closed, highly specialized firm that works by referral, moves with absolute discretion, and protects those who cannot afford exposure." data-es="No solo defendemos — hacemos desaparecer del radar. No somos una empresa de IT. Somos una firma cerrada y altamente especializada que opera por referidos, se mueve con discreción absoluta y protege a quienes no pueden permitirse la exposición.">We don't just defend — we make you disappear from the radar. We are not an IT company. We are a closed, highly specialized firm that works by referral, moves with absolute discretion, and protects those who cannot afford exposure.</p></div>
           </div>
         </div>
       </div>
@@ -937,8 +924,8 @@
     <section class="editorial">
       <img src="img_window.png" alt="" style="object-position: 40% center;">
       <div class="editorial-caption">
-        <p class="lbl r-fade">The executive</p>
-        <p class="r-fade d1">He built an empire.<br>His family became<br>the priority.</p>
+        <p class="lbl r-fade" data-en="The executive" data-es="El ejecutivo">The executive</p>
+        <p class="r-fade d1" data-en="He built an empire.<br>His family became<br>the priority." data-es="Construyó un imperio.<br>Su familia se convirtió<br>en la prioridad.">He built an empire.<br>His family became<br>the priority.</p>
       </div>
     </section>
 
@@ -947,13 +934,13 @@
       <!-- LEFT: WHAT WE PROTECT -->
       <div class="ww-left">
         <div class="ww-inner">
-          <div class="r-fade"><p class="lbl">What We Protect</p></div>
-          <div class="pr-row r-fade d1"><span class="pr-s">Your devices</span><span class="pr-w">Because everything you are lives inside them.</span></div>
-          <div class="pr-row r-fade d2"><span class="pr-s">Your home</span><span class="pr-w">Because four walls are only as safe as the network inside them.</span></div>
-          <div class="pr-row r-fade d3"><span class="pr-s">Your digital identity</span><span class="pr-w">Because someone is always looking.</span></div>
-          <div class="pr-row r-fade d4"><span class="pr-s">Your reputation</span><span class="pr-w">Because it takes years to build and hours to destroy.</span></div>
-          <div class="pr-row r-fade d5"><span class="pr-s">Your communications</span><span class="pr-w">Because privacy is not paranoia — it is a right.</span></div>
-          <div class="pr-row r-fade d6"><span class="pr-s">Your family</span><span class="pr-w">Because exposure doesn't choose who it hurts.</span></div>
+          <div class="r-fade"><p class="lbl" data-en="What We Protect" data-es="Qué Protegemos">What We Protect</p></div>
+          <div class="pr-row r-fade d1"><span class="pr-s" data-en="Your devices" data-es="Tus dispositivos">Your devices</span><span class="pr-w" data-en="Because everything you are lives inside them." data-es="Porque todo lo que eres vive dentro de ellos.">Because everything you are lives inside them.</span></div>
+          <div class="pr-row r-fade d2"><span class="pr-s" data-en="Your home" data-es="Tu hogar">Your home</span><span class="pr-w" data-en="Because four walls are only as safe as the network inside them." data-es="Porque cuatro paredes son tan seguras como la red que las conecta.">Because four walls are only as safe as the network inside them.</span></div>
+          <div class="pr-row r-fade d3"><span class="pr-s" data-en="Your digital identity" data-es="Tu identidad digital">Your digital identity</span><span class="pr-w" data-en="Because someone is always looking." data-es="Porque siempre hay alguien mirando.">Because someone is always looking.</span></div>
+          <div class="pr-row r-fade d4"><span class="pr-s" data-en="Your reputation" data-es="Tu reputación">Your reputation</span><span class="pr-w" data-en="Because it takes years to build and hours to destroy." data-es="Construirla toma años. Destruirla, horas.">Because it takes years to build and hours to destroy.</span></div>
+          <div class="pr-row r-fade d5"><span class="pr-s" data-en="Your communications" data-es="Tus comunicaciones">Your communications</span><span class="pr-w" data-en="Because privacy is not paranoia — it is a right." data-es="La privacidad no es paranoia — es un derecho.">Because privacy is not paranoia — it is a right.</span></div>
+          <div class="pr-row r-fade d6"><span class="pr-s" data-en="Your family" data-es="Tu familia">Your family</span><span class="pr-w" data-en="Because exposure doesn't choose who it hurts." data-es="La exposición no elige a quién lastima.">Because exposure doesn't choose who it hurts.</span></div>
         </div>
       </div>
       <!-- RIGHT: WHO WE PROTECT (guitarrista) -->
@@ -962,8 +949,8 @@
           <img src="img_guitar2.png" alt="">
         </div>
         <div class="ww-inner who-panel">
-          <div class="r-fade"><p class="lbl">Who We Protect</p></div>
-          <div class="r-clip"><p class="r-inner who-intro">We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality.</p></div>
+          <div class="r-fade"><p class="lbl" data-en="Who We Protect" data-es="A Quién Protegemos">Who We Protect</p></div>
+          <div class="r-clip"><p class="r-inner who-intro" data-en="We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality." data-es="Trabajamos con un grupo cuidadosamente seleccionado de personas para quienes la exposición digital no es un riesgo teórico — es una realidad diaria.">We work with a carefully selected group of individuals for whom digital exposure is not a theoretical risk — it is a daily reality.</p></div>
           <div class="r-clip d1"><a class="r-inner who-item" href="who-what.html#executive-detail">The executive whose decisions move markets.</a></div>
           <div class="r-clip d2"><a class="r-inner who-item" href="who-what.html#artist-detail">The artist whose identity is their most valuable asset.</a></div>
           <div class="r-clip d3"><a class="r-inner who-item" href="who-what.html#family-detail">The family that built generational wealth and intends to protect it.</a></div>
@@ -973,7 +960,7 @@
       </div>
     </section>
     <div class="sec-cta r-fade">
-      <a href="who-what.html" class="sec-link">Who We Protect →</a>
+      <a href="who-what.html" class="sec-link" data-en="Who We Protect →" data-es="A Quién Protegemos →">Who We Protect →</a>
     </div>
 
     <!-- EDITORIAL C — the home -->
@@ -981,40 +968,40 @@
       <img src="img3.png" alt="" style="object-position: center 40%;">
       <div class="editorial-caption">
         <a href="solutions.html#sanctum" class="lbl r-fade" style="color:inherit;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:2px;">Sanctum</a>
-        <p class="r-fade d1">Your space,<br>made invisible.</p>
+        <p class="r-fade d1" data-en="Your space,<br>made invisible." data-es="Tu espacio,<br>hecho invisible.">Your space,<br>made invisible.</p>
       </div>
     </section>
 
     <!-- §7 SOLUTIONS -->
     <section id="solutions">
       <div class="sec">
-        <div class="r-fade"><p class="lbl">Solutions</p></div>
+        <div class="r-fade"><p class="lbl" data-en="Solutions" data-es="Soluciones">Solutions</p></div>
         <div class="sol-list">
           <a href="solutions.html#veil" class="sol-row r-fade d1">
             <span class="sol-n">01</span><span class="sol-nm">Veil</span>
-            <span class="sol-ds">Active protection of your personal devices — phones, laptops, tablets. Control. Privacy. Prevention.<span class="sol-more">Learn more →</span></span>
-            <span class="sol-tg">Personal Device Protection</span>
+            <span class="sol-ds" data-en="Active protection of your personal devices — phones, laptops, tablets. Control. Privacy. Prevention.<span class='sol-more'>Learn more →</span>" data-es="Protección activa de dispositivos personales — teléfonos, laptops, tabletas. Control. Privacidad. Prevención.<span class='sol-more'>Ver más →</span>">Active protection of your personal devices — phones, laptops, tablets. Control. Privacy. Prevention.<span class="sol-more">Learn more →</span></span>
+            <span class="sol-tg" data-en="Personal Device Protection" data-es="Protección de Dispositivos Personales">Personal Device Protection</span>
           </a>
           <a href="solutions.html#pulse" class="sol-row r-fade d2">
             <span class="sol-n">02</span><span class="sol-nm">Pulse</span>
-            <span class="sol-ds">Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching before they move.<span class="sol-more">Learn more →</span></span>
-            <span class="sol-tg">Digital Intelligence</span>
+            <span class="sol-ds" data-en="Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching before they move.<span class='sol-more'>Learn more →</span>" data-es="Monitoreo de inteligencia continuo en la web abierta, profunda y oscura. Sabemos quién observa antes de que actúe.<span class='sol-more'>Ver más →</span>">Continuous intelligence monitoring across the open web, deep web, and dark web. We know who's watching before they move.<span class="sol-more">Learn more →</span></span>
+            <span class="sol-tg" data-en="Digital Intelligence" data-es="Inteligencia Digital">Digital Intelligence</span>
           </a>
           <a href="solutions.html#sanctum" class="sol-row r-fade d3">
             <span class="sol-n">03</span><span class="sol-nm">Sanctum</span>
-            <span class="sol-ds">Cybersecurity architecture for your home, office, or private studio. Your space, made invisible.<span class="sol-more">Learn more →</span></span>
-            <span class="sol-tg">Home & Office Infrastructure</span>
+            <span class="sol-ds" data-en="Cybersecurity architecture for your home, office, or private studio. Your space, made invisible.<span class='sol-more'>Learn more →</span>" data-es="Arquitectura de ciberseguridad para el hogar, la oficina o el estudio privado. Tu espacio, hecho invisible.<span class='sol-more'>Ver más →</span>">Cybersecurity architecture for your home, office, or private studio. Your space, made invisible.<span class="sol-more">Learn more →</span></span>
+            <span class="sol-tg" data-en="Home &amp; Office Infrastructure" data-es="Infraestructura para Hogar y Oficina">Home & Office Infrastructure</span>
           </a>
           <a href="solutions.html#phantom" class="sol-row r-fade d4">
             <span class="sol-n">04</span><span class="sol-nm">Phantom</span>
-            <span class="sol-ds">Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent.<span class="sol-more">Learn more →</span></span>
-            <span class="sol-tg">Privacy & Counter-Surveillance</span>
+            <span class="sol-ds" data-en="Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent.<span class='sol-more'>Learn more →</span>" data-es="Contravigilancia avanzada, anti-espionaje y respuesta reputacional. Para cuando la amenaza es específica, personal y urgente.<span class='sol-more'>Ver más →</span>">Advanced counter-surveillance, anti-espionage, and reputational response. For when the threat is specific, personal, and urgent.<span class="sol-more">Learn more →</span></span>
+            <span class="sol-tg" data-en="Privacy &amp; Counter-Surveillance" data-es="Privacidad y Contravigilancia">Privacy & Counter-Surveillance</span>
           </a>
         </div>
       </div>
     </section>
     <div class="sec-cta r-fade">
-      <a href="solutions.html" class="sec-link">All Solutions →</a>
+      <a href="solutions.html" class="sec-link" data-en="All Solutions →" data-es="Ver Soluciones →">All Solutions →</a>
     </div>
 
     <!-- §8 CONTACT — fondo pared concreto -->
@@ -1023,19 +1010,19 @@
         <img src="img5.jpg" alt="">
       </div>
       <div class="sec">
-        <div class="r-clip ct-lbl"><p class="r-inner lbl">Private Consultation</p></div>
+        <div class="r-clip ct-lbl"><p class="r-inner lbl" data-en="Private Consultation" data-es="Consulta Privada">Private Consultation</p></div>
         <div class="ct-h">
-          <div class="r-clip"><span class="r-inner" style="display:block">Access to Obscural</span></div>
-          <div class="r-clip d1"><span class="r-inner" style="display:block">is by introduction only.</span></div>
+          <div class="r-clip"><span class="r-inner" style="display:block" data-en="Access to Obscural" data-es="El acceso a Obscural">Access to Obscural</span></div>
+          <div class="r-clip d1"><span class="r-inner" style="display:block" data-en="is by introduction only." data-es="es por presentación exclusiva.">is by introduction only.</span></div>
         </div>
-        <div class="r-clip d2"><p class="r-inner ct-sub">If you were referred to us, or believe your situation warrants a conversation — we're listening.</p></div>
-        <div class="r-fade d3"><a href="mailto:hello@obscural.io" class="ct-link">hello@obscural.io</a></div>
+        <div class="r-clip d2"><p class="r-inner ct-sub" data-en="If you were referred to us, or believe your situation warrants a conversation — we're listening." data-es="Si alguien te refirió, o crees que tu situación merece una conversación — estamos escuchando.">If you were referred to us, or believe your situation warrants a conversation — we're listening.</p></div>
+        <div class="r-fade d3"><a href="mailto:enter@obscural.tech" class="ct-link">enter@obscural.tech</a></div>
       </div>
     </section>
 
     <footer>
-      <span class="ft">© 2026 Obscural. All rights reserved.</span>
-      <span class="ft">obscural.io</span>
+      <span class="ft" data-en="© 2026 Obscural. All rights reserved." data-es="© 2026 Obscural. Todos los derechos reservados.">© 2026 Obscural. All rights reserved.</span>
+      <span class="ft">obscural.tech</span>
     </footer>
   </div>
 
@@ -1144,20 +1131,6 @@
       }, { passive: true });
     }
 
-    /* ── COUNTER ── */
-    let counted = false;
-    const expEl = document.getElementById('expNum');
-    new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && !counted) {
-        counted = true;
-        let v = 10;
-        const t = setInterval(() => {
-          v += .4;
-          expEl.textContent = Math.round(v);
-          if (v >= 30) { expEl.textContent = '30'; clearInterval(t); }
-        }, 24);
-      }
-    }, { threshold: .3 }).observe(expEl);
   </script>
   <script>
     /* ── PAGE TRANSITION ── */
@@ -1336,6 +1309,43 @@
   document.getElementById('ob-s').className = isTrace ? 'ob-off' : 'ob-on';
   document.getElementById('ob-t').onclick = function(){ if(!isTrace){ sessionStorage.setItem(KEY,'trace'); location.reload(); }};
   document.getElementById('ob-s').onclick = function(){ if(isTrace){ sessionStorage.removeItem(KEY); location.reload(); }};
+})();
+</script>
+
+<!-- EN/ES Language toggle -->
+<script>
+(function(){
+  var LANG_KEY = 'ob-lang';
+
+  function setLang(lang) {
+    if (lang === currentLang) return;
+    currentLang = lang;
+    sessionStorage.setItem(LANG_KEY, lang);
+    document.body.classList.toggle('lang-es', lang === 'es');
+    document.getElementById('btn-en').className = lang === 'en' ? 'lang-btn lang-active' : 'lang-btn lang-idle';
+    document.getElementById('btn-es').className = lang === 'es' ? 'lang-btn lang-active' : 'lang-btn lang-idle';
+    document.querySelectorAll('[data-es]').forEach(function(el){
+      var val = lang === 'es' ? el.dataset.es : el.dataset.en;
+      if (val !== undefined) el.innerHTML = val;
+    });
+  }
+
+  // Expose globally so onclick="" works
+  window.setLang = setLang;
+
+  // Init from sessionStorage or URL param
+  var paramLang = new URLSearchParams(location.search).get('lang');
+  if (paramLang === 'en' || paramLang === 'es') {
+    sessionStorage.setItem(LANG_KEY, paramLang);
+    history.replaceState(null, null, location.pathname + location.hash);
+  }
+  var saved = sessionStorage.getItem(LANG_KEY);
+  var currentLang = 'en';
+
+  if (saved === 'es') {
+    currentLang = 'en'; // trick setLang into running
+    setLang('es');
+  }
 })();
 </script>
 </body>
