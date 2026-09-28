@@ -525,26 +525,6 @@
       transition: opacity 0.8s ease, transform 0.8s ease;
     }
     #svc-title.in { opacity: 1; transform: none; }
-    .svc-list { display: flex; flex-direction: column; }
-    .svc-item {
-      font-size: clamp(11px, 1.0vw, 15px);
-      font-weight: 300;
-      color: rgba(255,255,255,0.62);
-      padding: clamp(6px,0.8vh,10px) 0;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-      opacity: 0; transform: translateY(8px);
-      transition: opacity 0.65s cubic-bezier(.16,1,.3,1), transform 0.65s cubic-bezier(.16,1,.3,1);
-    }
-    .svc-item.in { opacity: 1; transform: none; }
-    .svc-item:nth-child(2) { transition-delay: 0.08s; }
-    .svc-item:nth-child(3) { transition-delay: 0.16s; }
-    .svc-item:nth-child(4) { transition-delay: 0.24s; }
-    .svc-item:nth-child(5) { transition-delay: 0.32s; }
-    .svc-item:nth-child(6) { transition-delay: 0.40s; }
-    .svc-item--bold {
-      font-size: clamp(12px, 1.1vw, 16px);
-      font-weight: 400; color: rgba(255,255,255,0.90);
-    }
     #svc-right {
       flex: 1;
       position: relative;
@@ -554,67 +534,36 @@
       width: 100%; height: 100%;
     }
     @media (max-width: 768px) {
-      #servicios { flex-direction: column; }
-      #svc-left { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
-      #svc-right { min-height: 50vh; }
+      #servicios {
+        flex-direction: column;
+        min-height: 100vh;
+        max-height: 100vh;
+        overflow: hidden;
+      }
+      #svc-left {
+        flex: none;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        padding: 32px 24px 20px;
+        justify-content: flex-start;
+        text-align: center;
+        align-items: center;
+      }
+      #svc-eyebrow { margin-bottom: 10px; }
+      #svc-title {
+        font-size: clamp(36px, 10vw, 56px);
+        margin-bottom: 14px;
+      }
+      #cierre-sub { font-size: 13px; margin-bottom: 10px; }
+      #cierre-list { gap: 4px; margin-bottom: 10px; }
+      #cierre-list li { font-size: 13px; }
+      #cierre-tagline { font-size: 11px; margin-top: 8px; }
+      #svc-right { flex: 1; min-height: 0; }
     }
 
     /* ═══════════════════════════════════════════════
        06 — CIERRE + CTA
     ═══════════════════════════════════════════════ */
-    /* ── CIERRE ── */
-    #cierre {
-      min-height: 100vh;
-      display: flex;
-      background: #000;
-      border-top: 1px solid rgba(255,255,255,0.04);
-      position: relative;
-    }
-    #cierre-left {
-      flex: 0 0 42%;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: clamp(48px,8vh,96px) clamp(32px,5vw,80px);
-      border-right: 1px solid rgba(255,255,255,0.04);
-    }
-    #cierre-right {
-      flex: 1;
-      position: relative;
-    }
-    #cierre-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    #cierre-eyebrow {
-      font-size: 10px;
-      font-weight: 400;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.30);
-      margin-bottom: 28px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    #cierre-eyebrow.in { opacity: 1; transform: none; }
-
-    #cierre-what {
-      font-size: clamp(44px, 6vw, 96px);
-      font-weight: 700;
-      letter-spacing: -0.05em;
-      line-height: 0.88;
-      color: #fff;
-      margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    #cierre-what.in { opacity: 1; transform: none; }
-
     #cierre-sub {
       font-size: clamp(16px, 2vw, 26px);
       font-weight: 200;
@@ -685,17 +634,6 @@
     #cierre-cta:hover {
       border-color: rgba(255,255,255,0.65);
       background: rgba(255,255,255,0.05);
-    }
-
-    #cierre-footer {
-      position: absolute;
-      bottom: 28px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 10px;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.15);
-      white-space: nowrap;
     }
 
     /* ── NAV BAR ── */
@@ -812,21 +750,7 @@
     }
     #s06-email.in { opacity: 1; }
     #s06-email:hover { color: rgba(255,255,255,0.60); }
-    #s06-fine {
-      position: absolute;
-      bottom: 28px; left: 50%;
-      transform: translateX(-50%);
-      font-size: 9px;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,0.14);
-      white-space: nowrap;
-    }
-
     @media (max-width: 768px) {
-      #cierre { flex-direction: column; }
-      #cierre-left { flex: none; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.04); }
-      #cierre-right { min-height: 60vw; }
       #cierre-list { display: flex; }
       #cierre-cta { align-self: center; }
     }
@@ -836,7 +760,96 @@
       #hero-logo { top: 24px; left: 24px; }
       #facts, #parteaguas, #audiencias { padding: 80px 24px; }
       #servicios { padding: 80px 24px; }
-      #cierre { padding: 80px 24px; }
+    }
+
+    /* ═══════════════════════════════════════════════
+       MOBILE POLISH — responsive additions
+    ═══════════════════════════════════════════════ */
+
+    /* ── Tablet: touch targets, parteaguas height, section emails ── */
+    @media (max-width: 768px) {
+      /* 44 px minimum touch targets on nav interactive elements */
+      #lang-btn {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 14px;
+      }
+      #nav-contact {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+      /* Per-section corner emails are 9 px non-tappable links — suppress on touch */
+      .section-email { display: none; }
+      /* Allow parteaguas to grow taller than viewport; removes content clip */
+      #parteaguas { height: auto; }
+    }
+
+    /* ── Nav: prevent overflow on narrow phones ── */
+    @media (max-width: 600px) {
+      #nav { padding: 12px 20px; }
+      #nav-links { gap: 12px; }
+      /* Remove the redundant obscural.tech link — keeps Contact Us + language toggle */
+      #nav-links > a:not(#nav-contact) { display: none; }
+    }
+
+    /* ── Hero: tighten title on very narrow screens ── */
+    @media (max-width: 390px) {
+      #hero { padding: 0 20px; }
+      #hero-line { font-size: clamp(26px, 8vw, 36px); }
+      #hero-sub { font-size: 11px; letter-spacing: 0.10em; }
+    }
+
+    /* ── Facts: 2×2 grid, fit in one screen on mobile ── */
+    @media (max-width: 600px) {
+      #facts {
+        height: 100vh;
+        padding: 0 16px;
+        justify-content: center;
+      }
+      #facts-inner { gap: 12px; }
+      #facts-header { gap: 4px; margin-bottom: 4px; }
+      #facts-title { font-size: clamp(22px, 6vw, 32px); }
+      #facts-tag { font-size: 11px; max-width: 100%; }
+      #facts-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .fact-card { padding: 14px 12px 12px; }
+      .fact-index { font-size: 8px; margin-bottom: 6px; }
+      .fact-number { font-size: clamp(28px, 8vw, 38px); margin-bottom: 6px; }
+      .fact-number sup { font-size: 0.45em; }
+      .fact-desc { font-size: 10px; line-height: 1.4; margin-bottom: 8px; }
+      .fact-source { font-size: 8px; padding-top: 8px; }
+    }
+
+    /* ── WHO: single column + overflow fix on narrow phones ── */
+    @media (max-width: 480px) {
+      .profiles-cols {
+        grid-template-columns: 1fr;
+        max-height: none;
+      }
+      .profile-col { min-height: 220px; }
+      .who-title { font-size: clamp(40px, 13vw, 64px); }
+      /* overflow: hidden clips stacked cards taller than viewport — allow scroll */
+      .who-sticky {
+        overflow: visible;
+        gap: clamp(24px, 4vh, 40px);
+      }
+    }
+
+
+    /* ── Section 06 close: prevent email overflow on tiny screens ── */
+    @media (max-width: 480px) {
+      #s06-email {
+        font-size: clamp(12px, 3.8vw, 16px);
+        letter-spacing: 0.10em;
+        word-break: break-all;
+        text-align: center;
+        padding: 0 20px;
+      }
     }
   </style>
 </head>
@@ -1043,12 +1056,10 @@
       <li data-en="Your devices." data-es="Tus equipos electrónicos.">Your devices.</li>
     </ul>
     <p id="cierre-tagline" data-en="We are your partner in digital protection." data-es="Somos tu partner en protección digital.">We are your partner in digital protection.</p>
-    <a id="cierre-cta" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
   </div>
   <div id="svc-right">
     <canvas id="svc-canvas"></canvas>
   </div>
-  <a class="section-email" href="mailto:enter@obscural.tech">enter@obscural.tech</a>
 </section>
 
 <!-- ═══════════════════ 06 — LOGO CLOSE ═══════════════════ -->
@@ -1163,8 +1174,6 @@
   }, { threshold: 0.15 });
   profileCols.forEach(el => profileObs.observe(el));
 
-  /* svc-item observer removed — list replaced by cierre-list */
-
   /* ── CIERRE — left column reveal + radar sync ── */
   (function() {
     var triggered = false;
@@ -1205,8 +1214,7 @@
             setTimeout(function() { item.el.classList.add('in'); }, item.delay);
           });
 
-          if (!isMobile && typeof window._radarStep === 'function') {
-            // Recalculate canvas dimensions now that section is visible
+          if (typeof window._radarStep === 'function') {
             if (typeof window._radarResize === 'function') window._radarResize();
             radarSteps.forEach(function(s) {
               setTimeout(function() { window._radarStep(s.step); }, s.delay);
@@ -1218,197 +1226,6 @@
       });
     }, { threshold: 0.12 });
     obs.observe(section);
-  })();
-
-  /* ── CIERRE CANVAS — radar with fixed labeled nodes ── */
-  (function() {
-    var canvas = document.getElementById('cierre-canvas');
-    if (!canvas) return;
-    var ctx = canvas.getContext('2d');
-    var T = 0, CX = 0, CY = 0, SC = 0, scanAngle = -Math.PI/2;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-    // Fixed positions — evenly spread, no orbiting, no collisions
-    // deg = clock angle (0 = top), rFrac = fraction of SC
-    var DEFS = [
-      { text: 'TÚ.',                    deg:   0, rFrac: 0.145 },
-      { text: 'Tu familia.',            deg:  62, rFrac: 0.240 },
-      { text: 'Tus personas queridas.', deg: 130, rFrac: 0.185 },
-      { text: 'Tu patrimonio.',         deg: 188, rFrac: 0.255 },
-      { text: 'Tus hogares.',           deg: 248, rFrac: 0.210 },
-      { text: 'Tu vida digital.',       deg: 308, rFrac: 0.245 },
-    ];
-
-    var nodes = DEFS.map(function(d) {
-      var rad = (d.deg - 90) * Math.PI / 180;
-      return { text: d.text, rad: rad, rFrac: d.rFrac,
-               x: 0, y: 0, nodeO: 0, labelO: 0, labelTo: 0 };
-    });
-
-    var rings = {
-      r1:   { r: 0, tr: 0 },
-      r2:   { r: 0, tr: 0 },
-      scan: { r: 0, tr: 0 },
-      sh:   { r: 0, tr: 0 },
-    };
-
-    function place() {
-      nodes.forEach(function(n) {
-        var r = SC * n.rFrac;
-        n.x = CX + Math.cos(n.rad) * r;
-        n.y = CY + Math.sin(n.rad) * r;
-        n.nodeO = 1;
-      });
-    }
-
-    function resize() {
-      var wrap = canvas.parentElement;
-      var W = wrap.clientWidth, H = wrap.clientHeight;
-      canvas.width = W * dpr; canvas.height = H * dpr;
-      canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      CX = W / 2; CY = H / 2; SC = Math.min(W, H);
-      rings.r1.tr = SC * 0.100; rings.r1.r = rings.r1.tr;
-      rings.r2.tr = SC * 0.165; rings.r2.r = rings.r2.tr;
-      rings.scan.tr = SC * 0.320; rings.scan.r = rings.scan.tr;
-      rings.sh.tr = SC * 0.410;  rings.sh.r = rings.sh.tr;
-      place();
-    }
-
-    var lp = function(a, b, f) { return a + (b - a) * f; };
-
-    // staggered label reveal on scroll
-    var triggered = false;
-    function triggerLabels() {
-      if (triggered) return; triggered = true;
-      nodes.forEach(function(n, i) {
-        setTimeout(function() { n.labelTo = 1; }, 500 + i * 420);
-      });
-    }
-
-    function drawLabel(n) {
-      if (n.labelO < 0.02) return;
-      var offDist = SC * 0.048 + 8;
-      var lx = CX + Math.cos(n.rad) * (SC * n.rFrac + offDist);
-      var ly = CY + Math.sin(n.rad) * (SC * n.rFrac + offDist);
-      var fs = Math.max(11, Math.min(SC * 0.032, 18));
-      ctx.save();
-      ctx.font = '300 ' + fs + 'px "Outfit", sans-serif';
-      ctx.fillStyle = 'rgba(255,255,255,' + (n.labelO * 0.85) + ')';
-      ctx.textBaseline = 'middle';
-      // align: left if node is on right half, right if left half
-      var cosA = Math.cos(n.rad);
-      ctx.textAlign = cosA >= -0.15 ? 'left' : 'right';
-      // connector line from node to label start
-      var lineEnd = lx + (cosA >= -0.15 ? -6 : 6);
-      ctx.beginPath();
-      ctx.moveTo(n.x, n.y);
-      ctx.lineTo(lineEnd, ly);
-      ctx.strokeStyle = 'rgba(255,255,255,' + (n.labelO * 0.20) + ')';
-      ctx.lineWidth = 0.6;
-      ctx.stroke();
-      ctx.fillText(n.text, lx, ly);
-      ctx.restore();
-    }
-
-    function draw() {
-      requestAnimationFrame(draw);
-      T += 0.016;
-      var dprL = window.devicePixelRatio || 1;
-      var W = canvas.width / dprL, H = canvas.height / dprL;
-      ctx.setTransform(dprL, 0, 0, dprL, 0, 0);
-      ctx.clearRect(0, 0, W, H);
-
-      scanAngle += 0.018;
-
-      // lerp label opacities
-      nodes.forEach(function(n) { n.labelO = lp(n.labelO, n.labelTo, 0.035); });
-
-      // connection lines node → center ring
-      nodes.forEach(function(n) {
-        if (n.nodeO < 0.02) return;
-        var edgeR = rings.r2.r;
-        var ex = CX + Math.cos(n.rad) * edgeR;
-        var ey = CY + Math.sin(n.rad) * edgeR;
-        ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(ex, ey);
-        ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-        ctx.lineWidth = 0.5; ctx.stroke();
-      });
-
-      // Ring 2
-      ctx.save();
-      ctx.shadowBlur = 20; ctx.shadowColor = 'rgba(255,255,255,0.35)';
-      ctx.beginPath(); ctx.arc(CX, CY, rings.r2.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.018)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 0.75; ctx.stroke();
-      ctx.restore();
-
-      // Ring 1
-      ctx.save();
-      ctx.shadowBlur = 14; ctx.shadowColor = 'rgba(255,255,255,0.45)';
-      ctx.beginPath(); ctx.arc(CX, CY, rings.r1.r, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill();
-      ctx.strokeStyle = 'rgba(255,255,255,0.26)'; ctx.lineWidth = 1; ctx.stroke();
-      ctx.restore();
-
-      // Nodes + labels
-      nodes.forEach(function(n) {
-        if (n.nodeO < 0.02) return;
-        var r = 2.8;
-        var g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, r * 7);
-        g.addColorStop(0, 'rgba(255,255,255,0.16)');
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.arc(n.x, n.y, r * 7, 0, Math.PI * 2);
-        ctx.fillStyle = g; ctx.fill();
-        ctx.beginPath(); ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
-        ctx.fillStyle = '#fff'; ctx.fill();
-        drawLabel(n);
-      });
-
-      // Scan ring
-      ctx.beginPath(); ctx.arc(CX, CY, rings.scan.r, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 0.5; ctx.stroke();
-      var sweepLen = Math.PI * 0.65;
-      for (var i = 0; i < 20; i++) {
-        var f = i / 20;
-        ctx.beginPath();
-        ctx.arc(CX, CY, rings.scan.r,
-          scanAngle - sweepLen + f * sweepLen,
-          scanAngle - sweepLen + (f + 1/20) * sweepLen);
-        ctx.strokeStyle = 'rgba(255,255,255,' + (f * 0.10) + ')';
-        ctx.lineWidth = 1.5; ctx.stroke();
-      }
-      var sx = CX + Math.cos(scanAngle) * rings.scan.r;
-      var sy = CY + Math.sin(scanAngle) * rings.scan.r;
-      var sg = ctx.createRadialGradient(sx, sy, 0, sx, sy, 16);
-      sg.addColorStop(0, 'rgba(255,255,255,0.22)'); sg.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(sx, sy, 16, 0, Math.PI * 2); ctx.fillStyle = sg; ctx.fill();
-      ctx.beginPath(); ctx.arc(sx, sy, 2.5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-
-      // Shield dashed
-      ctx.save(); ctx.setLineDash([5, 11]); ctx.lineDashOffset = -T * 22;
-      ctx.beginPath(); ctx.arc(CX, CY, rings.sh.r, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.20)'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
-      ctx.save(); ctx.setLineDash([3, 16]); ctx.lineDashOffset = T * 16;
-      ctx.beginPath(); ctx.arc(CX, CY, rings.sh.r * 0.88, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(255,255,255,0.11)'; ctx.lineWidth = 0.75; ctx.stroke(); ctx.restore();
-
-      // Center
-      var pulse = 1 + 0.18 * Math.sin(T * 1.6);
-      var pg = ctx.createRadialGradient(CX, CY, 0, CX, CY, 45 * pulse);
-      pg.addColorStop(0, 'rgba(255,255,255,0.13)'); pg.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.beginPath(); ctx.arc(CX, CY, 45 * pulse, 0, Math.PI * 2); ctx.fillStyle = pg; ctx.fill();
-      ctx.beginPath(); ctx.arc(CX, CY, 5, 0, Math.PI * 2); ctx.fillStyle = '#fff'; ctx.fill();
-    }
-
-    resize();
-    draw();
-    window.addEventListener('resize', resize);
-
-    var obs = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) { if (e.isIntersecting) { triggerLabels(); obs.disconnect(); } });
-    }, { threshold: 0.18 });
-    obs.observe(document.getElementById('cierre'));
   })();
 
   /* ── RADAR CANVAS ── */
